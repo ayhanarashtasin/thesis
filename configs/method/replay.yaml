@@ -1,0 +1,9 @@
+defaults:
+  - rl_lora
+  - _self_
+
+name: replay
+anchor_memory:
+  enabled: true
+  capacity: 512
+

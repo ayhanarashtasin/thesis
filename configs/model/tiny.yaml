@@ -1,0 +1,11 @@
+backend: tiny
+identifier: rahc_lora/tiny-causal-lm
+revision: 1.0.0
+tokenizer_identifier: rahc_lora/byte-tokenizer
+tokenizer_revision: 1.0.0
+precision: float32
+allow_precision_fallback: false
+vocab_size: 259
+hidden_size: 32
+max_sequence_length: 256
+trust_remote_code: false

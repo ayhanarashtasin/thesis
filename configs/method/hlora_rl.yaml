@@ -1,0 +1,8 @@
+defaults:
+  - rl_lora
+  - _self_
+
+name: hlora_rl
+use_parameter_consolidation: true
+parameter_regularization_lambda: 1.0
+parameter_importance_epsilon: 1.0e-8

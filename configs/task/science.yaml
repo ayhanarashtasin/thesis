@@ -1,0 +1,20 @@
+task_id: arc_challenge
+family: science_reasoning
+provider: huggingface
+dataset_name: allenai/ai2_arc
+dataset_subset: ARC-Challenge
+revision: 210d026faf9955653af8916fad021475a3f00453
+license: CC-BY-SA-4.0
+citation: "Clark et al. (2018), Think you have Solved Question Answering? Try ARC"
+source_train_split: train
+source_validation_split: validation
+source_test_split: test
+id_fields: [id]
+split_seed: 1702
+validation_fraction: 0.0
+anchor_fraction: 0.1
+preprocessing_version: arc-challenge-v1
+prompt_version: arc-challenge-prompt-v1
+reward_version: option-exact-v1
+evaluation_only: false
+

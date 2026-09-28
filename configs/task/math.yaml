@@ -1,0 +1,20 @@
+task_id: gsm8k
+family: arithmetic_reasoning
+provider: huggingface
+dataset_name: openai/gsm8k
+dataset_subset: main
+revision: 740312add88f781978c0658806c59bc2815b9866
+license: MIT
+citation: "Cobbe et al. (2021), Training Verifiers to Solve Math Word Problems"
+source_train_split: train
+source_validation_split: null
+source_test_split: test
+id_fields: [question]
+split_seed: 1701
+validation_fraction: 0.1
+anchor_fraction: 0.1
+preprocessing_version: gsm8k-v1
+prompt_version: gsm8k-prompt-v1
+reward_version: numeric-exact-v1
+evaluation_only: false
+

@@ -1,0 +1,36 @@
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Local configuration and credentials
+.env
+*.pem
+*.key
+
+# Data, model, and experiment artifacts
+data/raw/
+data/processed/
+outputs/
+.cache/
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+
+
+# Word temporary lock files
+~$*.docx
+~$*.tmp

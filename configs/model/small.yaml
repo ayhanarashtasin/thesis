@@ -1,0 +1,11 @@
+backend: transformers
+identifier: Qwen/Qwen2.5-0.5B-Instruct
+revision: 7ae557604adf67be50417f59c2c2f167def9a775
+tokenizer_identifier: Qwen/Qwen2.5-0.5B-Instruct
+tokenizer_revision: 7ae557604adf67be50417f59c2c2f167def9a775
+precision: bfloat16
+allow_precision_fallback: false
+vocab_size: 151936
+hidden_size: 896
+max_sequence_length: 32768
+trust_remote_code: false

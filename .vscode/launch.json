@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "RAHC-LoRA: doctor",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "rahc_lora.cli",
+      "args": ["doctor"],
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}
+

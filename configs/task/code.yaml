@@ -1,0 +1,20 @@
+task_id: mbpp
+family: code_generation
+provider: huggingface
+dataset_name: google-research-datasets/mbpp
+dataset_subset: sanitized
+revision: 4bb6404fdc6cacfda99d4ac4205087b89d32030c
+license: CC-BY-4.0
+citation: "Austin et al. (2021), Program Synthesis with Large Language Models"
+source_train_split: train
+source_validation_split: validation
+source_test_split: test
+id_fields: [task_id]
+split_seed: 1703
+validation_fraction: 0.0
+anchor_fraction: 0.1
+preprocessing_version: mbpp-sanitized-v1
+prompt_version: mbpp-prompt-v1
+reward_version: isolated-hidden-tests-v1
+evaluation_only: false
+

@@ -1,0 +1,11 @@
+dataset_version: 1.0.0
+grammar_version: 1.0.0
+template_version: 1.0.0
+validator_version: 1.0.0
+seed: 20260922
+split_sizes:
+  train: 32
+  validation: 16
+  anchor_candidate: 16
+  test: 16
+

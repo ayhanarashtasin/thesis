@@ -1,0 +1,4 @@
+name: slurm
+device: cuda
+num_processes: 1
+

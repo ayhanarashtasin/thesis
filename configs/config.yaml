@@ -1,0 +1,24 @@
+defaults:
+  - model: small
+  - task@tasks.gsm8k: math
+  - task@tasks.arc_challenge: science
+  - task@tasks.mbpp: code
+  - task@tasks.constraints: constraints
+  - evaluation@general_capabilities: default
+  - constraint_generator: default
+  - sandbox@code_sandbox: docker
+  - data: default
+  - method: rl_lora
+  - task_stream: order_1
+  - experiment: smoke
+  - rollout: grpo
+  - optimizer: adamw
+  - scheduler: constant
+  - checkpoint: default
+  - launcher: local
+  - _self_
+
+seed: 1
+paths:
+  output_dir: outputs
+  cache_dir: .cache/rahc_lora

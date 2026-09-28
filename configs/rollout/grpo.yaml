@@ -1,0 +1,10 @@
+prompts_per_batch: 2
+group_size: 4
+max_prompt_tokens: 128
+max_response_tokens: 32
+do_sample: true
+temperature: 1.0
+top_p: 1.0
+advantage_epsilon: 1.0e-8
+advantage_clip: 5.0
+policy_clip_epsilon: 0.2

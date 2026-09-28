@@ -1,0 +1,3 @@
+name: order_3
+tasks: [constraints, arc_challenge, gsm8k, mbpp]
+

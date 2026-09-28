@@ -1,0 +1,16 @@
+defaults:
+  - rl_lora
+  - _self_
+
+name: rahc_lora
+use_anchor_kl: true
+use_parameter_consolidation: true
+use_reward_aware_importance: true
+use_factorized_importance: true
+use_conflict_gate: true
+use_dual_controller: true
+anchor_memory:
+  enabled: true
+  capacity: 512
+parameter_regularization_lambda: 1.0
+

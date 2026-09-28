@@ -1,0 +1,5 @@
+name: main
+max_steps_per_task: 1000
+task_limit: 4
+evaluation_max_examples_per_task: 0
+deterministic: true

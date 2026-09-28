@@ -1,0 +1,5 @@
+name: pilot_two_task
+max_steps_per_task: 100
+task_limit: 2
+evaluation_max_examples_per_task: 128
+deterministic: true

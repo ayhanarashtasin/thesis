@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "huggingface": {
+      "type": "sse",
+      "url": "https://huggingface.co/mcp"
+    }
+  },
+  "mcpServers": {
+    "huggingface": {
+      "url": "https://huggingface.co/mcp"
+    }
+  }
+}

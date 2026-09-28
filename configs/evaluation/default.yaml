@@ -1,0 +1,117 @@
+enabled: false
+max_examples_per_capability: 0
+max_perplexity_tokens: 256
+ifeval_scorer_repository: null
+ifeval_scorer_revision: 758b894eb02dc2a7097068031089a2803be147c6
+ifeval_scorer_seed: 0
+ifeval_nltk_data_dir: ${paths.cache_dir}/nltk_data
+ifeval_punkt_tab_sha256: 56e42ce8e87ce5653d8bc261e8100a2cc719fa51e3e66ef138dc54049733b4b6
+ifeval:
+  task_id: ifeval
+  family: instruction_following
+  provider: huggingface
+  dataset_name: google/IFEval
+  dataset_subset: null
+  revision: 966cd89545d6b6acfd7638bc708b98261ca58e84
+  license: Apache-2.0
+  citation: "Zhou et al. (2023), Instruction-Following Evaluation for Large Language Models"
+  source_train_split: null
+  source_validation_split: null
+  source_test_split: train
+  id_fields: [key]
+  split_seed: 0
+  validation_fraction: 0.0
+  anchor_fraction: 0.0
+  preprocessing_version: ifeval-official-v1
+  prompt_version: ifeval-official-v1
+  reward_version: ifeval-official-strict-loose-v1
+  evaluation_only: true
+mmlu:
+  task_id: mmlu
+  family: general_knowledge
+  provider: huggingface
+  dataset_name: cais/mmlu
+  dataset_subset: all
+  revision: c30699e8356da336a370243923dbaf21066bb9fe
+  license: MIT
+  citation: "Hendrycks et al. (2021), Measuring Massive Multitask Language Understanding"
+  source_train_split: null
+  source_validation_split: null
+  source_test_split: test
+  id_fields: [subject, question, choices, answer]
+  split_seed: 0
+  validation_fraction: 0.0
+  anchor_fraction: 0.0
+  preprocessing_version: mmlu-fixed-v1
+  prompt_version: mmlu-prompt-v1
+  reward_version: option-exact-v1
+  evaluation_only: true
+hellaswag:
+  task_id: hellaswag
+  family: commonsense_completion
+  provider: huggingface
+  dataset_name: Rowan/hellaswag
+  dataset_subset: null
+  revision: 218ec52e09a7e7462a5400043bb9a69a41d06b76
+  license: MIT
+  citation: "Zellers et al. (2019), HellaSwag"
+  source_train_split: null
+  source_validation_split: null
+  source_test_split: validation
+  id_fields: [ind]
+  split_seed: 0
+  validation_fraction: 0.0
+  anchor_fraction: 0.0
+  preprocessing_version: hellaswag-v1
+  prompt_version: hellaswag-prompt-v1
+  reward_version: option-exact-v1
+  evaluation_only: true
+arc_easy:
+  task_id: arc_easy
+  family: easy_science
+  provider: huggingface
+  dataset_name: allenai/ai2_arc
+  dataset_subset: ARC-Easy
+  revision: 210d026faf9955653af8916fad021475a3f00453
+  license: CC-BY-SA-4.0
+  citation: "Clark et al. (2018), Think you have Solved Question Answering? Try ARC"
+  source_train_split: null
+  source_validation_split: null
+  source_test_split: test
+  id_fields: [id]
+  split_seed: 0
+  validation_fraction: 0.0
+  anchor_fraction: 0.0
+  preprocessing_version: arc-easy-v1
+  prompt_version: arc-easy-prompt-v1
+  reward_version: option-exact-v1
+  evaluation_only: true
+perplexity:
+  task_id: perplexity
+  family: language_modeling
+  provider: huggingface
+  dataset_name: Salesforce/wikitext
+  dataset_subset: wikitext-2-raw-v1
+  revision: b08601e04326c79dfdd32d625aee71d232d685c3
+  license: CC-BY-SA-3.0
+  citation: "Merity et al. (2016), Pointer Sentinel Mixture Models"
+  source_train_split: null
+  source_validation_split: null
+  source_test_split: test
+  id_fields: [text]
+  split_seed: 0
+  validation_fraction: 0.0
+  anchor_fraction: 0.0
+  preprocessing_version: wikitext2-heldout-v1
+  prompt_version: perplexity-v1
+  reward_version: token-nll-v1
+  evaluation_only: true
+mmlu_subjects:
+  - abstract_algebra
+  - college_computer_science
+  - high_school_physics
+  - professional_medicine
+max_new_tokens: 128
+do_sample: false
+temperature: 0.0
+top_p: 1.0

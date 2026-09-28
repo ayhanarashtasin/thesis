@@ -1,0 +1,2 @@
+name: order_arc_first
+tasks: [arc_challenge, gsm8k, mbpp, constraints]

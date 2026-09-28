@@ -1,0 +1,4 @@
+name: local
+device: auto
+num_processes: 1
+

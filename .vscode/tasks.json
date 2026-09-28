@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "RAHC-LoRA: validate",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "pytest", "-q"],
+      "group": {"kind": "test", "isDefault": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "RAHC-LoRA: doctor",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "rahc_lora.cli", "doctor"],
+      "problemMatcher": []
+    },
+    {
+      "label": "RAHC-LoRA: lint and type check",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "ruff", "check", "."],
+      "dependsOrder": "sequence",
+      "dependsOn": ["RAHC-LoRA: mypy"],
+      "problemMatcher": []
+    },
+    {
+      "label": "RAHC-LoRA: mypy",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "mypy", "src/rahc_lora"],
+      "problemMatcher": []
+    },
+    {
+      "label": "AGY: Auto Mode (Skip Permissions)",
+      "type": "shell",
+      "command": "agy",
+      "args": ["--dangerously-skip-permissions"],
+      "problemMatcher": []
+    }
+  ]
+}
+

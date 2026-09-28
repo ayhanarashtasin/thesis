@@ -1,0 +1,20 @@
+task_id: constraints
+family: instruction_constraints
+provider: generated
+dataset_name: rahc_lora/verifiable_constraints
+dataset_subset: null
+revision: 1.0.0
+license: MIT
+citation: "RAHC-LoRA generated Verifiable Constraint Training dataset"
+source_train_split: train
+source_validation_split: validation
+source_test_split: test
+id_fields: [example_id]
+split_seed: 20260922
+validation_fraction: 0.0
+anchor_fraction: 0.0
+preprocessing_version: constraints-v1
+prompt_version: constraints-prompt-v1
+reward_version: constraint-fraction-v1
+evaluation_only: false
+

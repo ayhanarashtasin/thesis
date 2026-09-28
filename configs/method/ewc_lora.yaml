@@ -1,0 +1,9 @@
+defaults:
+  - rl_lora
+  - _self_
+
+name: ewc_lora
+use_parameter_consolidation: true
+diagnostic_factorized_importance: true
+parameter_regularization_lambda: 1.0
+

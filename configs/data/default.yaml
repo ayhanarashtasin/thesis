@@ -1,0 +1,3 @@
+manifest_dir: data/manifests
+fail_on_content_overlap: true
+prepare_general_capabilities: true

@@ -1,0 +1,34 @@
+name: rl_lora
+use_anchor_kl: false
+use_parameter_consolidation: false
+use_reward_aware_importance: false
+use_factorized_importance: false
+use_conflict_gate: false
+use_dual_controller: false
+diagnostic_factorized_importance: false
+lora:
+  rank: 4
+  alpha: 8.0
+  dropout: 0.0
+  target_modules: [q_proj]
+importance:
+  ema_beta: 0.99
+  epsilon: 1.0e-8
+  clip_quantile: 0.995
+  accumulator_dtype: float32
+anchor_memory:
+  enabled: false
+  capacity: 0
+  batch_size: 16
+  top_k_logits: 32
+conflict:
+  zero_norm_threshold: 1.0e-12
+  coefficient_clip: 5.0
+functional_controller:
+  initial_lambda: 0.0
+  dual_lr: 0.001
+  target_kl: 0.02
+  ema_beta: 0.95
+  max_lambda: 10.0
+  saturation_patience: 100
+parameter_regularization_lambda: 0.0

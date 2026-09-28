@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this research code, please cite the repository."
+title: "RAHC-LoRA"
+type: software
+version: 0.1.0-dev
+date-released: 2026-09-22
+authors:
+  - name: "RAHC-LoRA contributors"
+license: MIT
+
