@@ -1,0 +1,110 @@
+# Literature Review {#chap:lit}
+
+This chapter first introduces the concepts that the rest of the thesis relies on: LLM adaptation with LoRA, RL for LLMs, catastrophic forgetting, and importance-based consolidation. It then reviews existing research grouped by mitigation strategy, with particular attention to work on forgetting during RL fine-tuning, which has grown quickly since our P1 review. The chapter ends with a comparison table and the research gap that motivates RAHC-LoRA.
+
+## Preliminaries {#sec:prelim}
+
+### Large language models and adaptation
+
+A decoder-only LLM defines an autoregressive distribution over tokens, π(y|x) = ∏_{j} p(y_{j} | x, y_{<j}), computed by a stack of Transformer layers with self-attention and feed-forward blocks [@vaswani2017; @brown2020]. Each attention block contains the query, key, value, and output projections (q_proj, k_proj, v_proj, o_proj), which are the LoRA targets in this work. Pre-training gives broad knowledge. Adaptation then specializes the model through supervised fine-tuning (SFT) on demonstrations, preference optimization [@rafailov2023], or RL against a reward [@ouyang2022].
+
+### Parameter-efficient fine-tuning and LoRA
+
+PEFT methods adapt a frozen model by training a small number of new parameters, for example adapters [@houlsby2019] or low-rank updates [@hu2022lora]. LoRA replaces the output of a target linear layer by
+
+[[EQ:eq_lora]]
+
+where W_{0} is frozen, B is initialized to zero so that training starts from the pre-trained model, and α/r is a fixed scale. Variants change the rank allocation [@zhang2023adalora], the learning rates of the two factors [@hayou2024loraplus], or decompose the update into magnitude and direction [@liu2024dora]. Two properties of LoRA matter for continual learning. First, LoRA tends to learn less and forget less than full fine-tuning, but it still forgets [@biderman2024]. Second, the factorization is not unique. For any invertible r×r matrix Q, the pair (BQ, Q^{-1}A) gives the same update, so any quantity defined on A and B separately depends on an arbitrary choice of coordinates. Chapter 4 builds on this observation.
+
+### Reinforcement learning for LLMs
+
+In the RL view, a prompt x is a state, a response y is an action sequence sampled from the policy π_{θ}, and a scalar reward r(x, y) scores the response. RLHF-style training maximizes the KL-regularized objective [@ziegler2019; @ouyang2022]
+
+[[EQ:eq_rl_objective]]
+
+where π_{ref} is usually the initial model. The policy-gradient theorem [@williams1992] gives unbiased but high-variance gradient estimates. PPO [@schulman2017ppo] reduces variance with a learned value baseline and limits update size with a clipped probability ratio. GRPO [@shao2024deepseekmath] samples a group of G responses per prompt and uses the group-normalized reward as the advantage, which removes the value network entirely. With verifiable rewards (RLVR), rewards come from exact checkers rather than a learned reward model [@lambert2024tulu; @deepseek2025r1]. This removes reward-model drift and makes rewards deterministic, which is why this thesis uses RLVR tasks.
+
+An important practical property of GRPO with binary rewards is sparsity. If all G responses for a prompt are wrong, or all are right, the group's rewards have zero variance and every advantage is zero. Such a group contributes no gradient at all. The pilots in Chapter 6 show that this happens for most GSM8K and MBPP groups early in training.
+
+### Catastrophic forgetting and the stability-plasticity dilemma
+
+Catastrophic forgetting was first described in connectionist networks trained on sequential tasks [@mccloskey1989; @french1999]. It follows from sharing parameters: the gradient of the new task's loss is unaware of the old task's loss surface, so moving along it can increase the old loss arbitrarily. Continual learning seeks a balance between stability (retaining old skills) and plasticity (acquiring new ones) [@parisi2019; @wang2024survey]. Surveys for language models [@biesialska2020; @wu2024survey; @shi2024survey] distinguish continual pre-training, continual instruction tuning, and continual alignment. Our setting is continual RL post-training with a fixed task sequence and task boundaries known during training.
+
+Two cautions from recent work matter for evaluation. Spurious forgetting shows that an apparent drop in performance can reflect a loss of task alignment or format rather than of underlying knowledge [@zheng2025spurious]. Implicit-inference analysis shows that fine-tuning can suppress capabilities that remain recoverable [@kotha2024implicit]. Evaluations therefore need to be designed carefully: they must parse answers explicitly and document failures, and they must compare against the frozen starting model.
+
+### Continual-learning evaluation
+
+The standard protocol records a performance matrix A[i, j], the held-out score on task j after training on task i ({fig:fig_2_1_evaluation_protocol}). Average forgetting compares each old task's best earlier score with its final score. Final average performance averages the last row, and backward transfer compares final scores with the score each task had right after it was learned [@lopezpaz2017; @chaudhry2019]. Reporting only the final row hides whether a method retained old tasks or simply never learned new ones, so the full matrix must be reported.
+
+[[FIG:fig_2_1_evaluation_protocol]] Evaluation protocol. (a) The performance matrix A[i, j]: entries above the diagonal refer to tasks not yet learned and are explicitly missing. (b) The metrics derived from the complete matrix.
+
+### Importance-based consolidation
+
+Regularization methods add a penalty that keeps parameters important for old tasks near their old values. EWC [@kirkpatrick2017] uses the diagonal Fisher information F as importance:
+
+[[EQ:eq_ewc]]
+
+Synaptic Intelligence [@zenke2017] estimates importance online as a path integral. Each parameter's contribution to the loss decrease is accumulated along the training trajectory and normalized by its total displacement:
+
+[[EQ:eq_si]]
+
+Memory Aware Synapses [@aljundi2018] measure the sensitivity of the model output instead of the loss. Structured curvature approximations such as Kronecker-factored Laplace approximations [@ritter2018; @martens2015kfac] trade accuracy for memory. All of these methods avoid computing the full Hessian, which is impossible at LLM scale; in that sense they are Hessian-free, a term borrowed from second-order optimization [@martens2010]. The first-order path-integral estimate is the starting point of RAHC-LoRA. However, it was designed for supervised learning with SGD-like updates. Using it in RL requires an explicit definition of which gradient is used (the clipped-advantage RL objective) and which movement is measured (the step the optimizer actually took).
+
+## Review of Existing Research {#sec:review}
+
+The literature is organized into six strands, summarized in {fig:fig_2_2_cl_taxonomy}.
+
+[[FIG:fig_2_2_cl_taxonomy]] Taxonomy of forgetting-mitigation strategies reviewed in this chapter and the strands that RAHC-LoRA combines.
+
+### Empirical studies of forgetting in LLMs
+
+Luo et al. [@luo2023empirical] measured forgetting of domain knowledge, reasoning, and reading comprehension during continual instruction tuning of models from 1B to 7B parameters. They found that forgetting is common and generally becomes more severe as model size grows in that range. Kalajdzievski [@kalajdzievski2024] reported power-law relationships between the amount of fine-tuning and forgetting, even for LoRA. Scialom et al. [@scialom2022] showed that instruction-tuned T0 models can continually learn new instructions with a small rehearsal buffer. Gupta et al. [@gupta2023rewarm] studied how learning-rate re-warming affects forgetting during continual pre-training. Together, these studies establish that forgetting in LLMs is real and depends on the task sequence and the training budget. They also show that measured forgetting depends strongly on how evaluation is done [@zheng2025spurious].
+
+### Regularization-based methods
+
+EWC [@kirkpatrick2017], SI [@zenke2017], and MAS [@aljundi2018] are the canonical parameter-regularization methods. Progress & Compress [@schwarz2018] combines distillation with an online EWC variant and applies it to RL agents. For pre-trained language models, RecAdam [@chen2020recadam] gradually pulls fine-tuned weights towards the pre-trained weights with an annealed quadratic penalty.
+
+The method closest to ours is HLoRA/HLER [@song2025hlora]. It computes element-wise parameter importance for preserving general knowledge from a supervised general-domain task. It then adds an importance-weighted regularization loss to the cross-entropy of the new domain task and weights each layer by a softmax of its importance norm. Experiments used The Pile [@gao2020pile] as the general-domain reference and SciQ [@welbl2017sciq], PiQA [@bisk2020piqa], and MedMCQA [@pal2022medmcqa] as domain tasks. HLoRA was the main baseline identified in P1. Three aspects limit its direct use in continual RL: its importance derivation assumes a closed-form SGD step on a supervised loss, its importance is dense, and its softmax layer coefficients are static.
+
+Very recently, EWC-LoRA [@zheng2026ewclora] revisited weight regularization for low-rank continual learning. It regularizes a single shared low-rank update with EWC and so keeps storage and inference cost constant. This supports our choice of one shared adapter, but it is supervised and uses Fisher importance without a behavioural term.
+
+### Replay and distillation
+
+Experience replay mixes stored old examples into new-task training and is a strong baseline for both supervised and RL continual learning [@rolnick2019]. LAMOL [@sun2020lamol] lets the language model generate pseudo-samples of earlier tasks. MbPA++ [@dautume2019] keeps an episodic memory with sparse replay and adapts locally at inference time. Self-synthesized rehearsal [@huang2024ssr] generates rehearsal data with the model itself. Learning without Forgetting [@li2018lwf] and knowledge distillation [@hinton2015] preserve the old model's outputs rather than its data. This is the principle behind our anchor KL: RAHC-LoRA stores a fixed budget of old training prompts together with compact top-k reference distributions, so it preserves behaviour without replaying rewards or storing full vocabulary distributions.
+
+### Parameter-efficient and subspace methods
+
+O-LoRA [@wang2023olora] learns each new task in a LoRA subspace orthogonal to those of earlier tasks. InfLoRA [@liang2024inflora] designs the subspace so that new updates do not interfere with old tasks. I-LoRA [@ren2024ilora] builds a dual-memory replay framework on interpolations of LoRA parameters. Progressive networks [@rusu2016] and prompt-based methods add capacity per task. These methods reduce interference effectively, but storage or routing grows with the number of tasks. The primary RAHC-LoRA method deliberately keeps a single shared adapter, and subspace methods appear only as baselines.
+
+### Gradient-geometry methods
+
+GEM [@lopezpaz2017] and A-GEM [@chaudhry2019] project the new-task gradient so that the loss on stored examples does not increase. PCGrad [@yu2020pcgrad] removes the conflicting component when two task gradients have negative cosine similarity. These methods motivate our conflict gate, which measures the cosine between the RL gradient and the anchor gradient at the level of each layer's effective weight. The difference is that RAHC-LoRA does not project gradients. It uses the detached conflict to weight a parameter penalty, which is cheaper and keeps the RL gradient unchanged when there is no conflict. Concurrent work on geometry conflict [@wang2026geometry] explains forgetting in LLM continual post-training as a geometric incompatibility between the new update and the current model state, which supports conflict-aware protection.
+
+### Forgetting in RL fine-tuning of LLMs
+
+Several recent studies ask specifically whether RL forgets. Shenfeld et al. [@shenfeld2025razor] find that the amount of forgetting is predicted by the KL divergence between the fine-tuned and base policies on the new task. They also find that on-policy RL is implicitly biased towards KL-minimal solutions ("RL's Razor") and therefore forgets less than SFT. Lai et al. [@lai2025rft] report that reinforcement fine-tuning mitigates forgetting in continual post-training of a multimodal model and attribute part of this to the scaling of gradients by reward variance. Mukherjee et al. [@mukherjee2025sparse] show that RL updates only a small subnetwork of 5-30% of the parameters, which suggests that importance should be sparse and structured. In contrast, Luo et al. [@luo2026cpo] show that standard RL still suffers severe forgetting during continual post-training. They trace the failure to a mismatch: the usual KL regularizer is measured on current-task data, whereas forgetting is caused by drift on prior-task distributions. Their remedy is a replay-free KL on the prior-task distribution.
+
+These findings are directly relevant. They predict that RL forgetting may be milder than SFT forgetting, which our pilots confirm (Chapter 6). They also argue that behavioural drift on old-task inputs, not on current prompts, is the quantity to control, which is exactly what our anchor KL measures.
+
+Continual RL outside language modelling has a longer history [@khetarpal2022]. Policy consolidation [@kaplanis2019] couples a cascade of policies through KL terms. Continual World [@wolczyk2021] showed that forgetting and transfer in continual control are sensitive to design choices. That literature also warns that RL results vary strongly across seeds and must be reported with appropriate statistics [@henderson2018; @agarwal2021], a caution we follow.
+
+### Constrained optimization and KL control
+
+Keeping a policy close to a reference is naturally formulated as a constrained problem: maximize reward subject to a divergence budget [@altman1999]. PPO-style RLHF uses a fixed or adaptive KL coefficient [@ziegler2019], and Lagrangian and PID controllers adapt the multiplier to keep a constraint satisfied [@stooke2020]. RAHC-LoRA applies the same principle to old-task behaviour. A nonnegative dual variable increases when the smoothed anchor KL exceeds its budget and decreases when it is below.
+
+## From P1 to P2 {#sec:p1p2}
+
+P1 reviewed catastrophic forgetting broadly and selected HLoRA/HLER as the strongest regularization starting point. P2 narrows and deepens this in four ways. It moves from supervised fine-tuning to RL with verifiable rewards, following the trend in LLM post-training. It changes the protected object from individual parameters to the effective LoRA update. It adds recent RL-specific evidence [@shenfeld2025razor; @lai2025rft; @luo2026cpo; @mukherjee2025sparse], which shows that behavioural drift on old-task inputs is the key quantity. Finally, it moves from reviewing methods to implementing and testing them under a pre-registered protocol. The title of the thesis was updated accordingly.
+
+## Summary of Key Findings and Research Gap {#sec:gap}
+
+{tab:tab_2_1_literature_comparison} compares representative methods. Four observations follow.
+
+[[TAB:tab_2_1_literature_comparison]]
+
+1. **Regularization is memory-heavy or supervised.** Dense importance (EWC, SI, MAS, HLoRA) costs as much as the protected weights, and the known importance derivations assume supervised losses and SGD-like updates.
+2. **PEFT continual methods usually grow.** Subspace and per-task adapter methods avoid interference by adding capacity, which conflicts with a single shared adapter.
+3. **RL forgetting is real but different.** RL forgets less than SFT, updates are sparse, and forgetting is governed by drift on prior-task distributions. The standard current-prompt KL does not measure that drift.
+4. **Few methods combine parameter and behavioural protection adaptively.** Gradient-conflict ideas exist for multi-task learning, and KL budgets exist for RLHF, but to our knowledge no method combines conflict-gated effective-weight consolidation, compact old-task KL, and a dual controller for one shared LoRA policy under RL.
+
+**Research gap.** There is no validated method for continual RL post-training of a single shared LoRA policy that (i) defines importance on the gauge-invariant effective update using the actual RL gradient and optimizer step, (ii) keeps persistent retention state bounded, (iii) protects old behaviour through a fixed-budget memory, and (iv) adapts protection to measured conflict and drift. There is also no reproducible, statistically careful testbed for evaluating such a method in RLVR. RAHC-LoRA and the platform described in this thesis address both needs.

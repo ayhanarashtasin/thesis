@@ -1,0 +1,141 @@
+# Results and Discussion {#chap:results}
+
+This chapter reports the results of the eight analysed GPU pilots. All numbers are computed directly from the raw run artifacts by a versioned analysis script. Nothing is copied from earlier summaries, and Appendix D lists where those summaries differed. All pilots use one training seed. Uncertainty statements therefore describe the finite evaluation samples, not seed-to-seed training variance, and no result in this chapter is a test of the full RAHC-LoRA method.
+
+## Overview of Experiments {#sec:res_overview}
+
+Two groups of experiments were run. The first group (Phase 2) tested whether standard RL-LoRA forgets on the pre-registered streams: four runs on GSM8K → ARC-Challenge and MBPP → GSM8K with 100 or 500 GRPO updates per task. The second group compared standard RL-LoRA with the direct HLoRA-to-RL baseline on ARC-Challenge → GSM8K, with 100 and 150 updates per task. This stream was chosen after Phase 2 because its first task is learned strongly and therefore can be forgotten, so the comparison is exploratory rather than part of the pre-registered order set.
+
+## Standard RL-LoRA Pilots and the Continuation Rule {#sec:res_phase2}
+
+{fig:fig_6_1_phase2_performance_matrices} and {tab:tab_6_1_phase2_results} show the performance matrices of the Phase 2 pilots. No stream showed meaningful forgetting. With the 0.5B model and 100 updates per task, GSM8K reached only 1.56% (2/128) and fell to 0.78% (1/128) after ARC-Challenge. With the 1.5B model and 100 updates per task, GSM8K rose from 3.91% (5/128) to 4.69% (6/128) after ARC-Challenge, a small positive backward transfer. Extending training to 500 updates per task raised GSM8K to 18.75% (24/128). After 500 ARC-Challenge updates, which brought ARC-Challenge to 75.78% (97/128), GSM8K still scored 17.19% (22/128), a loss of only two problems or 1.56 points. On MBPP → GSM8K, MBPP reached only 4.95% after 500 updates (a mean fraction of tests passed) and rose slightly to 6.25% after GSM8K.
+
+[[FIG:fig_6_1_phase2_performance_matrices]] Performance matrices of the standard RL-LoRA Phase 2 pilots (held-out accuracy, n = 128 per cell).
+
+[[TAB:tab_6_1_phase2_results]]
+
+The pilot continuation rule requires a loss of at least 10 points on some prior task under standard RL-LoRA. {fig:fig_6_2_continuation_rule} places every standard RL-LoRA stream, including the two ARC-first runs, against that threshold. Measured forgetting ranged from −1.30 to +3.12 points. In three streams the first task was learned so weakly that even total collapse could not have produced a 10-point loss (maximum possible losses of 1.6, 3.9, and 4.9 points). In the remaining streams the first task was learned well (18.8%, 76.6%, 82.8%) but lost at most 3.12 points. **The continuation rule is therefore not met.** Following the protocol, no multi-seed method study was launched on these streams.
+
+[[FIG:fig_6_2_continuation_rule]] Measured task-1 forgetting of standard RL-LoRA in every stream, compared with the 10-point continuation threshold. The tick shows the largest loss that was possible given the task-1 score.
+
+## ARC-Challenge → GSM8K: RL-LoRA versus HLoRA-RL {#sec:res_compare}
+
+{fig:fig_6_3_arc_gsm_comparison} and {tab:tab_6_2_arc_gsm_results} compare the two methods on ARC-Challenge → GSM8K. Because the first task carries no retention term, both methods produced identical ARC-Challenge scores after task 1: 76.56% (49/64) at 100 updates and 82.81% (53/64) at 150 updates. After GSM8K training, the ARC-Challenge score of RL-LoRA was unchanged at 100 updates and fell by 3.12 points (two problems) at 150 updates. HLoRA-RL lost 1.56 points at 100 updates and exactly the same 3.12 points at 150 updates. **HLoRA-RL did not reduce forgetting in either budget.** At 150 updates the two methods even lost the same two ARC-Challenge items, and their correctness on the 64 ARC-Challenge items after task 2 agreed exactly.
+
+[[FIG:fig_6_3_arc_gsm_comparison]] Held-out accuracy on ARC-Challenge → GSM8K for RL-LoRA and HLoRA-RL at (a) 100 and (b) 150 updates per task. Error bars are Wilson 95% intervals over 64 examples.
+
+[[TAB:tab_6_2_arc_gsm_results]]
+
+The methods differed in how well they learned the second task. RL-LoRA reached only 1.56% (1/64) on GSM8K at 100 updates and 3.12% (2/64) at 150 updates. HLoRA-RL reached 15.62% (10/64) and 32.81% (21/64). The final average performance was therefore higher for HLoRA-RL: 45.31% versus 39.06% at 100 updates, and 56.25% versus 41.41% at 150 updates. {tab:tab_6_3_paired_tests} analyses the difference on the identical 64 GSM8K problems. At 150 updates, every one of the 19 discordant problems was solved by HLoRA-RL and not by RL-LoRA. The paired bootstrap interval of the difference is [+18.8, +40.6] points and the exact McNemar p-value is 3.8 × 10⁻⁶. At 100 updates, 9 of 9 discordant problems favoured HLoRA-RL (p = 0.0039). The ARC-Challenge forgetting of either method is not distinguishable from zero (McNemar p ≥ 0.5).
+
+[[TAB:tab_6_3_paired_tests]]
+
+These tests show that the GSM8K difference is not an artefact of sampling the 64 evaluation problems. They do not show that the difference is caused by consolidation, or that it would recur with another training seed. {sec:res_mechanism} examines the mechanism.
+
+## Training Dynamics and Learning Signal {#sec:res_dynamics}
+
+{fig:fig_6_4_training_reward_curves} shows the training reward. On ARC-Challenge the curves of the two methods coincide exactly: every loss and gradient norm of the first task is bit-identical, which confirms that the retention machinery is inactive on task 1, as specified. ARC-Challenge training reward rose from about 0.25 to about 0.7. When training switched to GSM8K, reward fell to about 0.02-0.05 within 15 updates and recovered only slowly. At 100 updates the GSM8K training curves of the two methods were nearly indistinguishable, and the mean training reward was even slightly lower for HLoRA-RL (0.050 versus 0.058). At 150 updates the curves stayed close until about global step 270 (GSM8K update 120 of 150), after which HLoRA-RL's training reward rose faster.
+
+[[FIG:fig_6_4_training_reward_curves]] Training reward (15-update moving mean) for RL-LoRA and HLoRA-RL at (a) 100 and (b) 150 updates per task. The task-1 curves are identical.
+
+The low GSM8K reward is a sparsity effect ({fig:fig_6_5_learning_signal_diagnostics}, {tab:tab_6_4_training_diagnostics}). Across the four ARC-first runs, 68-82% of GSM8K prompt groups had identical rewards for all four responses, usually all zero, and therefore produced zero advantage. For RL-LoRA, 61% (100 updates) and 57% (150 updates) of GSM8K updates had an exactly zero gradient. HLoRA-RL had no zero-gradient updates at all: whenever the RL loss vanished (66 and 69 GSM8K updates), the consolidation penalty still produced a small gradient. The same sparsity dominated Phase 2: MBPP had positive reward in only 80 of 500 training batches (16%), and in the 500-update GSM8K → ARC run, 345 of the 500 ARC-Challenge updates had zero gradient, mostly because all four responses in a group were already correct (mean training reward 0.72).
+
+[[FIG:fig_6_5_learning_signal_diagnostics]] Learning-signal diagnostics on the ARC-first runs: batches with positive reward, zero-variance prompt groups, and updates with exactly zero gradient.
+
+[[TAB:tab_6_4_training_diagnostics]]
+
+A substantial part of early learning is learning the answer format. In the first 30 ARC-Challenge updates, 55-60% of sampled responses could not be parsed into an option label; by the end of the task this had fallen to about 10% ({fig:fig_6_6_parse_failure_trend}). The sampled policy KL per update remained small (about 0.0006-0.0011 nats per token), consistent with the conservative, clipped updates of GRPO.
+
+[[FIG:fig_6_6_parse_failure_trend]] Fraction of unparseable training responses (15-update moving mean) at 150 updates per task.
+
+## General Capabilities {#sec:res_capabilities}
+
+{fig:fig_6_7_general_capabilities} and {tab:tab_6_5_capabilities} report the capability suite for the 150-update runs. Held-out perplexity was essentially unchanged (20.80 for the frozen model versus 20.83 and 20.77 after task 2). IFEval strict accuracy fell from 15.6% to 10.9% (RL-LoRA) and 14.1% (HLoRA-RL). These changes are within the Wilson intervals at n = 64. Across all eight runs, perplexity changed by at most +3.52%, in the 500-update GSM8K → ARC run, and by less than ±0.2% in all four ARC-first runs ({fig:fig_6_8_perplexity_drift}).
+
+[[FIG:fig_6_7_general_capabilities]] General-capability suite for the 150-update ARC → GSM8K runs (n = 64 per point, Wilson 95% intervals).
+
+[[TAB:tab_6_5_capabilities]]
+
+The multiple-choice capabilities must be interpreted with care. The frozen instruction model scored only 4.7% on MMLU, 0.0% on HellaSwag, and 17.2% on ARC-Easy. This is far below the known ability of Qwen2.5-1.5B-Instruct, and the gap arises because our evaluation is generative. It allows at most 64 greedy tokens and accepts only an unambiguous option label, and the frozen model usually answers with an explanation that either never states a single label or is cut off. After ARC-Challenge training, which rewards ending with a label, MMLU rose to 40.6%, HellaSwag to 40.6%, and ARC-Easy to 82.8%. The 500-update GSM8K → ARC run shows the same effect in reverse. After GSM8K training, which rewards numeric answers, ARC-Easy fell from 14.1% to 3.9%. After ARC-Challenge training it rose to 89.8%. These swings measure answer-format transfer at least as much as knowledge. They must not be read as the RL training "improving MMLU by 36 points", and differences between methods in these benchmarks at n = 64 are not significant. Following our protocol, the final study will report both the absolute score and the change from the frozen model, and will add a log-likelihood-based multiple-choice evaluation that does not depend on answer format.
+
+[[FIG:fig_6_8_perplexity_drift]] WikiText-2 perplexity change from the frozen model after task 1 and task 2 in all eight runs.
+
+## Mechanism Diagnostics of the Direct HLoRA Transfer {#sec:res_mechanism}
+
+If HLoRA-RL's GSM8K advantage came from protecting ARC-relevant directions and leaving other directions free, the protection should be spread over the modules that matter for ARC-Challenge, and it should be strong enough to change the update. The diagnostics show neither.
+
+**Importance is concentrated in v_proj but broad.** After ARC-Challenge training, the dense importance norms ‖Ω_{l}‖₂ of the 112 modules ranged from 385 to 11,729 ({fig:fig_6_9_importance_heatmap}). The largest values were in the value projections, especially in layers 0, 2, 3, and 17. Between 57% and 65% of the importance elements of each module were nonzero after ARC-Challenge, and 76-87% after GSM8K, so the path integral does assign importance across the whole adapter.
+
+[[FIG:fig_6_9_importance_heatmap]] Dense path-integral importance norms per layer and projection in HLoRA-RL (150 updates per task) after (a) ARC-Challenge and (b) GSM8K.
+
+**The static layer coefficients collapse to one module.** The coefficients are a softmax over these raw norms. The largest norm (layer-0 v_proj, 11,729) exceeds the second (layer-3 v_proj, 7,719) by 4,010, and e^{−4010} is exactly zero in floating point. Layer-0 v_proj therefore receives coefficient 1 and the other 111 modules receive exactly 0. This held in all four consolidations of both budgets ({fig:fig_6_10_layer_coefficient_collapse}). The effective number of protected modules (the inverse of the sum of squared coefficients) is 1.0. By contrast, normalizing by the sum of norms would protect about 82 effective modules, and a softmax of standardized norms about 2. The direct transfer of the HLoRA layer weighting is therefore degenerate at this scale of importance values. In practice HLoRA-RL is "RL-LoRA plus a penalty on one module".
+
+[[FIG:fig_6_10_layer_coefficient_collapse]] Layer coefficients sorted by importance norm: the implemented softmax of raw norms (one-hot) compared with two non-degenerate normalizations.
+
+**The penalty is small.** During GSM8K training, the penalty averaged 2.5 × 10⁻⁵ (100 updates) and 5.2 × 10⁻⁵ (150 updates), with a maximum of 1.1 × 10⁻⁴. On updates with a non-zero RL loss, the mean absolute RL loss was about 2 × 10⁻⁴ to 4 × 10⁻⁴ ({fig:fig_6_11_penalty_vs_rl_loss}). The penalty is thus roughly an order of magnitude smaller than the RL loss. On the many updates where the RL loss is exactly zero, however, it is the only source of gradient, and it acts only on layer-0 v_proj.
+
+[[FIG:fig_6_11_penalty_vs_rl_loss]] Magnitude of the consolidation penalty and of the GRPO loss during GSM8K training. Ticks mark updates whose GRPO loss was exactly zero.
+
+**The runs diverge from the second GSM8K update.** Because the training runs are deterministic, the two methods can be compared step by step ({fig:fig_6_12_trajectory_divergence}). All task-1 updates and the first GSM8K update are identical. At that first update the adapter still equals the reference, so both the penalty and its gradient are zero. From the second GSM8K update on (global step 102 or 152), the penalty gradient on layer-0 v_proj changes the parameters slightly. Temperature-1 sampling then produces different responses, and the two trajectories evolve independently. Their cumulative training rewards stayed close for most of task 2 and separated only in the last 30 updates of the 150-update run.
+
+[[FIG:fig_6_12_trajectory_divergence]] (a) Absolute difference of per-step gradient norms between the two 150-update runs; (b) cumulative training reward.
+
+Taken together, these diagnostics suggest that the GSM8K difference reflects the sensitivity of sparse-reward RL to small perturbations of the trajectory, rather than protection of task-1 directions. A single seed cannot separate these explanations, so the plasticity result is treated as unconfirmed. It may be a genuine regularization effect, for example because the penalty prevents the adapter from settling while the RL gradient is zero, or it may be a favourable draw. Replication over at least three seeds is required, together with a control that adds an equally small, unrelated perturbation.
+
+**A second observation from code review.** The captured effective gradient multiplies the output-gradient-times-input product by the LoRA scale s = α/r. Since the dense update ΔW = sBA already contains s, the captured quantity is s·∂L/∂ΔW rather than ∂L/∂ΔW. This is a uniform factor of two for all modules. It does not change importance rankings or the one-hot softmax outcome, and it is equivalent to doubling λ. It will be corrected and covered by a finite-difference test before Phase 4, which requires the scale to be applied exactly once.
+
+## Efficiency and Persistent State {#sec:res_efficiency}
+
+{fig:fig_6_13_compute_profile} and {tab:tab_6_6_efficiency} summarize the cost. With the 1.5B model, an update (eight rollouts of up to 128 tokens, reward scoring, and one AdamW step) took about 50-52 seconds, at about 20 generated tokens per second. The 500-update runs averaged 52-60 seconds per update. Part of the slowdown in the interrupted MBPP → GSM8K source run was traced to host memory pressure ({sec:risk}). Dense HLoRA-RL importance added only 2.2% to the step time (51.8 versus 50.6 seconds). It raised peak GPU allocation from 12.2 to 14.1 GB, close to the 16 GB limit, and process memory from 3.4 to 6.1 GB.
+
+[[FIG:fig_6_13_compute_profile]] Compute profile of all runs: mean time per update, peak GPU memory allocated, and total optimizer time.
+
+[[TAB:tab_6_6_efficiency]]
+
+The persistent state shows the motivation for factorization most clearly ({fig:fig_6_14_storage_comparison}). The dense importance of HLoRA-RL holds 154.1 million FP32 values (616.6 MB), 71 times the size of the rank-8 adapter it protects (8.7 MB). The rank-one state planned for RAHC-LoRA holds 272,384 values (1.09 MB), 566 times smaller than the dense state and smaller than the adapter itself.
+
+[[FIG:fig_6_14_storage_comparison]] Persistent state for Qwen2.5-1.5B (log scale): the frozen backbone, dense importance (implemented), the adapter and its reference, and rank-one importance (planned).
+
+## Discussion {#sec:discussion}
+
+### Why the baseline did not forget
+
+Three factors explain the absence of a forgetting signal. First, weak first tasks: GSM8K at 100 updates and MBPP at 500 updates stayed close to their floors, so they had almost nothing to lose. Second, sparse rewards: most prompt groups on the hard tasks produced no gradient, so the adapter moved little. Third, the conservative nature of on-policy GRPO: the sampled KL per update stayed around 10⁻³ nats per token, and recent work finds that on-policy RL favours solutions close to the starting policy and therefore forgets less than SFT [@shenfeld2025razor; @lai2025rft]. Our ARC-first results agree with this: ARC-Challenge, learned to 83%, lost at most 3 points during 150 GSM8K updates.
+
+This is itself a useful finding for the thesis. It means that a stream on which the baseline demonstrably forgets must be constructed deliberately. The next pilot will use the full four-task streams, longer budgets on each task, tasks whose answer formats conflict (numeric versus option label versus code), and a higher learning rate or LoRA rank if needed, as the protocol allows. It will check the continuation rule before any method comparison. If a sufficiently strong forgetting signal cannot be produced, the protocol provides for validating the mechanism on a continual-control benchmark instead [@wolczyk2021].
+
+### Interpreting the plasticity difference
+
+The largest effect observed is on plasticity, not stability. HLoRA-RL learned GSM8K much better than RL-LoRA in both budgets, with strong evaluation-level significance. Among the GSM8K responses that could be parsed, HLoRA-RL answered 35% correctly at 150 updates (21 of 60), compared with 4% (2 of 53) for RL-LoRA, so the difference is not only in answer format. However, the training rewards of the two runs were similar for most of task 2, and the runs diverged only because of a tiny, single-module penalty. The evidence therefore supports a cautious conclusion: small changes to the optimization trajectory can produce large differences in held-out GSM8K accuracy after a short, sparse-reward RL phase. Any claim that consolidation improves plasticity requires multi-seed replication. This is consistent with the well-known seed sensitivity of deep RL [@henderson2018; @agarwal2021].
+
+### Implications for the design of RAHC-LoRA
+
+The pilots confirm four design decisions and motivate one correction.
+
+1. *Effective-weight importance works mechanically.* Hooks on the target layers capture dense effective gradients, and the path integral with the observed AdamW movement is finite, nonnegative after clamping, and broadly distributed.
+2. *Dense state is too expensive to keep.* Importance costs 71 times the adapter and uses most of the remaining GPU headroom, which supports rank-one factorization.
+3. *Layer coefficients must not be a softmax of raw norms.* Norms in the thousands make any unscaled softmax one-hot. RAHC-LoRA's conflict-aware coefficients are rescaled to a mean of one and clipped ({sec:method}), which prevents this collapse by construction. A static-coefficient ablation should use a non-degenerate normalization.
+4. *Behavioural protection is needed.* Parameter distance did not predict retention here, and recent work identifies drift on old-task inputs as the key quantity [@luo2026cpo]. The anchor KL measures exactly this.
+5. *Correction:* apply the LoRA scale exactly once in the effective gradient, verified by a finite-difference test.
+
+### What the capability suite measures
+
+The capability results show that general language modelling (perplexity) was preserved in every run and that instruction following (IFEval) changed by amounts within noise. They also show that generative multiple-choice evaluation with a short token cap largely measures answer format [@zheng2025spurious]. For the final study, log-likelihood-based multiple-choice scoring, a longer evaluation budget, and larger evaluation samples (all 1,172 ARC-Challenge and 1,319 GSM8K test items) will be used for the headline comparisons, with the current generative scores kept as a secondary, format-sensitive measure.
+
+## Threats to Validity {#sec:threats}
+
+**Internal validity.** All pilots use one training seed, so seed-to-seed variance is unknown, and the paired tests describe only evaluation-sample uncertainty. The ARC-first order was chosen after the Phase 2 results and is not one of the three pre-registered orders. Its results are exploratory. Evaluation used 64 or 128 examples per task, and the 64-token evaluation cap is shorter than the 128-token training budget. The effective-gradient scale factor noted above changes the penalty strength by a constant factor.
+
+**Construct validity.** Generative multiple-choice scores mix knowledge with answer format, and low scores of the frozen model on MMLU and HellaSwag reflect format rather than ability. A low anchor KL (in future runs) will not by itself prove retention, which is why held-out old-task scores remain the primary evidence.
+
+**Reward validity.** While preparing Appendix C we found that the multiple-choice parser accepts a hedged answer. "Answer: A or B" is scored as label A, because only labels that follow an explicit marker are compared, and a second explicit marker ("Answer: A. Final answer: B") is correctly rejected as ambiguous. A policy could in principle learn to exploit this. We have no evidence that it happened in the pilots, since generated text is stored only as hashes, but the parser will be tightened, with new rejection tests, before the main study.
+
+**External validity.** Results come from two-task streams, models of 0.5B and 1.5B parameters, and rank-8 adapters on attention projections only. They may not hold for four-task streams, larger models, other RL algorithms, or LoRA on MLP layers.
+
+**Conclusion validity.** The HLoRA-RL results evaluate the direct transfer baseline, not RAHC-LoRA. No statement in this chapter supports or refutes the primary hypothesis H1, which cannot be tested until a stream with measurable baseline forgetting exists and the RAHC-LoRA components are implemented.
+
+## Summary of Findings {#sec:findings}
+
+{tab:tab_6_7_findings_summary} summarizes the findings against the research questions. In brief, the platform is validated and reproducible. Standard RL-LoRA did not forget measurably on any tested stream, so the pilot continuation rule is not met and the stream must be redesigned. The direct HLoRA-to-RL baseline showed no retention benefit, a large but unconfirmed single-seed plasticity difference, and a degenerate layer weighting. The planned rank-one state reduces persistent importance storage by a factor of 566.
+
+[[TAB:tab_6_7_findings_summary]]

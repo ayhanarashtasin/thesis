@@ -1,0 +1,27 @@
+[[TITLEPAGE]]
+
+[[DECLARATION]]
+
+[[APPROVAL]]
+
+#* Abstract
+
+Reinforcement learning (RL) with verifiable rewards is now a standard way to improve the reasoning of large language models (LLMs), and low-rank adaptation (LoRA) makes it affordable on one consumer GPU. When a single shared LoRA policy is trained on a sequence of tasks, however, updates for a new task can overwrite earlier skills. This is catastrophic forgetting. Building on our P1 review, this P2 thesis proposes **RAHC-LoRA** (Reward-Aware Hessian-Free Consolidation for LoRA) and builds the platform needed to test it.
+
+RAHC-LoRA keeps one frozen backbone and one shared adapter. It protects the effective update ΔW = (α/r)BA, which is invariant to LoRA's rescaling symmetry. It estimates Hessian-free importance from the clipped-advantage RL gradient and the observed optimizer step, and stores it as rank-one factors. A fixed-budget anchor memory with a compact top-k KL preserves old behaviour, while a detached layer-conflict gate and a dual KL controller set the protection strength.
+
+We implemented a reproducible platform with four verifiable tasks, network-isolated code execution, the official IFEval scorer, full performance matrices, atomic checkpoints, and 59 tests. On it we built standard RL-LoRA and a direct HLoRA-to-RL baseline and ran eight GPU pilots with Qwen2.5-0.5B/1.5B-Instruct. Standard RL-LoRA forgot −1.30 to +3.12 points, below the 10-point threshold our protocol requires, so the task stream must be redesigned. On ARC-Challenge → GSM8K, HLoRA-RL did not reduce forgetting (3.12 versus 3.12 points) but reached higher GSM8K accuracy (32.8% versus 3.1%, n = 64; McNemar p = 3.8 × 10⁻⁶; one seed). Its softmax layer weights collapsed onto one of 112 modules, and the runs diverged from the second GSM8K update, so this gain cannot yet be attributed to consolidation. Dense importance needed 616.6 MB against 1.09 MB for the planned rank-one state. These results provide a validated testbed, a calibrated baseline, and concrete design corrections for the final thesis.
+
+**Keywords:** Catastrophic Forgetting; Continual Reinforcement Learning; Large Language Models; Low-Rank Adaptation (LoRA); Group Relative Policy Optimization (GRPO); Parameter Consolidation; Synaptic Intelligence; Knowledge Distillation; Stability-Plasticity Trade-off; Reproducible Machine Learning.
+
+#* Acknowledgement
+
+First and foremost, we thank Almighty Allah for His blessings, which allowed us to complete this stage of our thesis. We are deeply grateful to our supervisor, Mr. Md. Tanzim Reza, for his guidance, patience, and constructive feedback throughout P1 and P2. We thank the thesis coordination panel and the faculty of the Department of Computer Science and Engineering, BRAC University, for their support. Finally, we thank our families and friends for their constant encouragement.
+
+[[TOC]]
+
+[[LOF]]
+
+[[LOT]]
+
+[[NOMENCLATURE]]

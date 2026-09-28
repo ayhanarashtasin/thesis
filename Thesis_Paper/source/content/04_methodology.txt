@@ -1,0 +1,229 @@
+# Proposed Methodology {#chap:method}
+
+This chapter presents the complete design of RAHC-LoRA. It begins with the design process and the alternatives considered, formalizes the continual-RL problem, defines each component of the method mathematically, and ends with the baselines, ablations, evaluation protocol, and statistical plan that will be used to test it. Components already implemented are described in Chapter 5, and the chapter marks clearly which parts are specified but not yet implemented.
+
+## Design Process and Methodology Overview {#sec:design}
+
+### Design objectives
+
+The method was designed to meet five objectives derived from the problem statement ({sec:problem}):
+
+1. **Stability with plasticity:** reduce forgetting of earlier tasks without materially reducing learning of the current task.
+2. **One shared policy:** a single frozen backbone and one LoRA adapter for all tasks, with no per-task parameters.
+3. **Correct protected object:** retention defined on the effective update ΔW, not on the arbitrary LoRA factors.
+4. **Bounded state:** persistent retention state independent of the number of tasks and far smaller than dense importance.
+5. **Removable parts:** each component switchable by configuration, so its contribution can be measured by ablation.
+
+### Alternatives considered
+
+Several designs were considered and rejected for the primary method. *Per-task adapters or orthogonal subspaces* [@wang2023olora; @liang2024inflora] avoid interference but violate objective 2 and grow with the task count, so they are kept as baselines. *Full replay of old rewards* needs stored rewards and sandbox executions for old tasks and grows with the stream; a fixed anchor memory of prompts with compact reference distributions is cheaper and does not require re-running old reward functions. *Fisher-based importance* (EWC) requires sampling and squaring gradients under the current policy, is sensitive to reward sparsity, and does not account for the actual optimizer step. *Gradient projection* [@lopezpaz2017; @chaudhry2019] imposes hard constraints that can block learning and requires per-step memory gradients for every protected task. *Static softmax layer weights* (as in HLoRA) cannot react to whether the current task actually conflicts with the old ones. Our pilots later showed that they can collapse entirely ({sec:res_mechanism}).
+
+The chosen design combines two complementary protections. *Parameter protection* resists movement of effective weights that were important for the reward of earlier tasks. *Functional protection* keeps the policy's output distribution close to its old behaviour on a small memory of old prompts. Protection is scaled up only where the current RL gradient opposes the anchor gradient, and the strength of the behavioural term is controlled to meet an explicit drift budget. {fig:fig_4_1_rahc_lora_architecture} shows the architecture.
+
+[[FIG:fig_4_1_rahc_lora_architecture]] Architecture of RAHC-LoRA. One frozen backbone and one shared LoRA adapter serve both current-task learning and old-task retention. Retention terms are zero on the first task. State is consolidated at each task boundary, and the adapter is updated only by the AdamW step.
+
+## Problem Formulation {#sec:formulation}
+
+{tab:tab_4_1_notation} summarizes the notation.
+
+[[TAB:tab_4_1_notation]]
+
+A task stream is an ordered sequence of T datasets, each split into four disjoint roles:
+
+[[EQ:eq_stream]]
+
+The policy is the frozen backbone plus one shared set of LoRA factors θ over L protected modules:
+
+[[EQ:eq_policy]]
+
+While training on task t, the learner may access only D_{t}^{train} for RL updates, D_{t}^{val} for tuning, and the anchor candidates of completed tasks, under a fixed global memory budget. Test splits are used only at task boundaries for evaluation. The goal is to maximize the final average performance Ā_{T} while minimizing the average forgetting F, both defined on the full performance matrix ({sec:eval_protocol}).
+
+## The RAHC-LoRA Method {#sec:method}
+
+### Effective LoRA weight space and gauge invariance
+
+For each protected module l, RAHC-LoRA defines importance and consolidation on the effective update
+
+[[EQ:eq_effective]]
+
+rather than on A_{l} and B_{l} separately. The reason is the rescaling (gauge) symmetry of the factorization:
+
+[[EQ:eq_gauge]]
+
+Any quantity computed on the factors, such as ‖A − A^{ref}‖² + ‖B − B^{ref}‖², changes under this transformation even though the model is unchanged. A quantity computed on ΔW does not. {fig:fig_4_2_gauge_invariance} verifies this numerically. For random 64×8 and 8×48 factors, the factor-level penalty varies by more than four orders of magnitude as the rescaling factor k goes from 0.03 to 30, while the effective-weight penalty stays constant to within a relative spread of 3×10⁻¹⁶ (machine precision). The implementation must pass the same invariance test on real LoRA modules.
+
+[[FIG:fig_4_2_gauge_invariance]] Gauge invariance. (a) LoRA factors and the protected effective update. (b) Under the rescaling A′ = kA, B′ = B/k, a factor-level penalty changes by orders of magnitude while the effective-weight penalty is invariant.
+
+### Current-task learning with GRPO
+
+The current-task objective is the clipped GRPO loss [@shao2024deepseekmath] with verifiable rewards, implemented inside the project with explicitly documented semantics ({fig:fig_4_3_grpo_pipeline}). For each prompt, G responses are sampled and scored by a deterministic reward r_{i} ∈ [0, 1]. The advantage is normalized within the group using the population standard deviation and clipped:
+
+[[EQ:eq_grpo_adv]]
+
+The loss is the token-mean clipped surrogate over all valid response tokens:
+
+[[EQ:eq_grpo_loss]]
+
+Two details matter for consolidation. First, a group with identical rewards contributes exactly zero advantage and hence zero gradient. This is logged and never replaced by a heuristic reward. Second, the reference RL-LoRA baseline adds no KL term to the initial policy, since that is a separate baseline ({sec:baselines}).
+
+[[FIG:fig_4_3_grpo_pipeline]] Current-task learning pipeline with GRPO and deterministic verifiers, with worked examples of informative and zero-variance groups.
+
+### Reward-aware Hessian-free importance
+
+Consider the change of the RL loss when the effective update moves by δ:
+
+[[EQ:eq_taylor]]
+
+Second-order consolidation methods approximate the Hessian H, for example with a diagonal Fisher matrix, which is costly and noisy for policy gradients. Following the path-integral view of SI [@zenke2017], RAHC-LoRA instead credits each element of ΔW with the loss decrease it actually produced during training. No Hessian or Fisher matrix is computed, which is the sense of "Hessian-free" in the method's name [@martens2010]. The first ingredient is the effective-weight gradient of the RL loss, captured at the target layer from its input activations x and output gradients:
+
+[[EQ:eq_eff_grad]]
+
+The second is the movement actually taken by the optimizer, observed after gradient clipping and the AdamW update, not reconstructed from an assumed SGD step:
+
+[[EQ:eq_step_delta]]
+
+The per-step raw score keeps only positive contributions, those where the element moved in the direction that reduced the RL loss, and normalizes by the squared movement:
+
+[[EQ:eq_raw_score]]
+
+Scores are robustly clipped at the 99.5th percentile and accumulated with an exponential moving average in FP32:
+
+[[EQ:eq_ema]]
+
+The estimator is **reward-aware** because g_{l} is the gradient of the clipped-advantage GRPO objective, not of a likelihood or a supervised loss. Elements that moved to increase the probability of high-advantage responses receive credit in proportion to the reward signal that drove them. Groups with zero reward variance contribute nothing, so importance reflects only informative learning. Any non-finite gradient, movement, or score stops the step with a diagnostic instead of being skipped silently. This is Phase 4 of the implementation plan.
+
+### Rank-one factorized importance and efficient penalty
+
+Dense importance S_{l} ∈ ℝ^{O×I} is as large as the module itself. RAHC-LoRA stores only a nonnegative rank-one approximation built from the row and column marginals:
+
+[[EQ:eq_rank1]]
+
+This choice is exact for any importance matrix that is itself an outer product. It preserves the total importance mass exactly and is always nonnegative, and it reduces storage from O·I to O + I values per module:
+
+[[EQ:eq_storage]]
+
+For the q/k/v/o projections of the 28 layers of Qwen2.5-1.5B, this is 154.1 million versus 272,384 values, a reduction of 566 times. Higher-rank nonnegative factorizations [@lee1999nmf] are a possible extension. The factorization module must report reconstruction error, rank correlation with dense importance, storage, and update time on small models. This role is similar to that of Kronecker-factored curvature approximations in second-order methods [@martens2015kfac; @ritter2018].
+
+At each task boundary the current factors are stored as the reference. The consolidation penalty is defined on the difference of effective updates:
+
+[[EQ:eq_D]]
+
+and weights it by the factorized importance:
+
+[[EQ:eq_R]]
+
+Materializing D_{l} costs O·I memory. With P = diag(√p_{l}) and Q = diag(√q_{l}), the same value is computed from rank-2r Gram matrices without ever forming D_{l}:
+
+[[EQ:eq_gram]]
+
+This costs O(r²(O + I)) time and memory per module. Unit tests must confirm that the Gram form equals the dense computation on random matrices. {fig:fig_4_4_factorized_penalty} illustrates the construction.
+
+[[FIG:fig_4_4_factorized_penalty]] Factorized importance and the efficient penalty. (a) A dense nonnegative importance matrix. (b) Its mass-preserving rank-one approximation. (c) The Gram-form penalty and the storage it saves on Qwen2.5-1.5B.
+
+### Fixed-budget anchor memory and compact behavioural KL
+
+Parameter penalties protect weights, but the quantity that matters is behaviour on old-task inputs [@luo2026cpo]. At each task boundary, RAHC-LoRA selects anchor records from the completed task's anchor-candidate split, which is a subset of its training data and never its test data. Each record stores the prompt, the reference completion tokens, the top-k (k = 32) token log-probabilities of the policy at capture time with the residual probability mass, the reward at capture, a selection hash, and the policy version. One global capacity (512 by default) is shared by all tasks. Selection combines reservoir sampling for temporal fairness [@vitter1985], task balance, diversity by farthest-first selection when embeddings are available [@gonzalez1985], and a mixture of easy, medium, and hard examples by reward stratum.
+
+On an anchor minibatch M_{b}, the behavioural loss is a forward KL over the stored top-k tokens plus one residual bucket:
+
+[[EQ:eq_kl]]
+
+Only the current-policy probabilities π_{θ} are differentiable, and the references are constants. The compact representation avoids storing full vocabulary distributions (151,936 tokens for Qwen2.5). The anchor KL is logged together with held-out old-task scores, because a low anchor KL alone does not prove that old-task performance is preserved. This is Phase 6.
+
+### Conflict-aware layer coefficients
+
+Protection is needed most where the current RL update opposes the old behaviour. For each module, the conflict is the positive part of the negative cosine between the effective RL gradient and the effective anchor-KL gradient:
+
+[[EQ:eq_conflict]]
+
+Aligned or orthogonal gradients give zero conflict, and so does any gradient whose norm is below the threshold τ = 10⁻¹². The conflict is combined with the module's importance mass and normalized across modules:
+
+[[EQ:eq_coef]]
+
+where sg[·] stops gradients (the coefficient is detached) and c_{max} = 5 bounds the coefficient. The normalization "normalize across layers" in the specification is interpreted as rescaling to a mean of one across the L modules followed by clipping. This is the simplest testable interpretation, and it will be recorded as a design decision. Unlike a softmax of raw importance norms, this normalization cannot collapse onto a single module because of the scale of the norms ({sec:res_mechanism}). A static-coefficient ablation keeps c_{l} fixed. This is Phase 7.
+
+### Adaptive functional-retention controller
+
+The strength of the behavioural term is a nonnegative dual variable [@altman1999; @stooke2020]. It increases when the smoothed anchor KL exceeds a target budget K^{*} and decreases otherwise:
+
+[[EQ:eq_dual]]
+
+The defaults are an initial λ_{f} of 0.01, η_{λ} = 0.001, K^{*} = 0.02, β_{K} = 0.95, and λ_{max} = 10. If λ_{f} saturates while the KL stays above budget for a configured number of steps (100), the run stops with a diagnostic instead of continuing in a regime where the constraint cannot be met. A fixed-coefficient ablation disables the controller.
+
+### Combined objective and training algorithm
+
+The full objective for task t is
+
+[[EQ:eq_total]]
+
+All retention terms are exactly zero on the first task, because the memory and the consolidated state are empty. The method is therefore identical to standard RL-LoRA on task 1, which the pilots verified bit for bit (Chapter 6). The order of operations within one update is fixed ({fig:fig_4_5_update_sequence}). In particular, the importance update uses the movement observed after the optimizer step, and the dual variable is updated outside automatic differentiation. At task boundaries the state is consolidated, evaluated, and checkpointed atomically ({fig:fig_4_6_task_lifecycle}). Algorithm 4.1 summarizes the procedure.
+
+[[FIG:fig_4_5_update_sequence]] Order of operations in one RAHC-LoRA optimizer update, by owning component.
+
+[[CODE:Algorithm 4.1: RAHC-LoRA continual RL training]]
+Input: frozen backbone W0, shared LoRA factors {A_l, B_l}, task stream D_1..D_T, memory budget M
+Initialize: empty anchor memory, zero importance factors p_l, q_l, lambda_f <- lambda_0
+for t = 1..T:
+    load only D_t(train); reference <- current LoRA factors (task-start snapshot)
+    for each update s:
+        sample 2 prompts, G responses each; compute deterministic rewards
+        advantages <- group-normalize and clip (zero if group variance <= eps)
+        L_RL, g_RL <- clipped GRPO loss and effective-weight gradients
+        if memory not empty:
+            L_KL, g_anc <- compact top-k KL on an anchor minibatch
+            c_l <- detached conflict coefficients from g_RL, g_anc, p_l, q_l
+            R_l <- Gram-form effective-weight penalty vs reference
+        L_total <- L_RL + lambda_f * L_KL + lambda_p * sum_l c_l * R_l
+        snapshot DeltaW_l; backward; clip grad norm; AdamW step (LoRA only)
+        delta_l <- observed change of DeltaW_l
+        S_l <- EMA of robust-clipped relu(-g_RL * delta_l) / (delta_l^2 + eps)
+        lambda_f <- clamp(lambda_f + eta * (EMA(L_KL) - K_target), 0, lambda_max)
+        fail on any non-finite value; log metrics
+    consolidate: p_l, q_l <- rank-one factors of accumulated importance
+    store reference factors; add anchors from D_t(anchor), rebalance to budget M
+    evaluate all learned tasks and the capability suite -> row t of A[i, j]
+    write atomic checkpoint (policy, optimizer, RNG, retention state, manifests)
+Output: one continual LoRA policy, compact retention state, anchor memory, full A[i, j]
+[[/CODE]]
+
+[[FIG:fig_4_6_task_lifecycle]] Lifecycle of a continual run. On task 1 every retention term is zero, so the update equals standard RL-LoRA.
+
+### Computational complexity
+
+Relative to standard RL-LoRA, RAHC-LoRA adds per update one forward and backward pass on the anchor minibatch, two effective-gradient queries per protected module, and the Gram-form penalty. The effective gradient g_{l} = Σ (∂L/∂h) x^{T} is an O×I matrix and is the dominant transient cost. It can be processed module by module ("chunked hooks") so that at most one dense module-sized tensor is resident at a time. Persistent state is two rank-r factor sets (current and reference), O + I importance values per module, and the anchor memory. For 512 anchors with 128 response tokens and top-32 references, the memory holds about 2.1 million token-probability pairs, a few tens of megabytes, independent of the number of tasks.
+
+## Baselines {#sec:baselines}
+
+All methods run through the same trainer and evaluator and differ only in configuration ({tab:tab_4_2_method_matrix}). They are matched on backbone, LoRA rank and targets, rollout count, optimizer steps, rewards, task order, seed, generation parameters, and memory budget where applicable. Joint multi-task RL is included only as an upper reference and is clearly marked as violating the sequential-data constraint.
+
+[[TAB:tab_4_2_method_matrix]]
+
+## Ablation Design {#sec:ablations}
+
+Each component can be switched off through configuration ({tab:tab_4_3_ablations}). The ablations answer the secondary research questions: whether anchor KL or parameter consolidation carries the effect, what factorization costs, whether reward awareness helps, whether the conflict gate and the dual controller are necessary, how much memory is needed, and whether adapter capacity and gauge invariance matter in practice.
+
+[[TAB:tab_4_3_ablations]]
+
+## Evaluation Protocol and Metrics {#sec:eval_protocol}
+
+After each task, the evaluator scores every learned task on its held-out test split and records one row of the performance matrix A[i, j]. Cells for tasks not yet learned are stored explicitly as missing, never as zero. The co-primary metrics are average forgetting and final average performance, with backward transfer as a secondary metric:
+
+[[EQ:eq_forgetting]]
+
+[[EQ:eq_final_avg]]
+
+A fixed general-capability suite is evaluated on the frozen starting model and after every task. It consists of the official IFEval scorer (strict and loose) [@zhou2023ifeval], a fixed four-subject MMLU subset [@hendrycks2021mmlu], HellaSwag [@zellers2019hellaswag], ARC-Easy [@clark2018arc], and WikiText-2 perplexity [@merity2017wikitext]. Every capability score is reported together with its signed change from the frozen model. Additional diagnostics include current-task learning curves, reward sparsity, parse failures, sampled policy KL, response length and diversity, gradient conflict, importance concentration, the dual multiplier, step time, throughput, and peak CPU and GPU memory.
+
+**Statistical plan.** The primary analysis pairs methods by seed and task order. For each metric it reports the mean, median, standard deviation, a 95% bootstrap confidence interval [@efron1993], and an effect size. Paired comparisons use permutation or Wilcoxon signed-rank tests when the sample is small, and secondary ablations are corrected for the false discovery rate [@benjamini1995]. For single-run pilots, where training-seed variance cannot yet be estimated, we report evaluation-sample uncertainty on the identical held-out examples: Wilson intervals for accuracies [@wilson1927], paired bootstrap intervals for differences, and exact McNemar tests on discordant pairs [@mcnemar1947; @dror2018]:
+
+[[EQ:eq_wilson]]
+
+where b and c are the numbers of examples solved only by the first and only by the second method. These tests do not substitute for multiple seeds [@henderson2018; @agarwal2021].
+
+**Decision rules.** The protocol fixes in advance how results will change the method. If anchor KL alone matches the full method, parameter consolidation is reported as unnecessary. If the conflict gate provides no consistent benefit, factorized importance plus anchor KL becomes the main method. If factorization loses substantial retention, a small factorization rank is tested before compression is abandoned. If no forgetting occurs, the stream is redesigned. If forgetting falls but current-task performance falls materially, the result is reported as over-consolidation.
+
+## Hyperparameters {#sec:hyperparameters}
+
+{tab:tab_4_4_rahc_hyperparameters} lists the default hyperparameters, fixed before any method pilot. They are tuned only on validation splits, never on test results.
+
+[[TAB:tab_4_4_rahc_hyperparameters]]

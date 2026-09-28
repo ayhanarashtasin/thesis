@@ -1,0 +1,159 @@
+#A Appendix A: Reproduction Commands {#app:repro}
+
+All commands run from the repository root in the Conda gpu-env (Python 3.11, CUDA PyTorch). The CPU checks also run in the Python 3.12 validation environment.
+
+[[CODE:A.1 Environment and quality checks]]
+python -m pip install -e ".[dev]"
+python -m rahc_lora.cli doctor
+ruff format --check .
+ruff check .
+mypy src/rahc_lora
+pytest -q                      # 59 passed in 12.5 s (CPU)
+[[/CODE]]
+
+[[CODE:A.2 Data preparation (manifests and IFEval overlap audit only)]]
+python -m rahc_lora.cli prepare-data
+# cache-only repeat: set HF_HUB_OFFLINE=1 and HF_DATASETS_OFFLINE=1 first
+[[/CODE]]
+
+[[CODE:A.3 Standard RL-LoRA, 1.5B, GSM8K -> ARC-Challenge, 500 updates per task]]
+python -m rahc_lora.cli train --run-id phase2-pilot-duration-500-gpu-128-20260924 \
+  experiment=pilot_two_task model=confirmation method=rl_lora task_stream=order_1 seed=1 \
+  launcher=single_gpu general_capabilities.enabled=true \
+  general_capabilities.ifeval_scorer_repository=.cache/upstream/google-research-ifeval-sparse \
+  general_capabilities.ifeval_nltk_data_dir=.cache/rahc_lora/nltk_data \
+  general_capabilities.max_examples_per_capability=128 general_capabilities.max_new_tokens=64 \
+  experiment.max_steps_per_task=500 experiment.task_limit=2 \
+  experiment.evaluation_max_examples_per_task=128 rollout.max_response_tokens=128
+[[/CODE]]
+
+[[CODE:A.4 ARC-Challenge -> GSM8K comparison, 150 updates per task (run once per method)]]
+python -m rahc_lora.cli train --run-id phase3-scaled-hlora-arc-gsm-150 \
+  experiment=pilot_two_task model=confirmation task_stream=order_arc_first seed=1 \
+  launcher=single_gpu general_capabilities.enabled=true \
+  general_capabilities.ifeval_scorer_repository=.cache/upstream/google-research-ifeval-sparse \
+  general_capabilities.ifeval_nltk_data_dir=.cache/rahc_lora/nltk_data \
+  general_capabilities.max_examples_per_capability=64 general_capabilities.max_new_tokens=64 \
+  experiment.max_steps_per_task=150 experiment.task_limit=2 \
+  experiment.evaluation_max_examples_per_task=64 rollout.max_response_tokens=128 \
+  method=hlora_rl method.parameter_regularization_lambda=1.0
+# baseline: same overrides with method=rl_lora and --run-id phase3-scaled-baseline-arc-gsm-150
+[[/CODE]]
+
+[[CODE:A.5 Resume from a verified task-boundary checkpoint]]
+python -m rahc_lora.cli train --run-id <new-run-id> \
+  --resume outputs/runs/pilot_two_task/rl_lora/order_2/1/phase2-pilot-order2-duration-500-gpu-128-20260925/checkpoints/task-01-step-00000500 \
+  <identical scientific overrides>
+[[/CODE]]
+
+[[CODE:A.6 Regenerate every number, figure and table of this thesis from the raw runs]]
+python Thesis_Paper/source/analyze_runs.py      # -> Thesis_Paper/data/results_summary.json
+python Thesis_Paper/source/make_diagrams.py     # -> Thesis_Paper/figures/fig_1..5_*.png
+python Thesis_Paper/source/make_charts.py       # -> Thesis_Paper/figures/fig_6_*.png
+python Thesis_Paper/source/build_document.py    # -> tables/*.png, data/document_model.json
+node   Thesis_Paper/source/build_docx.js        # -> Thesis_Paper/*.docx and chapters/*.docx
+[[/CODE]]
+
+#A Appendix B: Key Configuration Listings {#app:config}
+
+[[CODE:B.1 configs/method/rl_lora.yaml (standard baseline; all retention components off)]]
+name: rl_lora
+use_anchor_kl: false
+use_parameter_consolidation: false
+use_reward_aware_importance: false
+use_factorized_importance: false
+use_conflict_gate: false
+use_dual_controller: false
+lora: {rank: 8, alpha: 16.0, dropout: 0.0, target_modules: [q_proj, k_proj, v_proj, o_proj]}
+importance: {ema_beta: 0.99, epsilon: 1.0e-8, clip_quantile: 0.995, accumulator_dtype: float32}
+anchor_memory: {enabled: false, capacity: 0, batch_size: 16, top_k_logits: 32}
+conflict: {zero_norm_threshold: 1.0e-12, coefficient_clip: 5.0}
+functional_controller: {initial_lambda: 0.0, dual_lr: 0.001, target_kl: 0.02, ema_beta: 0.95,
+                        max_lambda: 10.0, saturation_patience: 100}
+parameter_regularization_lambda: 0.0
+[[/CODE]]
+
+[[CODE:B.2 configs/method/hlora_rl.yaml (implemented direct HLoRA-to-RL baseline)]]
+defaults: [rl_lora, _self_]
+name: hlora_rl
+use_parameter_consolidation: true
+parameter_regularization_lambda: 1.0
+parameter_importance_epsilon: 1.0e-8
+[[/CODE]]
+
+[[CODE:B.3 configs/method/rahc_lora.yaml (specified; components implemented in Phases 4-7)]]
+defaults: [rl_lora, _self_]
+name: rahc_lora
+use_anchor_kl: true
+use_parameter_consolidation: true
+use_reward_aware_importance: true
+use_factorized_importance: true
+use_conflict_gate: true
+use_dual_controller: true
+anchor_memory: {enabled: true, capacity: 512}
+parameter_regularization_lambda: 1.0
+[[/CODE]]
+
+[[CODE:B.4 Rollout, optimizer, sandbox and task-stream configuration]]
+rollout:
+  prompts_per_batch: 2          group_size: 4
+  max_prompt_tokens: 128        max_response_tokens: 32 (128 in all pilots)
+  do_sample: true               temperature: 1.0      top_p: 1.0
+  advantage_epsilon: 1e-8       advantage_clip: 5.0   policy_clip_epsilon: 0.2
+optimizer:
+  adamw  learning_rate: 1e-4  betas: [0.9, 0.999]  epsilon: 1e-8
+  weight_decay: 0.0  max_grad_norm: 1.0   (scheduler: constant, warmup 0)
+sandbox:
+  docker  image: python:3.11.10-slim-bookworm@sha256:840e180e...
+  timeout 5.0 s, memory 256 MB, cpus 1.0, pids 32, output 65536 bytes
+  network disabled, read-only root
+task streams:
+  order_1: [gsm8k, arc_challenge, mbpp, constraints]
+  order_2: [mbpp, gsm8k, constraints, arc_challenge]
+  order_3: [constraints, arc_challenge, gsm8k, mbpp]
+  order_arc_first (exploratory): [arc_challenge, gsm8k, mbpp, constraints]
+[[/CODE]]
+
+#A Appendix C: Example Prompts and Reward Outcomes {#app:examples}
+
+The prompts below are produced by the project's task adapters from real training records. The rewards were computed by running the project's reward functions on the example responses shown; the responses are illustrative and were written for this appendix.
+
+**GSM8K (arithmetic reasoning).** Prompt: "Solve the problem. Give your final numeric answer clearly. Problem: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?" The reference answer ends with "#### 72".
+
+- "In May she sold 48 / 2 = 24 clips, so altogether 48 + 24 = 72. Final answer: 72" gives reward 1.0 (parsed 72).
+- "The answer is 72.0" gives reward 1.0 (exact rational comparison).
+- "She sold 48 clips in April and 24 in May, so the total is" gives reward 0.0 (parsed 24, the last number). This is the typical failure when an evaluation response is cut off by the token cap.
+
+**ARC-Challenge (science reasoning).** Prompt: "Choose the correct option and end with its label. Question: George wants to warm his hands quickly by rubbing them. Which skin surface will produce the most heat? A. dry palms B. wet palms C. palms covered with oil D. palms covered with lotion" (gold label A).
+
+- "Friction is highest on dry skin. Answer: A" gives reward 1.0.
+- "Dry palms create more friction, so I would pick the first option." gives reward 0.0 (parse failure, no label).
+- "Answer: A. Final answer: B" is rejected as ambiguous (parse failure).
+- "Either A or B could work. Answer: A or B" gives reward 1.0. This is the hedging weakness discussed in {sec:threats}.
+
+**MBPP (code generation).** Prompt: "Write a complete Python solution. Return only Python code; do not include tests. Problem: Write a python function to find the first repeated character in a given string." Hidden tests, executed only in the sandbox: assert first_repeated_char("abcabc") == "a"; assert first_repeated_char("abc") == None; assert first_repeated_char("123123") == "1". The reward is the fraction of the three tests that pass.
+
+**Custom verifiable constraints (template family topic_keyword_bullets, training role).** Prompt: "Scenario train-1: Write a compact field note about libraries. Use exactly 2 dash-led bullet lines, and include the standalone word 'evidence' exactly once."
+
+- "- Quiet reading rooms help focus." followed by "- Archives preserve evidence of local history." gives reward 1.0 (2 of 2 constraints satisfied).
+- A three-bullet response that uses "evidence" twice gives reward 0.0 (0 of 2).
+
+#A Appendix D: Reconciliation with Earlier Internal Reports {#app:reconcile}
+
+Before this thesis, several internal summaries of the pilots were written: a benchmark report, a supervisor briefing, and a poster draft. Re-deriving every number from the raw artifacts showed several discrepancies. {tab:tab_D_1_reconciliation} lists them and states which value this thesis uses. In every case the resolved run configuration or the raw evaluation records are treated as authoritative.
+
+[[TAB:tab_D_1_reconciliation]]
+
+#A Appendix E: Artifact Index {#app:artifacts}
+
+Every analysed run lives under outputs/runs/pilot_two_task/<method>/<order>/1/<run_id>/ and contains the files listed in {sec:checkpoint}. The runs are:
+
+- rl_lora/order_1/1/phase2-pilot-gpu-128-20260924 (0.5B, 100 updates per task)
+- rl_lora/order_1/1/phase2-pilot-confirmation-gpu-128-20260924 (1.5B, 100 updates per task)
+- rl_lora/order_1/1/phase2-pilot-duration-500-gpu-128-20260924 (1.5B, 500 updates per task)
+- rl_lora/order_2/1/phase2-pilot-order2-duration-500-gpu-128-20260925 (interrupted source run, preserved)
+- rl_lora/order_2/1/phase2-pilot-order2-recovery-20260926 (recovered MBPP → GSM8K run)
+- rl_lora/order_arc_first/1/phase3-pilot-baseline-arc-gsm-100 and hlora_rl/order_arc_first/1/phase3-pilot-hlora-arc-gsm-100
+- rl_lora/order_arc_first/1/phase3-scaled-baseline-arc-gsm-150 and hlora_rl/order_arc_first/1/phase3-scaled-hlora-arc-gsm-150
+
+Design decisions are recorded in docs/decisions/0001-task-split-construction.md, 0002-phase2-grpo-reference.md, and 0003-direct-hlora-rl-transfer.md.

@@ -1,0 +1,141 @@
+# Introduction {#chap:intro}
+
+This chapter introduces the problem studied in this thesis, explains why it matters, and states the research questions, objectives, hypotheses, and contributions of the P2 stage. It closes with a short description of the methodology, the scope and challenges of the work, and the organization of the remaining chapters.
+
+## Background {#sec:background}
+
+Large language models (LLMs) built on the Transformer architecture [@vaswani2017] are pre-trained on very large text corpora and then adapted for particular behaviours such as instruction following, mathematical reasoning, or code generation [@brown2020; @ouyang2022]. Adaptation is increasingly done with reinforcement learning (RL). In reinforcement learning from human feedback (RLHF), a policy is optimized against a learned reward model with algorithms such as Proximal Policy Optimization (PPO) [@christiano2017; @ziegler2019; @schulman2017ppo]. In reinforcement learning with verifiable rewards (RLVR), the reward is computed by a deterministic program: a checker for a final numeric answer, a multiple-choice label, a unit-test suite, or a set of formatting constraints [@lambert2024tulu; @deepseek2025r1]. Group Relative Policy Optimization (GRPO) removes the separate value network of PPO by normalizing rewards within a group of responses sampled for the same prompt [@shao2024deepseekmath]. This makes RL post-training of billion-parameter models feasible on a single GPU.
+
+Parameter-efficient fine-tuning (PEFT) makes adaptation cheaper still. Low-Rank Adaptation (LoRA) [@hu2022lora] freezes the pre-trained weight matrix W_{0} of each target layer and learns a low-rank update ΔW = (α/r)BA with r much smaller than the layer dimensions. Only the two thin factors A and B are trained, so a 1.5-billion-parameter model can be adapted by training about two million parameters. The adapter can be stored, shared, or swapped cheaply.
+
+Real systems are rarely adapted once. A deployed assistant may first be improved for mathematics, then for science questions, then for code, then for new formatting rules, each time with a new reward and a new dataset. Learning a sequence of tasks with one model is the continual-learning setting [@parisi2019; @wang2024survey]. Its best-known failure is catastrophic forgetting: gradient updates for the new task change parameters that were important for earlier tasks, and performance on those tasks collapses [@mccloskey1989; @french1999]. Forgetting has been measured repeatedly in LLM fine-tuning [@luo2023empirical; @kalajdzievski2024], and recent studies show that RL fine-tuning is not immune, even if it tends to forget less than supervised fine-tuning [@shenfeld2025razor; @lai2025rft; @luo2026cpo].
+
+Our P1 thesis reviewed 24 studies of catastrophic forgetting in LLM fine-tuning. It identified the hierarchical layer-wise and element-wise regularization method (HLoRA/HLER) [@song2025hlora] as one of the most complete regularization approaches, and it concluded that existing methods are rarely designed for sequential RL, for a single shared LoRA adapter, or for strict memory budgets. This P2 thesis turns that conclusion into a concrete method, RAHC-LoRA, and into an experimental platform that can test it rigorously.
+
+## Rationale of the Study {#sec:rationale}
+
+Three developments make continual RL with a shared adapter an important problem.
+
+First, RL post-training is now a main source of reasoning ability in open models [@shao2024deepseekmath; @deepseek2025r1; @lambert2024tulu]. Reward functions and task families change over time, so the same model is trained again and again. If every new RL stage erodes earlier skills, the cost of maintaining a model grows with every update, and users experience regressions they cannot predict.
+
+Second, the popular remedies scale poorly in this setting. Keeping one adapter per task [@wang2023olora; @liang2024inflora] makes storage and routing grow with the number of tasks. Replaying all old data [@rolnick2019] conflicts with privacy, licensing, and compute budgets. Dense importance matrices in the style of Elastic Weight Consolidation (EWC) [@kirkpatrick2017] or Synaptic Intelligence (SI) [@zenke2017] cost as much memory as the protected weights. For the 112 LoRA target modules of Qwen2.5-1.5B used in this work, a dense importance tensor holds 154.1 million values (616.6 MB in FP32), about 71 times the size of the rank-8 adapter itself.
+
+Third, methods designed for supervised learning do not transfer cleanly to policy gradients. Supervised importance estimates assume a smooth, low-variance loss. In GRPO the gradient is proportional to normalized advantages, it is exactly zero whenever all responses in a group receive the same reward, and it moves the parameters through an adaptive optimizer rather than plain gradient descent [@loshchilov2019]. The HLoRA method, for example, derives its importance from a closed-form SGD step on a supervised loss [@song2025hlora]. That derivation does not describe an AdamW update driven by sparse, clipped advantages.
+
+A method that is designed from the start for RL, for one shared adapter, and for a bounded memory budget would make continual RL post-training cheaper and more predictable. Equally important, a rigorous and reproducible platform is needed to find out whether such a method works, including the possibility that it does not.
+
+## Problem Statement {#sec:problem}
+
+The central problem of this thesis is:
+
+> Given a frozen language-model backbone and one shared LoRA policy trained with RL on a sequence of tasks with verifiable rewards, reduce forgetting of earlier tasks while maintaining learning of the current task, under fixed memory and compute budgets.
+
+This problem breaks down into the five sub-problems below.
+
+### Problem Statement 1: Forgetting in sequential RL with one shared adapter
+
+Standard RL-LoRA trains the same adapter on every task with no retention mechanism. Nothing prevents the update for task t from overwriting directions that encoded tasks 1 to t−1. The degree of forgetting depends on the task order, the conflict between tasks, and the training budget, and it must be measured, not assumed.
+
+### Problem Statement 2: The protected object is ambiguous in LoRA
+
+A LoRA update can be written with many different factor pairs: for any invertible matrix Q, the pair (BQ, Q^{-1}A) gives exactly the same update as (B, A). A penalty that constrains A and B separately therefore punishes harmless reparameterizations and may ignore harmful ones. Importance must be defined on the effective update ΔW.
+
+### Problem Statement 3: Importance estimation under policy-gradient noise
+
+Importance that works in supervised learning may fail under sparse, high-variance, clipped policy gradients. An estimator must use the gradient of the real RL objective and the optimizer step that was actually taken. It must also be numerically safe when gradients are exactly zero.
+
+### Problem Statement 4: Unbounded persistent state
+
+Dense per-parameter importance, per-task adapters, and unlimited replay buffers all grow with model size or with the number of tasks. A practical method needs persistent retention state that stays bounded: compact importance, one reference adapter, and a fixed-capacity memory.
+
+### Problem Statement 5: Protection must adapt to conflict and to behaviour
+
+Parameter penalties protect weights, not behaviour. A small change of weights can change outputs substantially, and a large change can leave them unchanged. Fixed layer coefficients also cannot tell whether the current task actually conflicts with an old one. An effective method needs a behavioural signal and a way to increase protection only where and when the new gradient opposes the old behaviour.
+
+## Research Questions and Objectives {#sec:objectives}
+
+### Research questions
+
+The primary research question is:
+
+> **RQ.** Can reward-aware parameter consolidation, combined with old-policy behavioural constraints, reduce catastrophic forgetting during sequential RL fine-tuning of a language model without materially reducing new-task learning?
+
+The secondary questions, fixed in the project specification before any experiment, are:
+
+1. Does advantage-aware importance outperform ordinary path-integral importance?
+2. Is importance on the effective LoRA weight more reliable than importance on the separate factors?
+3. Does conflict-aware layer protection outperform static layer coefficients?
+4. How much fixed anchor memory is required?
+5. How much retention is lost by factorizing the importance matrix?
+6. Does behavioural KL explain most of the retention benefit, or does parameter consolidation add a measurable improvement?
+7. Does the method remain effective across task orders and random seeds?
+
+### General objective
+
+The general objective is to design, implement, and rigorously evaluate a continual RL method for one shared LoRA policy. The method should reduce forgetting while preserving plasticity, and it should use bounded persistent state.
+
+### Specific objectives
+
+1. Formulate RAHC-LoRA mathematically: effective-weight importance, rank-one factorization, efficient penalty, anchor KL, conflict gate, and dual controller.
+2. Build a reproducible continual-RL platform with pinned datasets, strict data isolation, deterministic rewards, isolated code execution, full performance matrices, a general-capability suite, and resumable checkpoints.
+3. Implement and validate the standard RL-LoRA baseline and the direct HLoRA-to-RL baseline in the same trainer.
+4. Run pilots that test whether the chosen task streams produce measurable forgetting, and diagnose the behaviour of the direct consolidation baseline.
+5. Define the baselines, ablations, statistical procedures, and decision rules for the final study, and complete them in the final thesis stage.
+
+## Hypotheses and Success Criteria {#sec:hypotheses}
+
+The primary hypothesis (H1) is that RAHC-LoRA reduces average forgetting compared with standard RL-LoRA and with the direct HLoRA-to-RL baseline, while keeping competitive final average performance. Average forgetting and final average performance are co-primary outcomes, and both are required: a method that keeps old tasks only by failing to learn new ones is not a success.
+
+Before the full study, a pilot must satisfy a continuation rule. At least one prior task must lose 10 or more percentage points under standard RL-LoRA, RAHC-LoRA must reduce that loss, and current-task reward must fall by no more than 5% relative to standard RL-LoRA. If the baseline does not forget, the task stream is redesigned before any method is judged.
+
+The thesis is successful if it produces a reproducible answer, including a negative one. Acceptable outcomes include that the full method outperforms practical baselines, that behavioural KL explains most of the retention, that factorized importance suffices with little replay, or that the importance estimator fails under policy-gradient noise and so marks the boundary of HLoRA-style consolidation in RL.
+
+## Contributions of this P2 Stage {#sec:contributions}
+
+This report makes the following contributions.
+
+1. **Method specification.** A complete mathematical definition of RAHC-LoRA ({sec:method}). It covers gauge-invariant effective-weight protection, reward-aware Hessian-free importance from the observed optimizer step, a mass-preserving rank-one factorization with a Gram-form penalty, a compact top-k anchor KL, a detached conflict gate, and a bounded dual controller.
+2. **A validated research platform.** A typed, configuration-driven codebase with four verifiable tasks, hash-based data isolation and an IFEval overlap audit, a network-disabled Docker sandbox for generated code, the official IFEval scorer, full performance matrices, and atomic SHA-256 checkpoints. It is covered by 59 passing tests and resumes interrupted runs within 10⁻⁷ ({chap:impl}).
+3. **Two implemented baselines.** Standard RL-LoRA with a project-owned GRPO objective, and a direct HLoRA-to-RL transfer with dense path-integral importance on effective weights and static layer coefficients.
+4. **Pilot evidence.** Eight analysed GPU runs (43.2 optimizer hours, not counting the preserved interrupted run) showing that none of six standard RL-LoRA streams reached the 10-point forgetting threshold. The analysis identifies why: reward sparsity, floor effects, and short budgets ({chap:results}).
+5. **Diagnosis of the direct transfer.** Paired, example-level analysis of HLoRA-RL against RL-LoRA. HLoRA-RL showed no retention benefit but a significant single-seed plasticity difference. The analysis traces this difference to trajectory divergence and shows that the softmax layer coefficients collapse onto one module, which motivates specific corrections in RAHC-LoRA.
+
+## Methodology in Brief {#sec:method_brief}
+
+The work follows a phased research-engineering workflow ({fig:fig_1_1_research_roadmap}). Each mechanism is added only after the previous stage has a working baseline, tests, and a measurable expected effect.
+
+[[FIG:fig_1_1_research_roadmap]] Research roadmap from the P1 literature review to the final study. Stages 1-4 are complete, stage 5 is partly complete, and stages 6-8 form the final-thesis plan.
+
+First, the problem, method, and success criteria were written down as an authoritative specification. Second, a testbed was built for data preparation, rewards, evaluation, and continual metrics, with evaluation-only benchmarks isolated from all training roles. Third, a standard RL-LoRA baseline was implemented and piloted on GPU to test whether the chosen streams produce measurable forgetting. Fourth, the direct HLoRA-to-RL baseline was implemented in the same trainer and compared with RL-LoRA on a stream chosen to create more conflict. The remaining RAHC-LoRA components, the multi-seed pilot, and the main study with ablations follow in the final thesis stage.
+
+## Scope and Challenges {#sec:scope}
+
+### What this study covers
+
+- Continual RL post-training of one instruction-tuned causal LLM (0.5B to 1.5B parameters in the pilots; 1B to 3B planned) with a frozen backbone and one shared LoRA adapter.
+- Four task families with deterministic verifiable rewards: arithmetic reasoning (GSM8K), science reasoning (ARC-Challenge), Python code generation (MBPP), and verifiable instruction constraints.
+- Parameter-level and behaviour-level retention mechanisms, their ablations, and their memory and compute cost.
+- Evaluation after every task of all learned tasks and of an evaluation-only general-capability suite.
+
+### What this study does not cover
+
+- Training a foundation model from scratch or full-parameter continual fine-tuning.
+- Methods that add one adapter per task as the primary approach (they appear only as baselines).
+- Unbounded replay of old training data.
+- Claims that catastrophic forgetting is solved in general, or state-of-the-art claims from a single task order or seed.
+
+### Key challenges
+
+**Measuring forgetting at all.** Forgetting can only be observed when the first task is learned well and then lost. A task learned to only 2% cannot lose 10 points. The pilots showed that obtaining a clear forgetting signal is itself difficult.
+
+**Sparse rewards.** With four responses per prompt, many groups receive identical rewards and therefore produce zero gradient. This slows learning and makes importance estimates noisy.
+
+**Distinguishing real forgetting from evaluation artefacts.** Generative evaluation with strict answer parsing and a fixed token cap can confuse loss of knowledge with loss of answer format [@zheng2025spurious; @kotha2024implicit].
+
+**Compute.** One 1.5B update with eight rollouts takes about 50 seconds on the available 16 GB GPU, so a 1,000-update pilot takes about 14-17 hours. Multi-seed studies must be budgeted carefully.
+
+**Fair comparison.** Every method must run through the same trainer with the same data, rewards, budgets, seeds, and generation settings. Otherwise differences could come from the implementation rather than the method.
+
+## Thesis Organization {#sec:organization}
+
+Chapter 2 reviews the background and related work on LLM fine-tuning, RL for LLMs, continual learning, and forgetting mitigation, and identifies the research gap. Chapter 3 states the requirements, impacts, and constraints of the project, including ethics, risk management, and the work plan. Chapter 4 presents the proposed methodology: the problem formulation, the complete RAHC-LoRA method, the baselines, the ablations, and the evaluation protocol. Chapter 5 describes the implementation and the experimental setup. Chapter 6 reports and discusses the pilot results. Chapter 7 concludes the report and sets out the plan for the final thesis. The appendices contain reproduction commands, configuration listings, example prompts, and a reconciliation of earlier internal reports with the verified artifacts.

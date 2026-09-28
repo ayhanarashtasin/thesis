@@ -1,0 +1,187 @@
+% Display equations of the P2 thesis. Labels match the Word numbering.
+
+% Equation (2.1)
+\begin{equation}
+  h = W_0\,x + \Delta W x = W_0\,x + \frac{\alpha}{r}\,B A\,x,\qquad B\in\mathbb{R}^{O\times r},\; A\in\mathbb{R}^{r\times I},\; r \ll \min(O, I)
+  \label{eq:eq_lora}
+\end{equation}
+
+% Equation (2.2)
+\begin{equation}
+  J(\theta) = \mathbb{E}_{x\sim\mathcal{D},\; y\sim\pi_\theta(\cdot\,|\,x)}\left[\, r(x, y)\,\right] - \beta\,\mathbb{E}_{x\sim\mathcal{D}}\left[\mathrm{KL}\left(\pi_\theta(\cdot\,|\,x)\,\|\,\pi_{\mathrm{ref}}(\cdot\,|\,x)\right)\right]
+  \label{eq:eq_rl_objective}
+\end{equation}
+
+% Equation (2.3)
+\begin{equation}
+  \mathcal{L}(\theta) = \mathcal{L}_{t}(\theta) + \sum_{k} \frac{\lambda}{2}\,F_k\left(\theta_k - \theta^{*}_{t-1,k}\right)^2
+  \label{eq:eq_ewc}
+\end{equation}
+
+% Equation (2.4)
+\begin{equation}
+  \omega_k = -\sum_{s} g_k^{(s)}\,\Delta\theta_k^{(s)},\qquad \Omega_k = \frac{\omega_k}{\left(\theta_k^{\mathrm{end}} - \theta_k^{\mathrm{start}}\right)^2 + \xi}
+  \label{eq:eq_si}
+\end{equation}
+
+% Equation (4.1)
+\begin{equation}
+  \mathcal{S} = \left(\mathcal{D}_1, \mathcal{D}_2, \ldots, \mathcal{D}_T\right),\qquad \mathcal{D}_t = \mathcal{D}_t^{\mathrm{train}} \cup \mathcal{D}_t^{\mathrm{val}} \cup \mathcal{D}_t^{\mathrm{anchor}} \cup \mathcal{D}_t^{\mathrm{test}}\ \ (\mathrm{disjoint})
+  \label{eq:eq_stream}
+\end{equation}
+
+% Equation (4.2)
+\begin{equation}
+  \pi_\theta(y\,|\,x) = \prod_{j=1}^{|y|} p_{W_0,\theta}\left(y_j \,|\, x, y_{<j}\right),\qquad \theta = \{A_l, B_l\}_{l=1}^{L}\ \ (\mathrm{one\ shared\ adapter})
+  \label{eq:eq_policy}
+\end{equation}
+
+% Equation (4.3)
+\begin{equation}
+  \Delta W_l = s_l\,B_l A_l,\qquad s_l = \frac{\alpha}{r}
+  \label{eq:eq_effective}
+\end{equation}
+
+% Equation (4.4)
+\begin{equation}
+  B_l' A_l' = \left(B_l Q\right)\left(Q^{-1} A_l\right) = B_l A_l \quad \mathrm{for\ every\ invertible}\ Q\in\mathbb{R}^{r\times r}\quad (\mathrm{e.g.}\ Q = k^{-1} I)
+  \label{eq:eq_gauge}
+\end{equation}
+
+% Equation (4.5)
+\begin{equation}
+  \hat{A}_i = \mathrm{clip}\left(\frac{r_i - \mu_g}{\sigma_g},\,-c,\,c\right)\ \ \mathrm{if}\ \sigma_g > \epsilon_A,\qquad \hat{A}_i = 0\ \ \mathrm{otherwise}
+  \label{eq:eq_grpo_adv}
+\end{equation}
+
+% Equation (4.6)
+\begin{equation}
+  \mathcal{L}_{\mathrm{RL}} = -\frac{1}{\sum_i |y_i|}\sum_{i=1}^{G}\sum_{j=1}^{|y_i|} \min\left(\rho_{i,j}\hat{A}_i,\; \mathrm{clip}\left(\rho_{i,j}, 1-\epsilon, 1+\epsilon\right)\hat{A}_i\right),\qquad \rho_{i,j} = \frac{\pi_\theta(y_{i,j}\,|\,x, y_{i,<j})}{\pi_{\mathrm{old}}(y_{i,j}\,|\,x, y_{i,<j})}
+  \label{eq:eq_grpo_loss}
+\end{equation}
+
+% Equation (4.7)
+\begin{equation}
+  \mathcal{L}\left(\Delta W + \delta\right) - \mathcal{L}\left(\Delta W\right) = \left\langle g, \delta\right\rangle + \frac{1}{2}\,\mathrm{vec}(\delta)^{\top} H\,\mathrm{vec}(\delta) + O\left(\|\delta\|^3\right)
+  \label{eq:eq_taylor}
+\end{equation}
+
+% Equation (4.8)
+\begin{equation}
+  g_l = \frac{\partial \mathcal{L}_{\mathrm{RL}}}{\partial \Delta W_l} = \sum_{b,j} \frac{\partial \mathcal{L}_{\mathrm{RL}}}{\partial h_{l,b,j}}\; x_{l,b,j}^{\top}\ \in \mathbb{R}^{O\times I}
+  \label{eq:eq_eff_grad}
+\end{equation}
+
+% Equation (4.9)
+\begin{equation}
+  \delta_l^{(s)} = \Delta W_l^{(s+1)} - \Delta W_l^{(s)}\qquad (\mathrm{observed\ after\ clipping\ and\ the\ AdamW\ step})
+  \label{eq:eq_step_delta}
+\end{equation}
+
+% Equation (4.10)
+\begin{equation}
+  \tilde{S}_l^{(s)} = \frac{\mathrm{ReLU}\left(-\,g_l^{(s)} \odot \delta_l^{(s)}\right)}{\delta_l^{(s)} \odot \delta_l^{(s)} + \epsilon}
+  \label{eq:eq_raw_score}
+\end{equation}
+
+% Equation (4.11)
+\begin{equation}
+  S_l^{(s)} = \beta\,S_l^{(s-1)} + (1-\beta)\,\mathrm{clip}_{q}\left(\tilde{S}_l^{(s)}\right),\qquad \beta = 0.99,\ q = 0.995
+  \label{eq:eq_ema}
+\end{equation}
+
+% Equation (4.12)
+\begin{equation}
+  S_l \approx p_l\,q_l^{\top},\qquad p_l = S_l\,\mathbf{1},\qquad q_l = \frac{S_l^{\top}\mathbf{1}}{\mathbf{1}^{\top} S_l\,\mathbf{1}},\qquad \mathbf{1}^{\top}p_l\,q_l^{\top}\mathbf{1} = \mathbf{1}^{\top}S_l\mathbf{1}
+  \label{eq:eq_rank1}
+\end{equation}
+
+% Equation (4.13)
+\begin{equation}
+  |S_{\mathrm{dense}}| = \sum_{l} O_l\,I_l,\qquad |S_{\mathrm{rank1}}| = \sum_{l}\left(O_l + I_l\right)
+  \label{eq:eq_storage}
+\end{equation}
+
+% Equation (4.14)
+\begin{equation}
+  D_l = s_l\left(B_l A_l - B_l^{\mathrm{ref}} A_l^{\mathrm{ref}}\right) = \Delta W_l - \Delta W_l^{\mathrm{ref}}
+  \label{eq:eq_D}
+\end{equation}
+
+% Equation (4.15)
+\begin{equation}
+  R_l = \left\| \mathrm{diag}\left(\sqrt{p_l}\right)\,D_l\,\mathrm{diag}\left(\sqrt{q_l}\right) \right\|_F^2 = \sum_{i,j} p_{l,i}\,q_{l,j}\,D_{l,ij}^2
+  \label{eq:eq_R}
+\end{equation}
+
+% Equation (4.16)
+\begin{equation}
+  X_l = \sqrt{s_l}\left[\,P B_l,\; -P B_l^{\mathrm{ref}}\,\right],\quad Y_l = \sqrt{s_l}\left[\,A_l Q;\; A_l^{\mathrm{ref}} Q\,\right]\ (\mathrm{row\ stack}),\quad R_l = \mathrm{tr}\left(\left(X_l^{\top}X_l\right)\left(Y_l Y_l^{\top}\right)\right)
+  \label{eq:eq_gram}
+\end{equation}
+
+% Equation (4.17)
+\begin{equation}
+  \mathcal{L}_{\mathrm{KL}} = \frac{1}{|\mathcal{M}_b|}\sum_{m\in\mathcal{M}_b}\frac{1}{|y_m|}\sum_{j}\left[\sum_{v\in K_{m,j}} p^{\mathrm{ref}}_{v}\log\frac{p^{\mathrm{ref}}_{v}}{\pi_\theta(v)} + \bar{p}^{\mathrm{ref}}\log\frac{\bar{p}^{\mathrm{ref}}}{\bar{\pi}_\theta}\right],\quad \bar{p} = 1 - \sum_{v\in K} p_v
+  \label{eq:eq_kl}
+\end{equation}
+
+% Equation (4.18)
+\begin{equation}
+  \kappa_l = \max\left(0,\; -\frac{\langle g_l^{\mathrm{RL}}, g_l^{\mathrm{anc}}\rangle}{\|g_l^{\mathrm{RL}}\|_F\,\|g_l^{\mathrm{anc}}\|_F + \epsilon}\right),\qquad \kappa_l = 0\ \mathrm{if}\ \min\left(\|g_l^{\mathrm{RL}}\|, \|g_l^{\mathrm{anc}}\|\right) < \tau
+  \label{eq:eq_conflict}
+\end{equation}
+
+% Equation (4.19)
+\begin{equation}
+  m_l = \sqrt{\left(\mathbf{1}^{\top}p_l\right)\left(\mathbf{1}^{\top}q_l\right)},\qquad c_l = \mathrm{sg}\left[\min\left(c_{\max},\; \frac{L\,m_l\,\kappa_l}{\sum_{k=1}^{L} m_k\,\kappa_k + \epsilon}\right)\right]
+  \label{eq:eq_coef}
+\end{equation}
+
+% Equation (4.20)
+\begin{equation}
+  \bar{K}_s = \beta_K\,\bar{K}_{s-1} + (1-\beta_K)\,\mathcal{L}_{\mathrm{KL}}^{(s)},\qquad \lambda_f \leftarrow \min\left(\lambda_{\max},\; \max\left(0,\; \lambda_f + \eta_\lambda\left(\bar{K}_s - K^{*}\right)\right)\right)
+  \label{eq:eq_dual}
+\end{equation}
+
+% Equation (4.21)
+\begin{equation}
+  \mathcal{L}_{\mathrm{total}} = \mathcal{L}_{\mathrm{RL}} + \lambda_f\,\mathcal{L}_{\mathrm{KL}} + \lambda_p\sum_{l=1}^{L} c_l\,R_l
+  \label{eq:eq_total}
+\end{equation}
+
+% Equation (4.22)
+\begin{equation}
+  F = \frac{1}{T-1}\sum_{j=1}^{T-1}\left(\max_{j \leq i < T} A_{i,j} - A_{T,j}\right)
+  \label{eq:eq_forgetting}
+\end{equation}
+
+% Equation (4.23)
+\begin{equation}
+  \bar{A}_T = \frac{1}{T}\sum_{j=1}^{T} A_{T,j},\qquad \mathrm{BWT} = \frac{1}{T-1}\sum_{j=1}^{T-1}\left(A_{T,j} - A_{j,j}\right)
+  \label{eq:eq_final_avg}
+\end{equation}
+
+% Equation (4.24)
+\begin{equation}
+  \hat{p} \pm \Delta = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}},\qquad p_{\mathrm{McNemar}} = \min\left(1,\; 2\sum_{i=0}^{\min(b,c)} \binom{b+c}{i} 2^{-(b+c)}\right)
+  \label{eq:eq_wilson}
+\end{equation}
+
+% Equation (5.1)
+\begin{equation}
+  \omega_l \leftarrow \omega_l - G_l \odot \left(U_l^{\mathrm{after}} - U_l^{\mathrm{before}}\right),\qquad U_l = s_l B_l A_l
+  \label{eq:eq_hlora_path}
+\end{equation}
+
+% Equation (5.2)
+\begin{equation}
+  \Omega_l \leftarrow \Omega_l + \frac{\mathrm{ReLU}\left(\omega_l\right)}{\left(U_l^{\mathrm{end}} - U_l^{\mathrm{start}}\right)^{\odot 2} + \epsilon},\qquad \alpha_l = \frac{\exp\left(\|\Omega_l\|_2\right)}{\sum_{k}\exp\left(\|\Omega_k\|_2\right)}
+  \label{eq:eq_hlora_omega}
+\end{equation}
+
+% Equation (5.3)
+\begin{equation}
+  \mathcal{L} = \mathcal{L}_{\mathrm{RL}} + \lambda\sum_{l}\alpha_l\sum_{i,j}\Omega_{l,ij}\left(U_{l,ij} - U^{\mathrm{ref}}_{l,ij}\right)^2
+  \label{eq:eq_hlora_loss}
+\end{equation}

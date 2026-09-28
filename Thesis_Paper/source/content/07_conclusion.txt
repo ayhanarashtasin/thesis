@@ -1,0 +1,49 @@
+# Conclusion and Future Work {#chap:conclusion}
+
+## Conclusion {#sec:conclusion}
+
+This thesis addresses catastrophic forgetting in continual RL post-training of an LLM with one frozen backbone and one shared LoRA adapter. Building on the P1 literature review, the P2 stage made three advances.
+
+First, it specified **RAHC-LoRA**, a method that protects the gauge-invariant effective update ΔW = (α/r)BA. RAHC-LoRA estimates Hessian-free importance from the gradient of the clipped-advantage RL objective and the observed optimizer step, and stores that importance as mass-preserving rank-one factors with a Gram-form penalty. It preserves old behaviour through a fixed-budget anchor memory with a compact top-k KL, gates protection by the conflict between current and anchor gradients, and keeps anchor drift within a budget with a bounded dual controller.
+
+Second, it built and validated a reproducible research platform. The platform includes four verifiable RL tasks with strict data isolation and an IFEval overlap audit, a network-disabled sandbox for generated code, the official IFEval scorer, full performance matrices, and atomic, hashed, resumable checkpoints. It is tested by 59 automated tests and has recovered a real interrupted run.
+
+Third, it ran eight GPU pilots with a standard RL-LoRA baseline and a direct HLoRA-to-RL baseline. Standard RL-LoRA did not forget measurably on any tested stream (−1.30 to +3.12 points), so the pre-registered continuation rule is not met and the stream must be redesigned before a method comparison. The direct HLoRA transfer did not reduce forgetting on ARC-Challenge → GSM8K. It learned GSM8K much better in a single seed (32.8% versus 3.1%), but its layer weighting collapsed onto one of 112 modules and the two runs diverged from the second GSM8K update, so this plasticity difference cannot yet be attributed to consolidation. Dense importance required 616.6 MB, compared with 1.09 MB for the planned rank-one state.
+
+The honest conclusion of P2 is that the research question remains open. The platform is ready to answer it. The baseline is calibrated, with measured reward sparsity, learning speed, and forgetting behaviour. The pilots also produced concrete, evidence-based corrections to the design.
+
+## Contributions {#sec:final_contributions}
+
+1. A complete, testable specification of RAHC-LoRA and of its baselines, ablations, metrics, statistical plan, and decision rules.
+2. An open, reproducible continual-RL platform for LLMs with isolated verifiable rewards and full continual-learning evaluation.
+3. A project-owned GRPO baseline with documented semantics and a direct HLoRA-to-RL baseline with effective-weight importance from the observed AdamW movement.
+4. Empirical evidence that sequential RL-LoRA on the tested streams forgets little, together with an explanation of why: weak first tasks, sparse rewards, and conservative on-policy updates.
+5. Diagnosis of two design flaws of the direct transfer: softmax collapse of the layer coefficients, and a duplicated LoRA scale in the captured gradient. The diagnosis also identifies trajectory divergence as an alternative explanation of the single-seed plasticity difference.
+
+## Limitations {#sec:limitations}
+
+- The RAHC-LoRA components beyond the dense HLoRA-to-RL baseline (Phases 4-7) are specified but not yet implemented, so the primary hypothesis has not been tested.
+- All pilots used one training seed, two-task streams, and 64-128 evaluation examples per task.
+- The ARC-first stream was chosen after the Phase 2 results and is exploratory.
+- The generative capability evaluation is sensitive to answer format and to the 64-token cap.
+- The supervised HLoRA reproduction on SciQ, PiQA, MedMCQA, and The Pile has not yet been run.
+- Compute limits the backbone to 1.5B parameters on the available 16 GB GPU.
+
+## Future Work: Plan for the Final Thesis {#sec:future}
+
+The final thesis stage will proceed through the remaining phases, each with an exit gate.
+
+1. **Complete Phase 3.** Fix the effective-gradient scale and add a finite-difference test. Tighten the multiple-choice parser so that hedged answers are rejected. Run the supervised HLoRA reproduction on SciQ [@welbl2017sciq], PiQA [@bisk2020piqa], MedMCQA [@pal2022medmcqa], and a fixed subset of The Pile [@gao2020pile]. Add a non-degenerate static-coefficient variant.
+2. **Redesign the forgetting benchmark.** Use the pre-registered four-task orders with longer budgets. Check the continuation rule on standard RL-LoRA before any method comparison. Add log-likelihood multiple-choice scoring and use the full held-out test splits.
+3. **Phases 4-7.** Implement reward-aware importance with the rescaling-invariance and sensitivity tests, the rank-one factorization with dense-versus-Gram agreement tests, the fixed-budget anchor memory with compact KL and a controlled destructive-update test, and the conflict gate and dual controller with synthetic aligned and conflicting gradients.
+4. **Phase 8 pilot.** Compare RL-LoRA, replay, HLoRA-RL, and RAHC-LoRA on at least two orders with three seeds, and apply the continuation rule.
+5. **Phase 9 main study.** Run three orders with three seeds, all required baselines (including KL to the initial policy, balanced replay, EWC-LoRA, O-LoRA, and joint multi-task RL as an upper reference) and all ablations. Report paired statistics, efficiency, and every negative result.
+6. **Extensions, if time permits.** Evaluate larger backbones (3B) on rented hardware, LoRA on MLP layers, and higher-rank nonnegative factorization.
+
+## Expected Final Claim {#sec:final_claim}
+
+If the final study succeeds, the thesis will make a bounded claim of the form:
+
+> Under the evaluated model scale, task sequences, and fixed memory budget, RAHC-LoRA reduced measured continual-RL forgetting while preserving new-task learning, with lower persistent importance storage than dense parameter-consolidation methods.
+
+If it does not succeed, the thesis will report which component failed and why, for example that behavioural KL explains most of the retention or that reward-aware importance is too noisy under policy gradients. It will do so with the same rigour. Either outcome answers the research question.

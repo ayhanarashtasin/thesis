@@ -1,0 +1,71 @@
+# Requirements, Impacts and Constraints {#chap:req}
+
+This chapter states the final specifications of the research platform and the method, the constraints under which they were built, and the societal, environmental, ethical, and economic aspects of the work. It also presents the risk register and the project management plan.
+
+## Final Specifications and Requirements {#sec:requirements}
+
+The deliverable of this thesis is a research instrument, not a product. It must answer the research question reproducibly, including when the answer is negative. The requirements were therefore written as testable statements before implementation, in an authoritative specification. Each requirement is verified by an automated test or by an artifact produced by a run. {tab:tab_3_1_requirements} lists the requirements and their status at the end of P2.
+
+[[TAB:tab_3_1_requirements]]
+
+The scientific requirements (R1-R3, R9, R10) protect the validity of conclusions: one shared adapter, strict separation of data roles, deterministic rewards, bounded state, and multi-seed paired statistics. The safety requirement (R4) exists because the policy writes Python code that is executed to compute the MBPP reward. The reproducibility requirements (R5-R8) ensure that every reported number can be traced to a configuration, a data manifest, and a checkpoint. The resource requirement (R11) reflects the hardware actually available to the team, a single consumer GPU.
+
+The platform was built and run on the hardware and software in {tab:tab_3_2_platform}. Every run manifest records these values automatically, so each result can be tied to its exact environment.
+
+[[TAB:tab_3_2_platform]]
+
+## Design Constraints {#sec:constraints}
+
+**Compute.** All experiments run on one NVIDIA RTX 4070 Ti SUPER with 16 GB of memory. This bounds the backbone to about 1.5B parameters with BF16 weights, the rollout budget to eight responses per update, and the response length to 128 tokens. One update takes 40-60 seconds (Chapter 6). A 1,000-update two-task pilot therefore takes 14-17 hours, and a full three-order, three-seed, four-task study must be planned in stages.
+
+**Memory budget of the method.** The primary method may not store a model copy per task, a dense importance matrix per task, or an unlimited replay buffer. It may store one current adapter, one reference adapter, factorized importance vectors, a fixed-capacity anchor memory, and small controller state.
+
+**Data.** Only permissively licensed public datasets are used. Official IFEval is evaluation-only and may never influence training, anchors, importance, reward design, or tuning. The custom constraint dataset is generated from versioned templates and is checked against IFEval for exact and normalized overlap.
+
+**Software.** The GRPO objective is implemented inside the project and not delegated to a trainer library, so that a library upgrade cannot silently change the objective. Transformers and PEFT are wrapped behind project-owned interfaces. Precision fallbacks are forbidden: an unsupported precision raises an error.
+
+**Scientific process.** Task orders, seeds, metrics, and the continuation rule were fixed before any method pilot. Failed or negative runs are preserved. Held-out scores are never used to choose training settings.
+
+## Societal Impact {#sec:societal}
+
+Continual adaptation is how deployed language models keep up with new domains, tools, and rules. If each update silently erodes earlier skills, users receive regressions, for example a tutoring model whose arithmetic degrades after a coding update. Better retention methods make updates more predictable and reduce the need to retrain from scratch, which lowers the barrier for universities, small companies, and developers in regions such as Bangladesh who cannot afford large clusters. Because the method works with one shared adapter on one consumer GPU, the results are relevant to exactly these users.
+
+There are also risks. Methods that preserve old behaviour also preserve old mistakes and biases, so retention is not automatically beneficial. The method should preserve whatever the evaluation suite measures, and that suite must include safety-relevant behaviour before any deployment. In addition, stronger RL post-training on small models lowers the cost of specializing models for any purpose. Our tasks (arithmetic, science questions, code, formatting constraints) are benign, and we release no new model weights.
+
+## Environmental Impact {#sec:environment}
+
+Training LLMs consumes electricity. The eight analysed pilots used 43.2 optimizer hours on one GPU with a board power of roughly 285 W. At full load this is below about 15 kWh for the GPU, which is small compared with multi-GPU training runs. PEFT and bounded retention state are themselves efficiency measures: continual adaptation with a 2.2-million-parameter adapter avoids repeated full fine-tuning of 1.5 billion parameters. The protocol also includes a pilot continuation rule, which stops expensive full studies when the benchmark cannot measure the effect of interest. In P2 this rule stopped a multi-seed study that would not have been informative.
+
+## Ethical Issues {#sec:ethics}
+
+**Research integrity.** The central ethical risk in empirical machine learning is overstating results. Our protocol forbids tuning on test data, requires the full performance matrix, keeps negative and failed runs, and separates statistical significance from practical significance. Earlier internal summaries of this project described single-seed pilots with stronger language than the evidence supports. This thesis corrects those statements against the raw artifacts (Appendix D).
+
+**Data.** All datasets are public and pinned to exact revisions, with licenses recorded in manifests (MIT, CC-BY-SA-4.0, CC-BY-4.0, Apache-2.0). No personal data are collected, and generated responses are stored only as hashes in the evaluation records.
+
+**Safety of generated code.** Code written by the policy is untrusted. It runs only inside a Docker container with no network, a read-only root file system, all Linux capabilities dropped, an unprivileged user, and strict CPU, memory, process, time, and output limits. If Docker is unavailable, scoring stops with an error rather than falling back to host execution.
+
+**Benchmark contamination.** Public benchmarks may have appeared in the backbone's pre-training data. We therefore report changes relative to the frozen starting model as well as absolute scores, and we keep IFEval strictly evaluation-only.
+
+## Standards and Research Practice {#sec:standards}
+
+The work follows accepted standards of reproducible machine learning. All experimental choices are held in typed configuration and saved with each run; datasets, models, and code dependencies are pinned; and checkpoints are written atomically with SHA-256 manifests. Code quality is enforced with Ruff formatting and linting, mypy type checking, and pytest. Statistical reporting follows guidance for NLP and RL: paired tests on identical examples, confidence intervals, correction for multiple comparisons in ablations, and multiple seeds [@dror2018; @henderson2018; @agarwal2021; @benjamini1995]. Citations follow the IEEE numeric style.
+
+## Risk Management {#sec:risk}
+
+{tab:tab_3_3_risk_register} lists the main risks identified before implementation, the controls built into the platform, and what actually happened during P2. Three risks materialized and were handled by the controls. The first was the absence of a measurable forgetting signal, handled by the continuation rule. The second was an interrupted 1,000-update run, handled by the verified checkpoint and recovery. The third was host memory pressure from an orphaned monitoring process, detected through the system metrics. A fourth risk, unstable layer coefficients, was observed in a form that was not anticipated: the coefficients were not noisy but completely concentrated on one module. This finding feeds directly into the design of the final method.
+
+[[TAB:tab_3_3_risk_register]]
+
+## Project Management Plan {#sec:plan}
+
+{fig:fig_3_1_work_plan} shows the work plan. Completed items are placed at the dates recorded in the repository. The remaining items form a proposed schedule for the final thesis stage, to be confirmed with the supervisor. The critical path runs through the RAHC-LoRA components (Phases 4-7), the multi-seed pilot, and the main study. Each phase has an exit gate: for example, dense and factorized penalties must agree numerically before the factorized method is used, and the pilot must satisfy the continuation rule before the main study is launched.
+
+[[FIG:fig_3_1_work_plan]] Work plan. Completed work is shown at repository dates; the final-thesis phases are a proposed schedule.
+
+The codebase is organized into subsystems that can be owned separately: data and rewards, the RL trainer and checkpointing, the evaluation and capability suite, the consolidation methods, and analysis and writing. [Team to complete: assignment of subsystems to members.] Design decisions are recorded as architecture decision records in the repository, so that anyone who takes over a subsystem inherits its rationale.
+
+## Economic Analysis {#sec:economics}
+
+The main cost of the project is GPU time on hardware the team already had. A single-GPU workstation of this class costs roughly the price of a few hundred hours of rented data-centre GPU time, and the P2 pilots used about 43 GPU-hours. If rented at a typical public-cloud price of roughly US$0.5-1.0 per hour for a comparable GPU, the P2 compute would have cost less than US$50. The planned main study (three orders, three seeds, several methods, four tasks) needs a few hundred GPU-hours and would cost on the order of a few hundred dollars. All software is open source.
+
+The economic motivation of the method itself is also direct. Retraining a model from scratch for each new task, or storing and serving one adapter per task, costs more than maintaining one shared adapter with bounded retention state. For Qwen2.5-1.5B, the rank-one importance state planned for RAHC-LoRA is 1.09 MB, compared with 616.6 MB for dense importance. That difference decides whether consolidation state fits alongside the model on consumer hardware.

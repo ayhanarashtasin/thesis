@@ -1,0 +1,401 @@
+% Figure and table environments with captions and labels (graphicspath: ../figures/, ../tables/).
+
+% Figure 1.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_1_1_research_roadmap.png}
+  \caption{Research roadmap from the P1 literature review to the final study. Stages 1-4 are complete, stage 5 is partly complete, and stages 6-8 form the final-thesis plan.}
+  \label{fig:fig_1_1_research_roadmap}
+\end{figure}
+
+% Figure 2.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_2_1_evaluation_protocol.png}
+  \caption{Evaluation protocol. (a) The performance matrix A[i, j]: entries above the diagonal refer to tasks not yet learned and are explicitly missing. (b) The metrics derived from the complete matrix.}
+  \label{fig:fig_2_1_evaluation_protocol}
+\end{figure}
+
+% Figure 2.2
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_2_2_cl_taxonomy.png}
+  \caption{Taxonomy of forgetting-mitigation strategies reviewed in this chapter and the strands that RAHC-LoRA combines.}
+  \label{fig:fig_2_2_cl_taxonomy}
+\end{figure}
+
+% Figure 3.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_3_1_work_plan.png}
+  \caption{Work plan. Completed work is shown at repository dates; the final-thesis phases are a proposed schedule.}
+  \label{fig:fig_3_1_work_plan}
+\end{figure}
+
+% Figure 4.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_1_rahc_lora_architecture.png}
+  \caption{Architecture of RAHC-LoRA. One frozen backbone and one shared LoRA adapter serve both current-task learning and old-task retention. Retention terms are zero on the first task. State is consolidated at each task boundary, and the adapter is updated only by the AdamW step.}
+  \label{fig:fig_4_1_rahc_lora_architecture}
+\end{figure}
+
+% Figure 4.2
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_2_gauge_invariance.png}
+  \caption{Gauge invariance. (a) LoRA factors and the protected effective update. (b) Under the rescaling A′ = kA, B′ = B/k, a factor-level penalty changes by orders of magnitude while the effective-weight penalty is invariant.}
+  \label{fig:fig_4_2_gauge_invariance}
+\end{figure}
+
+% Figure 4.3
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_3_grpo_pipeline.png}
+  \caption{Current-task learning pipeline with GRPO and deterministic verifiers, with worked examples of informative and zero-variance groups.}
+  \label{fig:fig_4_3_grpo_pipeline}
+\end{figure}
+
+% Figure 4.4
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_4_factorized_penalty.png}
+  \caption{Factorized importance and the efficient penalty. (a) A dense nonnegative importance matrix. (b) Its mass-preserving rank-one approximation. (c) The Gram-form penalty and the storage it saves on Qwen2.5-1.5B.}
+  \label{fig:fig_4_4_factorized_penalty}
+\end{figure}
+
+% Figure 4.5
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_5_update_sequence.png}
+  \caption{Order of operations in one RAHC-LoRA optimizer update, by owning component.}
+  \label{fig:fig_4_5_update_sequence}
+\end{figure}
+
+% Figure 4.6
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_4_6_task_lifecycle.png}
+  \caption{Lifecycle of a continual run. On task 1 every retention term is zero, so the update equals standard RL-LoRA.}
+  \label{fig:fig_4_6_task_lifecycle}
+\end{figure}
+
+% Figure 5.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_5_1_software_layers.png}
+  \caption{Layered software architecture of the rahc_lora package.}
+  \label{fig:fig_5_1_software_layers}
+\end{figure}
+
+% Figure 5.2
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_5_2_data_isolation.png}
+  \caption{Data roles and isolation. Split sizes of the four RL tasks and the evaluation-only suite, with the flows each role is allowed to feed.}
+  \label{fig:fig_5_2_data_isolation}
+\end{figure}
+
+% Figure 5.3
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_5_3_code_sandbox.png}
+  \caption{Security boundary for code rewards. Generated code runs only in an ephemeral, network-disabled, resource-limited container, and only the test outcome leaves it.}
+  \label{fig:fig_5_3_code_sandbox}
+\end{figure}
+
+% Figure 5.4
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_5_4_hlora_rl_implementation.png}
+  \caption{The implemented direct HLoRA-to-RL baseline, with the coefficient collapse observed in the pilots.}
+  \label{fig:fig_5_4_hlora_rl_implementation}
+\end{figure}
+
+% Figure 5.5
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_5_5_artifact_contract.png}
+  \caption{Run artifacts and checkpoint contract.}
+  \label{fig:fig_5_5_artifact_contract}
+\end{figure}
+
+% Figure 6.1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_1_phase2_performance_matrices.png}
+  \caption{Performance matrices of the standard RL-LoRA Phase 2 pilots (held-out accuracy, n = 128 per cell).}
+  \label{fig:fig_6_1_phase2_performance_matrices}
+\end{figure}
+
+% Figure 6.2
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_2_continuation_rule.png}
+  \caption{Measured task-1 forgetting of standard RL-LoRA in every stream, compared with the 10-point continuation threshold. The tick shows the largest loss that was possible given the task-1 score.}
+  \label{fig:fig_6_2_continuation_rule}
+\end{figure}
+
+% Figure 6.3
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_3_arc_gsm_comparison.png}
+  \caption{Held-out accuracy on ARC-Challenge → GSM8K for RL-LoRA and HLoRA-RL at (a) 100 and (b) 150 updates per task. Error bars are Wilson 95\% intervals over 64 examples.}
+  \label{fig:fig_6_3_arc_gsm_comparison}
+\end{figure}
+
+% Figure 6.4
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_4_training_reward_curves.png}
+  \caption{Training reward (15-update moving mean) for RL-LoRA and HLoRA-RL at (a) 100 and (b) 150 updates per task. The task-1 curves are identical.}
+  \label{fig:fig_6_4_training_reward_curves}
+\end{figure}
+
+% Figure 6.5
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_5_learning_signal_diagnostics.png}
+  \caption{Learning-signal diagnostics on the ARC-first runs: batches with positive reward, zero-variance prompt groups, and updates with exactly zero gradient.}
+  \label{fig:fig_6_5_learning_signal_diagnostics}
+\end{figure}
+
+% Figure 6.6
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_6_parse_failure_trend.png}
+  \caption{Fraction of unparseable training responses (15-update moving mean) at 150 updates per task.}
+  \label{fig:fig_6_6_parse_failure_trend}
+\end{figure}
+
+% Figure 6.7
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_7_general_capabilities.png}
+  \caption{General-capability suite for the 150-update ARC → GSM8K runs (n = 64 per point, Wilson 95\% intervals).}
+  \label{fig:fig_6_7_general_capabilities}
+\end{figure}
+
+% Figure 6.8
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_8_perplexity_drift.png}
+  \caption{WikiText-2 perplexity change from the frozen model after task 1 and task 2 in all eight runs.}
+  \label{fig:fig_6_8_perplexity_drift}
+\end{figure}
+
+% Figure 6.9
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_9_importance_heatmap.png}
+  \caption{Dense path-integral importance norms per layer and projection in HLoRA-RL (150 updates per task) after (a) ARC-Challenge and (b) GSM8K.}
+  \label{fig:fig_6_9_importance_heatmap}
+\end{figure}
+
+% Figure 6.10
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_10_layer_coefficient_collapse.png}
+  \caption{Layer coefficients sorted by importance norm: the implemented softmax of raw norms (one-hot) compared with two non-degenerate normalizations.}
+  \label{fig:fig_6_10_layer_coefficient_collapse}
+\end{figure}
+
+% Figure 6.11
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_11_penalty_vs_rl_loss.png}
+  \caption{Magnitude of the consolidation penalty and of the GRPO loss during GSM8K training. Ticks mark updates whose GRPO loss was exactly zero.}
+  \label{fig:fig_6_11_penalty_vs_rl_loss}
+\end{figure}
+
+% Figure 6.12
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_12_trajectory_divergence.png}
+  \caption{(a) Absolute difference of per-step gradient norms between the two 150-update runs; (b) cumulative training reward.}
+  \label{fig:fig_6_12_trajectory_divergence}
+\end{figure}
+
+% Figure 6.13
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_13_compute_profile.png}
+  \caption{Compute profile of all runs: mean time per update, peak GPU memory allocated, and total optimizer time.}
+  \label{fig:fig_6_13_compute_profile}
+\end{figure}
+
+% Figure 6.14
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig_6_14_storage_comparison.png}
+  \caption{Persistent state for Qwen2.5-1.5B (log scale): the frozen backbone, dense importance (implemented), the adapter and its reference, and rank-one importance (planned).}
+  \label{fig:fig_6_14_storage_comparison}
+\end{figure}
+
+% Table 2.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison of representative continual-learning and forgetting studies relevant to sequential RL fine-tuning with one shared LoRA adapter.}
+  \label{tab:tab_2_1_literature_comparison}
+  \includegraphics[width=\textwidth]{tab_2_1_literature_comparison.png}
+\end{table}
+
+% Table 3.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Final specifications and requirements of the RAHC-LoRA research platform and their verification status.}
+  \label{tab:tab_3_1_requirements}
+  \includegraphics[width=\textwidth]{tab_3_1_requirements.png}
+\end{table}
+
+% Table 3.2 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Hardware and software platform recorded in the run manifests.}
+  \label{tab:tab_3_2_platform}
+  \includegraphics[width=\textwidth]{tab_3_2_platform.png}
+\end{table}
+
+% Table 3.3 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Risk register: risks anticipated in the specification, controls, and what was observed during P2.}
+  \label{tab:tab_3_3_risk_register}
+  \includegraphics[width=\textwidth]{tab_3_3_risk_register.png}
+\end{table}
+
+% Table 4.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Notation used in the RAHC-LoRA formulation.}
+  \label{tab:tab_4_1_notation}
+  \includegraphics[width=\textwidth]{tab_4_1_notation.png}
+\end{table}
+
+% Table 4.2 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Methods compared in the study and the retention components each one enables (all run through the same trainer).}
+  \label{tab:tab_4_2_method_matrix}
+  \includegraphics[width=\textwidth]{tab_4_2_method_matrix.png}
+\end{table}
+
+% Table 4.3 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Planned ablations; each is a configuration switch, never a source edit.}
+  \label{tab:tab_4_3_ablations}
+  \includegraphics[width=\textwidth]{tab_4_3_ablations.png}
+\end{table}
+
+% Table 4.4 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Default RAHC-LoRA hyperparameters fixed in the specification before any method pilot.}
+  \label{tab:tab_4_4_rahc_hyperparameters}
+  \includegraphics[width=\textwidth]{tab_4_4_rahc_hyperparameters.png}
+\end{table}
+
+% Table 5.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Pinned datasets, project roles, split sizes, and training rewards.}
+  \label{tab:tab_5_1_datasets}
+  \includegraphics[width=\textwidth]{tab_5_1_datasets.png}
+\end{table}
+
+% Table 5.2 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Experimental configuration shared by all GPU pilots (values from the resolved run configurations).}
+  \label{tab:tab_5_2_experimental_configuration}
+  \includegraphics[width=\textwidth]{tab_5_2_experimental_configuration.png}
+\end{table}
+
+% Table 5.3 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Inventory of the GPU runs analysed in this report (seed 1 in every run).}
+  \label{tab:tab_5_3_run_inventory}
+  \includegraphics[width=\textwidth]{tab_5_3_run_inventory.png}
+\end{table}
+
+% Table 5.4 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Engineering validation evidence (cheap checks before GPU runs).}
+  \label{tab:tab_5_4_validation}
+  \includegraphics[width=\textwidth]{tab_5_4_validation.png}
+\end{table}
+
+% Table 5.5 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Phase-by-phase implementation status established from repository evidence (29 September 2026).}
+  \label{tab:tab_5_5_phase_status}
+  \includegraphics[width=\textwidth]{tab_5_5_phase_status.png}
+\end{table}
+
+% Table 6.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Standard RL-LoRA pilots: performance matrices and continual metrics (percent; seed 1).}
+  \label{tab:tab_6_1_phase2_results}
+  \includegraphics[width=\textwidth]{tab_6_1_phase2_results.png}
+\end{table}
+
+% Table 6.2 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{ARC-Challenge -> GSM8K pilots: held-out accuracy with Wilson 95\% intervals (n = 64 per cell) and continual metrics.}
+  \label{tab:tab_6_2_arc_gsm_results}
+  \includegraphics[width=\textwidth]{tab_6_2_arc_gsm_results.png}
+\end{table}
+
+% Table 6.3 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Example-level paired analysis on identical held-out examples: paired bootstrap 95\% intervals (10,000 resamples) and exact McNemar tests.}
+  \label{tab:tab_6_3_paired_tests}
+  \includegraphics[width=\textwidth]{tab_6_3_paired_tests.png}
+\end{table}
+
+% Table 6.4 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Training-rollout diagnostics (training data only, never used as held-out evidence).}
+  \label{tab:tab_6_4_training_diagnostics}
+  \includegraphics[width=\textwidth]{tab_6_4_training_diagnostics.png}
+\end{table}
+
+% Table 6.5 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{General-capability suite for the 150-update ARC -> GSM8K pilots (n = 64 per metric; percent except perplexity).}
+  \label{tab:tab_6_5_capabilities}
+  \includegraphics[width=\textwidth]{tab_6_5_capabilities.png}
+\end{table}
+
+% Table 6.6 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Compute and persistent-state cost on the RTX 4070 Ti SUPER (Qwen2.5-1.5B unless noted).}
+  \label{tab:tab_6_6_efficiency}
+  \includegraphics[width=\textwidth]{tab_6_6_efficiency.png}
+\end{table}
+
+% Table 6.7 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Summary of findings against the research questions and hypotheses.}
+  \label{tab:tab_6_7_findings_summary}
+  \includegraphics[width=\textwidth]{tab_6_7_findings_summary.png}
+\end{table}
+
+% Table D.1 (rendered image; the editable rows are in data/tables.json and the Word files)
+\begin{table}[htbp]
+  \centering
+  \caption{Reconciliation of statements in earlier internal reports with the verified run artifacts.}
+  \label{tab:tab_D_1_reconciliation}
+  \includegraphics[width=\textwidth]{tab_D_1_reconciliation.png}
+\end{table}

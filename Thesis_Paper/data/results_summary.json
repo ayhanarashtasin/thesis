@@ -1,0 +1,3662 @@
+{
+  "runs": {
+    "p05_order1_100": {
+      "label": "RL-LoRA 0.5B GSM8K->ARC (100/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_1/1/phase2-pilot-gpu-128-20260924",
+      "method": "rl_lora",
+      "model": "Qwen2.5-0.5B-Instruct",
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "task_order": [
+        "gsm8k",
+        "arc_challenge"
+      ],
+      "seed": 1,
+      "steps_per_task": 100,
+      "global_steps": 200,
+      "rollouts": 1600,
+      "evaluation_examples_per_task": 128,
+      "config_sha256": "9b80bf3059485c68b3c6896518aa3950baf7f7bb95c1ea48e9e29f449353b22a",
+      "matrix": {
+        "tasks": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "rows": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "values": {
+          "gsm8k": {
+            "gsm8k": 0.015625,
+            "arc_challenge": null
+          },
+          "arc_challenge": {
+            "gsm8k": 0.0078125,
+            "arc_challenge": 0.4609375
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.0078125,
+        "backward_transfer": -0.0078125,
+        "final_average_performance": 0.234375,
+        "task1_after_task1": 0.015625,
+        "task1_after_task2": 0.0078125,
+        "task2_after_task2": 0.4609375,
+        "max_possible_task1_loss": 0.015625
+      },
+      "scores": {
+        "gsm8k|after_gsm8k": {
+          "score": 0.015625,
+          "n": 128,
+          "sum_reward": 2.0,
+          "parse_success_rate": 0.8203125,
+          "wilson95": [
+            0.004295449710144082,
+            0.055180976679817195
+          ]
+        },
+        "gsm8k|after_arc_challenge": {
+          "score": 0.0078125,
+          "n": 128,
+          "sum_reward": 1.0,
+          "parse_success_rate": 0.875,
+          "wilson95": [
+            0.0013804318928742412,
+            0.04292625943886061
+          ]
+        },
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.4609375,
+          "n": 128,
+          "sum_reward": 59.0,
+          "parse_success_rate": 0.9453125,
+          "wilson95": [
+            0.3769811559809195,
+            0.5471701687279483
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.125,
+          "frozen": 0.125,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.140625,
+          "frozen": 0.140625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.0390625,
+          "frozen": 0.0390625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.03125,
+          "frozen": 0.03125,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.0859375,
+          "frozen": 0.0859375,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 25.742105711620184,
+          "frozen": 25.742105711620184,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.125,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1640625,
+          "frozen": 0.140625,
+          "change": 0.0234375,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.03125,
+          "frozen": 0.0390625,
+          "change": -0.0078125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0078125,
+          "frozen": 0.03125,
+          "change": -0.0234375,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.09375,
+          "frozen": 0.0859375,
+          "change": 0.0078125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 25.899219983964,
+          "frozen": 25.742105711620184,
+          "change": 0.15711427234381503,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.109375,
+          "frozen": 0.125,
+          "change": -0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.125,
+          "frozen": 0.140625,
+          "change": -0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.15625,
+          "frozen": 0.0390625,
+          "change": 0.1171875,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.03125,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.328125,
+          "frozen": 0.0859375,
+          "change": 0.2421875,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 25.91676098306128,
+          "frozen": 25.742105711620184,
+          "change": 0.17465527144109672,
+          "n": 128
+        }
+      ],
+      "training": {
+        "gsm8k": {
+          "updates": 100,
+          "mean_raw_reward": 0.0375,
+          "positive_reward_batches": 25,
+          "zero_variance_groups": 173,
+          "zero_variance_group_fraction": 0.865,
+          "zero_gradient_updates": 75,
+          "gradient_clipped_updates": 0,
+          "parse_failures": null,
+          "responses": 800,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0007871537614846602,
+          "mean_ratio_clip_fraction": 0.00423828125
+        },
+        "arc_challenge": {
+          "updates": 100,
+          "mean_raw_reward": 0.25625,
+          "positive_reward_batches": 79,
+          "zero_variance_groups": 102,
+          "zero_variance_group_fraction": 0.51,
+          "zero_gradient_updates": 27,
+          "gradient_clipped_updates": 2,
+          "parse_failures": null,
+          "responses": 800,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.001149067656006082,
+          "mean_ratio_clip_fraction": 0.005146484375
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 200,
+        "mean_step_seconds": 40.726650798500415,
+        "median_step_seconds": 40.43363720000343,
+        "total_optimizer_hours": 2.2625917110278007,
+        "mean_tokens_per_second": 25.152088111107716,
+        "peak_gpu_allocated_gb": 7.001350144,
+        "max_cpu_rss_gb": 5.517852672
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "p15_order1_100": {
+      "label": "RL-LoRA 1.5B GSM8K->ARC (100/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_1/1/phase2-pilot-confirmation-gpu-128-20260924",
+      "method": "rl_lora",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "gsm8k",
+        "arc_challenge"
+      ],
+      "seed": 1,
+      "steps_per_task": 100,
+      "global_steps": 200,
+      "rollouts": 1600,
+      "evaluation_examples_per_task": 128,
+      "config_sha256": "f042d30b980d2428fa9810d479cef7f1e4f78488056f1ed862a07fde60b9dcea",
+      "matrix": {
+        "tasks": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "rows": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "values": {
+          "gsm8k": {
+            "gsm8k": 0.0390625,
+            "arc_challenge": null
+          },
+          "arc_challenge": {
+            "gsm8k": 0.046875,
+            "arc_challenge": 0.6953125
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": -0.0078125,
+        "backward_transfer": 0.0078125,
+        "final_average_performance": 0.37109375,
+        "task1_after_task1": 0.0390625,
+        "task1_after_task2": 0.046875,
+        "task2_after_task2": 0.6953125,
+        "max_possible_task1_loss": 0.0390625
+      },
+      "scores": {
+        "gsm8k|after_gsm8k": {
+          "score": 0.0390625,
+          "n": 128,
+          "sum_reward": 5.0,
+          "parse_success_rate": 0.8203125,
+          "wilson95": [
+            0.016798610797803704,
+            0.08818702076683686
+          ]
+        },
+        "gsm8k|after_arc_challenge": {
+          "score": 0.046875,
+          "n": 128,
+          "sum_reward": 6.0,
+          "parse_success_rate": 0.9453125,
+          "wilson95": [
+            0.021657844171923776,
+            0.09849752245094322
+          ]
+        },
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.6953125,
+          "n": 128,
+          "sum_reward": 89.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6108489916080531,
+            0.7683943848476078
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1171875,
+          "frozen": 0.1171875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0078125,
+          "frozen": 0.0078125,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.140625,
+          "frozen": 0.140625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.459480418951024,
+          "frozen": 17.459480418951024,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.1171875,
+          "change": 0.0234375,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1875,
+          "frozen": 0.15625,
+          "change": 0.03125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.03125,
+          "frozen": 0.046875,
+          "change": -0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.015625,
+          "frozen": 0.0078125,
+          "change": 0.0078125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.1171875,
+          "frozen": 0.140625,
+          "change": -0.0234375,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.495373193338857,
+          "frozen": 17.459480418951024,
+          "change": 0.03589277438783256,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1796875,
+          "frozen": 0.1171875,
+          "change": 0.0625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.21875,
+          "frozen": 0.15625,
+          "change": 0.0625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.28125,
+          "frozen": 0.046875,
+          "change": 0.234375,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0703125,
+          "frozen": 0.0078125,
+          "change": 0.0625,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.4609375,
+          "frozen": 0.140625,
+          "change": 0.3203125,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.568476015805086,
+          "frozen": 17.459480418951024,
+          "change": 0.10899559685406146,
+          "n": 128
+        }
+      ],
+      "training": {
+        "gsm8k": {
+          "updates": 100,
+          "mean_raw_reward": 0.045,
+          "positive_reward_batches": 28,
+          "zero_variance_groups": 170,
+          "zero_variance_group_fraction": 0.85,
+          "zero_gradient_updates": 72,
+          "gradient_clipped_updates": 0,
+          "parse_failures": null,
+          "responses": 800,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0006077550964255352,
+          "mean_ratio_clip_fraction": 0.0025390625
+        },
+        "arc_challenge": {
+          "updates": 100,
+          "mean_raw_reward": 0.49,
+          "positive_reward_batches": 96,
+          "zero_variance_groups": 62,
+          "zero_variance_group_fraction": 0.31,
+          "zero_gradient_updates": 11,
+          "gradient_clipped_updates": 0,
+          "parse_failures": null,
+          "responses": 800,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0010997061808302533,
+          "mean_ratio_clip_fraction": 0.004248046875
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 200,
+        "mean_step_seconds": 49.65822977399985,
+        "median_step_seconds": 49.469687700002396,
+        "total_optimizer_hours": 2.7587905429999915,
+        "mean_tokens_per_second": 20.627674375949745,
+        "peak_gpu_allocated_gb": 12.15494656,
+        "max_cpu_rss_gb": 7.862730752
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "p15_order1_500": {
+      "label": "RL-LoRA 1.5B GSM8K->ARC (500/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_1/1/phase2-pilot-duration-500-gpu-128-20260924",
+      "method": "rl_lora",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "gsm8k",
+        "arc_challenge"
+      ],
+      "seed": 1,
+      "steps_per_task": 500,
+      "global_steps": 1000,
+      "rollouts": 8000,
+      "evaluation_examples_per_task": 128,
+      "config_sha256": "4af54cd67069b761cc26cbb14f0299ec246e6c1f7c1de0c5fe60c568898b2c06",
+      "matrix": {
+        "tasks": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "rows": [
+          "gsm8k",
+          "arc_challenge"
+        ],
+        "values": {
+          "gsm8k": {
+            "gsm8k": 0.1875,
+            "arc_challenge": null
+          },
+          "arc_challenge": {
+            "gsm8k": 0.171875,
+            "arc_challenge": 0.7578125
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.015625,
+        "backward_transfer": -0.015625,
+        "final_average_performance": 0.46484375,
+        "task1_after_task1": 0.1875,
+        "task1_after_task2": 0.171875,
+        "task2_after_task2": 0.7578125,
+        "max_possible_task1_loss": 0.1875
+      },
+      "scores": {
+        "gsm8k|after_gsm8k": {
+          "score": 0.1875,
+          "n": 128,
+          "sum_reward": 24.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.12936141696376852,
+            0.2638491807071743
+          ]
+        },
+        "gsm8k|after_arc_challenge": {
+          "score": 0.171875,
+          "n": 128,
+          "sum_reward": 22.0,
+          "parse_success_rate": 0.9765625,
+          "wilson95": [
+            0.11633115948147267,
+            0.24653996807301726
+          ]
+        },
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.7578125,
+          "n": 128,
+          "sum_reward": 97.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6767886369138937,
+            0.8238126200075785
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1171875,
+          "frozen": 0.1171875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0078125,
+          "frozen": 0.0078125,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.140625,
+          "frozen": 0.140625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.459480418951024,
+          "frozen": 17.459480418951024,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1328125,
+          "frozen": 0.1171875,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1484375,
+          "frozen": 0.15625,
+          "change": -0.0078125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.0625,
+          "frozen": 0.046875,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0234375,
+          "frozen": 0.0078125,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.0390625,
+          "frozen": 0.140625,
+          "change": -0.1015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.65885046954065,
+          "frozen": 17.459480418951024,
+          "change": 0.19937005058962498,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.171875,
+          "frozen": 0.1171875,
+          "change": 0.0546875,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1875,
+          "frozen": 0.15625,
+          "change": 0.03125,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.46875,
+          "frozen": 0.046875,
+          "change": 0.421875,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.5625,
+          "frozen": 0.0078125,
+          "change": 0.5546875,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.8984375,
+          "frozen": 0.140625,
+          "change": 0.7578125,
+          "n": 128
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 18.074422843286026,
+          "frozen": 17.459480418951024,
+          "change": 0.6149424243350019,
+          "n": 128
+        }
+      ],
+      "training": {
+        "gsm8k": {
+          "updates": 500,
+          "mean_raw_reward": 0.30875,
+          "positive_reward_batches": 373,
+          "zero_variance_groups": 550,
+          "zero_variance_group_fraction": 0.55,
+          "zero_gradient_updates": 160,
+          "gradient_clipped_updates": 0,
+          "parse_failures": null,
+          "responses": 4000,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.00047382144579023586,
+          "mean_ratio_clip_fraction": 0.00339453125
+        },
+        "arc_challenge": {
+          "updates": 500,
+          "mean_raw_reward": 0.71525,
+          "positive_reward_batches": 478,
+          "zero_variance_groups": 818,
+          "zero_variance_group_fraction": 0.818,
+          "zero_gradient_updates": 345,
+          "gradient_clipped_updates": 2,
+          "parse_failures": null,
+          "responses": 4000,
+          "parse_failure_rate": null,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0002518198920224677,
+          "mean_ratio_clip_fraction": 0.002986328125
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 1000,
+        "mean_step_seconds": 60.038362079300164,
+        "median_step_seconds": 57.45388719999755,
+        "total_optimizer_hours": 16.6773227998056,
+        "mean_tokens_per_second": 17.84748872255804,
+        "peak_gpu_allocated_gb": 12.30112512,
+        "max_cpu_rss_gb": 13.656203264
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "p15_order2_500": {
+      "label": "RL-LoRA 1.5B MBPP->GSM8K (500/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_2/1/phase2-pilot-order2-recovery-20260926",
+      "method": "rl_lora",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "mbpp",
+        "gsm8k"
+      ],
+      "seed": 1,
+      "steps_per_task": 500,
+      "global_steps": 1000,
+      "rollouts": 8000,
+      "evaluation_examples_per_task": 128,
+      "config_sha256": "706aadf40a4546106b5f85b52ccc36f24c7a0a260b29178d39908db235d59364",
+      "matrix": {
+        "tasks": [
+          "mbpp",
+          "gsm8k"
+        ],
+        "rows": [
+          "mbpp",
+          "gsm8k"
+        ],
+        "values": {
+          "mbpp": {
+            "mbpp": 0.049479166666666664,
+            "gsm8k": null
+          },
+          "gsm8k": {
+            "mbpp": 0.0625,
+            "gsm8k": 0.265625
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": -0.013020833333333336,
+        "backward_transfer": 0.013020833333333336,
+        "final_average_performance": 0.1640625,
+        "task1_after_task1": 0.049479166666666664,
+        "task1_after_task2": 0.0625,
+        "task2_after_task2": 0.265625,
+        "max_possible_task1_loss": 0.049479166666666664
+      },
+      "scores": {
+        "mbpp|after_gsm8k": {
+          "score": 0.0625,
+          "n": 128,
+          "sum_reward": 8.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.03200692569506119,
+            0.11848791104425865
+          ]
+        },
+        "gsm8k|after_gsm8k": {
+          "score": 0.265625,
+          "n": 128,
+          "sum_reward": 34.0,
+          "parse_success_rate": 0.984375,
+          "wilson95": [
+            0.19675501016357286,
+            0.3481529380896342
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1171875,
+          "frozen": 0.1171875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0078125,
+          "frozen": 0.0078125,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.140625,
+          "frozen": 0.140625,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.459480418951024,
+          "frozen": 17.459480418951024,
+          "change": 0.0,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.1171875,
+          "change": 0.0234375,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1953125,
+          "frozen": 0.15625,
+          "change": 0.0390625,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.0625,
+          "frozen": 0.046875,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.078125,
+          "frozen": 0.0078125,
+          "change": 0.0703125,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.15625,
+          "frozen": 0.140625,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "mbpp",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.47252219274955,
+          "frozen": 17.459480418951024,
+          "change": 0.01304177379852689,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.1328125,
+          "frozen": 0.1171875,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.171875,
+          "frozen": 0.15625,
+          "change": 0.015625,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.1171875,
+          "frozen": 0.046875,
+          "change": 0.0703125,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0546875,
+          "frozen": 0.0078125,
+          "change": 0.046875,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.5078125,
+          "frozen": 0.140625,
+          "change": 0.3671875,
+          "n": 128
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 17.841261244138007,
+          "frozen": 17.459480418951024,
+          "change": 0.38178082518698275,
+          "n": 128
+        }
+      ],
+      "training": {
+        "gsm8k": {
+          "updates": 500,
+          "mean_raw_reward": 0.432,
+          "positive_reward_batches": 441,
+          "zero_variance_groups": 549,
+          "zero_variance_group_fraction": 0.549,
+          "zero_gradient_updates": 144,
+          "gradient_clipped_updates": 20,
+          "parse_failures": 208,
+          "responses": 4000,
+          "parse_failure_rate": 0.052,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0006452241312799742,
+          "mean_ratio_clip_fraction": 0.006455078125
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 500,
+        "mean_step_seconds": 52.376531171400686,
+        "median_step_seconds": 52.06992919999175,
+        "total_optimizer_hours": 7.274518218250095,
+        "mean_tokens_per_second": 19.566453463912058,
+        "peak_gpu_allocated_gb": 12.292588544,
+        "max_cpu_rss_gb": 5.852786688
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "arc_base_100": {
+      "label": "RL-LoRA 1.5B ARC->GSM8K (100/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_arc_first/1/phase3-pilot-baseline-arc-gsm-100",
+      "method": "rl_lora",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "arc_challenge",
+        "gsm8k"
+      ],
+      "seed": 1,
+      "steps_per_task": 100,
+      "global_steps": 200,
+      "rollouts": 1600,
+      "evaluation_examples_per_task": 64,
+      "config_sha256": "7d560e2138feb47f9279f4c046097e28c7ff0154a0d162fd6b2fb2a8fbddc810",
+      "matrix": {
+        "tasks": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "rows": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "values": {
+          "arc_challenge": {
+            "arc_challenge": 0.765625,
+            "gsm8k": null
+          },
+          "gsm8k": {
+            "arc_challenge": 0.765625,
+            "gsm8k": 0.015625
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.0,
+        "backward_transfer": 0.0,
+        "final_average_performance": 0.390625,
+        "task1_after_task1": 0.765625,
+        "task1_after_task2": 0.765625,
+        "task2_after_task2": 0.015625,
+        "max_possible_task1_loss": 0.765625
+      },
+      "scores": {
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.765625,
+          "n": 64,
+          "sum_reward": 49.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6486674241743136,
+            0.8525010440607586
+          ]
+        },
+        "arc_challenge|after_gsm8k": {
+          "score": 0.765625,
+          "n": 64,
+          "sum_reward": 49.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6486674241743136,
+            0.8525010440607586
+          ]
+        },
+        "gsm8k|after_gsm8k": {
+          "score": 0.015625,
+          "n": 64,
+          "sum_reward": 1.0,
+          "parse_success_rate": 0.859375,
+          "wilson95": [
+            0.002763541923337505,
+            0.08334101600094265
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0,
+          "frozen": 0.0,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.171875,
+          "frozen": 0.171875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.795220228557415,
+          "frozen": 20.795220228557415,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.15625,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.265625,
+          "frozen": 0.046875,
+          "change": 0.21875,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.21875,
+          "frozen": 0.0,
+          "change": 0.21875,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.65625,
+          "frozen": 0.171875,
+          "change": 0.484375,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.75988994650577,
+          "frozen": 20.795220228557415,
+          "change": -0.03533028205164612,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.15625,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.375,
+          "frozen": 0.046875,
+          "change": 0.328125,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.234375,
+          "frozen": 0.0,
+          "change": 0.234375,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.703125,
+          "frozen": 0.171875,
+          "change": 0.53125,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.794074677383232,
+          "frozen": 20.795220228557415,
+          "change": -0.0011455511741829127,
+          "n": 64
+        }
+      ],
+      "training": {
+        "arc_challenge": {
+          "updates": 100,
+          "mean_raw_reward": 0.45375,
+          "positive_reward_batches": 99,
+          "zero_variance_groups": 51,
+          "zero_variance_group_fraction": 0.255,
+          "zero_gradient_updates": 6,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 309,
+          "responses": 800,
+          "parse_failure_rate": 0.38625,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0010815798706607894,
+          "mean_ratio_clip_fraction": 0.004033203125
+        },
+        "gsm8k": {
+          "updates": 100,
+          "mean_raw_reward": 0.0575,
+          "positive_reward_batches": 39,
+          "zero_variance_groups": 158,
+          "zero_variance_group_fraction": 0.79,
+          "zero_gradient_updates": 61,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 116,
+          "responses": 800,
+          "parse_failure_rate": 0.145,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0007792486072867177,
+          "mean_ratio_clip_fraction": 0.003310546875
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 200,
+        "mean_step_seconds": 50.74365178399661,
+        "median_step_seconds": 50.4304688499833,
+        "total_optimizer_hours": 2.8190917657775896,
+        "mean_tokens_per_second": 20.18954230231428,
+        "peak_gpu_allocated_gb": 12.156847616,
+        "max_cpu_rss_gb": 3.527012352
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "arc_hlora_100": {
+      "label": "HLoRA-RL 1.5B ARC->GSM8K (100/task)",
+      "run_dir": "outputs/runs/pilot_two_task/hlora_rl/order_arc_first/1/phase3-pilot-hlora-arc-gsm-100",
+      "method": "hlora_rl",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "arc_challenge",
+        "gsm8k"
+      ],
+      "seed": 1,
+      "steps_per_task": 100,
+      "global_steps": 200,
+      "rollouts": 1600,
+      "evaluation_examples_per_task": 64,
+      "config_sha256": "225a566129ff5d27178868aa600ccda81e32c98bb778fc0e1a7dc5e464b366a8",
+      "matrix": {
+        "tasks": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "rows": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "values": {
+          "arc_challenge": {
+            "arc_challenge": 0.765625,
+            "gsm8k": null
+          },
+          "gsm8k": {
+            "arc_challenge": 0.75,
+            "gsm8k": 0.15625
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.015625,
+        "backward_transfer": -0.015625,
+        "final_average_performance": 0.453125,
+        "task1_after_task1": 0.765625,
+        "task1_after_task2": 0.75,
+        "task2_after_task2": 0.15625,
+        "max_possible_task1_loss": 0.765625
+      },
+      "scores": {
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.765625,
+          "n": 64,
+          "sum_reward": 49.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6486674241743136,
+            0.8525010440607586
+          ]
+        },
+        "arc_challenge|after_gsm8k": {
+          "score": 0.75,
+          "n": 64,
+          "sum_reward": 48.0,
+          "parse_success_rate": 0.984375,
+          "wilson95": [
+            0.631837235413303,
+            0.8398507346902941
+          ]
+        },
+        "gsm8k|after_gsm8k": {
+          "score": 0.15625,
+          "n": 64,
+          "sum_reward": 10.0,
+          "parse_success_rate": 0.8125,
+          "wilson95": [
+            0.08714842338206585,
+            0.2642806177254878
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0,
+          "frozen": 0.0,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.171875,
+          "frozen": 0.171875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.795220228557415,
+          "frozen": 20.795220228557415,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.15625,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.265625,
+          "frozen": 0.046875,
+          "change": 0.21875,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.21875,
+          "frozen": 0.0,
+          "change": 0.21875,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.65625,
+          "frozen": 0.171875,
+          "change": 0.484375,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.75988994650577,
+          "frozen": 20.795220228557415,
+          "change": -0.03533028205164612,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.109375,
+          "frozen": 0.15625,
+          "change": -0.046875,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.171875,
+          "frozen": 0.203125,
+          "change": -0.03125,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.40625,
+          "frozen": 0.046875,
+          "change": 0.359375,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.4375,
+          "frozen": 0.0,
+          "change": 0.4375,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.828125,
+          "frozen": 0.171875,
+          "change": 0.65625,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.81109662211349,
+          "frozen": 20.795220228557415,
+          "change": 0.01587639355607351,
+          "n": 64
+        }
+      ],
+      "training": {
+        "arc_challenge": {
+          "updates": 100,
+          "mean_raw_reward": 0.45375,
+          "positive_reward_batches": 99,
+          "zero_variance_groups": 51,
+          "zero_variance_group_fraction": 0.255,
+          "zero_gradient_updates": 6,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 309,
+          "responses": 800,
+          "parse_failure_rate": 0.38625,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0010815798706607894,
+          "mean_ratio_clip_fraction": 0.004033203125
+        },
+        "gsm8k": {
+          "updates": 100,
+          "mean_raw_reward": 0.05,
+          "positive_reward_batches": 34,
+          "zero_variance_groups": 165,
+          "zero_variance_group_fraction": 0.825,
+          "zero_gradient_updates": 0,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 132,
+          "responses": 800,
+          "parse_failure_rate": 0.165,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0006137887883960503,
+          "mean_ratio_clip_fraction": 0.003720703125
+        }
+      },
+      "consolidations": [
+        {
+          "after_task": "arc_challenge",
+          "clamped_negative_elements": 62431953,
+          "importance_storage_bytes": 616562688,
+          "negative_path_mass": 0.3943025474610449,
+          "task_steps": 100,
+          "coefficient_max": 1.0,
+          "coefficient_argmax": "base_model.model.model.layers.0.self_attn.v_proj",
+          "coefficients_above_1e-6": 1,
+          "importance_l2_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 1681.4959716796875,
+            "base_model.model.model.layers.0.self_attn.o_proj": 4354.8291015625,
+            "base_model.model.model.layers.0.self_attn.q_proj": 1998.35498046875,
+            "base_model.model.model.layers.0.self_attn.v_proj": 10247.7421875,
+            "base_model.model.model.layers.1.self_attn.k_proj": 475.3410339355469,
+            "base_model.model.model.layers.1.self_attn.o_proj": 3777.656005859375,
+            "base_model.model.model.layers.1.self_attn.q_proj": 352.7135314941406,
+            "base_model.model.model.layers.1.self_attn.v_proj": 3118.124267578125,
+            "base_model.model.model.layers.10.self_attn.k_proj": 1821.4090576171875,
+            "base_model.model.model.layers.10.self_attn.o_proj": 1928.0921630859375,
+            "base_model.model.model.layers.10.self_attn.q_proj": 1956.14111328125,
+            "base_model.model.model.layers.10.self_attn.v_proj": 2732.5419921875,
+            "base_model.model.model.layers.11.self_attn.k_proj": 3479.286376953125,
+            "base_model.model.model.layers.11.self_attn.o_proj": 2497.224365234375,
+            "base_model.model.model.layers.11.self_attn.q_proj": 2391.397705078125,
+            "base_model.model.model.layers.11.self_attn.v_proj": 4134.83837890625,
+            "base_model.model.model.layers.12.self_attn.k_proj": 1654.62939453125,
+            "base_model.model.model.layers.12.self_attn.o_proj": 2310.758544921875,
+            "base_model.model.model.layers.12.self_attn.q_proj": 1712.6622314453125,
+            "base_model.model.model.layers.12.self_attn.v_proj": 2481.14111328125,
+            "base_model.model.model.layers.13.self_attn.k_proj": 3157.113037109375,
+            "base_model.model.model.layers.13.self_attn.o_proj": 2357.974853515625,
+            "base_model.model.model.layers.13.self_attn.q_proj": 2321.890869140625,
+            "base_model.model.model.layers.13.self_attn.v_proj": 4184.841796875,
+            "base_model.model.model.layers.14.self_attn.k_proj": 2674.983154296875,
+            "base_model.model.model.layers.14.self_attn.o_proj": 1859.9473876953125,
+            "base_model.model.model.layers.14.self_attn.q_proj": 1711.129638671875,
+            "base_model.model.model.layers.14.self_attn.v_proj": 4305.04150390625,
+            "base_model.model.model.layers.15.self_attn.k_proj": 2517.72216796875,
+            "base_model.model.model.layers.15.self_attn.o_proj": 2805.667724609375,
+            "base_model.model.model.layers.15.self_attn.q_proj": 1928.0357666015625,
+            "base_model.model.model.layers.15.self_attn.v_proj": 3873.23876953125,
+            "base_model.model.model.layers.16.self_attn.k_proj": 1609.1995849609375,
+            "base_model.model.model.layers.16.self_attn.o_proj": 3055.56298828125,
+            "base_model.model.model.layers.16.self_attn.q_proj": 2155.92236328125,
+            "base_model.model.model.layers.16.self_attn.v_proj": 3217.1083984375,
+            "base_model.model.model.layers.17.self_attn.k_proj": 2102.510009765625,
+            "base_model.model.model.layers.17.self_attn.o_proj": 2223.78271484375,
+            "base_model.model.model.layers.17.self_attn.q_proj": 1676.1380615234375,
+            "base_model.model.model.layers.17.self_attn.v_proj": 5062.75830078125,
+            "base_model.model.model.layers.18.self_attn.k_proj": 2880.406982421875,
+            "base_model.model.model.layers.18.self_attn.o_proj": 2286.2080078125,
+            "base_model.model.model.layers.18.self_attn.q_proj": 2232.12646484375,
+            "base_model.model.model.layers.18.self_attn.v_proj": 2988.97265625,
+            "base_model.model.model.layers.19.self_attn.k_proj": 2225.703125,
+            "base_model.model.model.layers.19.self_attn.o_proj": 1369.4044189453125,
+            "base_model.model.model.layers.19.self_attn.q_proj": 1727.529541015625,
+            "base_model.model.model.layers.19.self_attn.v_proj": 3289.827392578125,
+            "base_model.model.model.layers.2.self_attn.k_proj": 1348.99072265625,
+            "base_model.model.model.layers.2.self_attn.o_proj": 1138.3341064453125,
+            "base_model.model.model.layers.2.self_attn.q_proj": 905.4794921875,
+            "base_model.model.model.layers.2.self_attn.v_proj": 5218.43359375,
+            "base_model.model.model.layers.20.self_attn.k_proj": 1281.716796875,
+            "base_model.model.model.layers.20.self_attn.o_proj": 1811.28662109375,
+            "base_model.model.model.layers.20.self_attn.q_proj": 1195.7237548828125,
+            "base_model.model.model.layers.20.self_attn.v_proj": 2122.13623046875,
+            "base_model.model.model.layers.21.self_attn.k_proj": 1338.2119140625,
+            "base_model.model.model.layers.21.self_attn.o_proj": 2171.2001953125,
+            "base_model.model.model.layers.21.self_attn.q_proj": 1405.784912109375,
+            "base_model.model.model.layers.21.self_attn.v_proj": 1708.9456787109375,
+            "base_model.model.model.layers.22.self_attn.k_proj": 1101.3489990234375,
+            "base_model.model.model.layers.22.self_attn.o_proj": 728.5738525390625,
+            "base_model.model.model.layers.22.self_attn.q_proj": 857.8237915039062,
+            "base_model.model.model.layers.22.self_attn.v_proj": 1483.123046875,
+            "base_model.model.model.layers.23.self_attn.k_proj": 1765.8399658203125,
+            "base_model.model.model.layers.23.self_attn.o_proj": 1300.5401611328125,
+            "base_model.model.model.layers.23.self_attn.q_proj": 1385.1046142578125,
+            "base_model.model.model.layers.23.self_attn.v_proj": 1963.943603515625,
+            "base_model.model.model.layers.24.self_attn.k_proj": 1231.70849609375,
+            "base_model.model.model.layers.24.self_attn.o_proj": 1465.6370849609375,
+            "base_model.model.model.layers.24.self_attn.q_proj": 827.211181640625,
+            "base_model.model.model.layers.24.self_attn.v_proj": 1480.4124755859375,
+            "base_model.model.model.layers.25.self_attn.k_proj": 1309.167724609375,
+            "base_model.model.model.layers.25.self_attn.o_proj": 1674.916748046875,
+            "base_model.model.model.layers.25.self_attn.q_proj": 1142.0880126953125,
+            "base_model.model.model.layers.25.self_attn.v_proj": 1851.214111328125,
+            "base_model.model.model.layers.26.self_attn.k_proj": 1499.9609375,
+            "base_model.model.model.layers.26.self_attn.o_proj": 1480.8857421875,
+            "base_model.model.model.layers.26.self_attn.q_proj": 976.5899658203125,
+            "base_model.model.model.layers.26.self_attn.v_proj": 698.0309448242188,
+            "base_model.model.model.layers.27.self_attn.k_proj": 1252.6092529296875,
+            "base_model.model.model.layers.27.self_attn.o_proj": 1539.64697265625,
+            "base_model.model.model.layers.27.self_attn.q_proj": 783.7154541015625,
+            "base_model.model.model.layers.27.self_attn.v_proj": 495.84423828125,
+            "base_model.model.model.layers.3.self_attn.k_proj": 1992.2894287109375,
+            "base_model.model.model.layers.3.self_attn.o_proj": 1198.2760009765625,
+            "base_model.model.model.layers.3.self_attn.q_proj": 1609.1412353515625,
+            "base_model.model.model.layers.3.self_attn.v_proj": 6647.22998046875,
+            "base_model.model.model.layers.4.self_attn.k_proj": 1750.190185546875,
+            "base_model.model.model.layers.4.self_attn.o_proj": 1012.899169921875,
+            "base_model.model.model.layers.4.self_attn.q_proj": 1452.9080810546875,
+            "base_model.model.model.layers.4.self_attn.v_proj": 3311.782958984375,
+            "base_model.model.model.layers.5.self_attn.k_proj": 2762.419921875,
+            "base_model.model.model.layers.5.self_attn.o_proj": 1491.0263671875,
+            "base_model.model.model.layers.5.self_attn.q_proj": 1666.267333984375,
+            "base_model.model.model.layers.5.self_attn.v_proj": 3026.080078125,
+            "base_model.model.model.layers.6.self_attn.k_proj": 1583.004150390625,
+            "base_model.model.model.layers.6.self_attn.o_proj": 1536.706787109375,
+            "base_model.model.model.layers.6.self_attn.q_proj": 1478.544677734375,
+            "base_model.model.model.layers.6.self_attn.v_proj": 5097.88525390625,
+            "base_model.model.model.layers.7.self_attn.k_proj": 2580.495849609375,
+            "base_model.model.model.layers.7.self_attn.o_proj": 1836.539306640625,
+            "base_model.model.model.layers.7.self_attn.q_proj": 2156.25732421875,
+            "base_model.model.model.layers.7.self_attn.v_proj": 3783.83203125,
+            "base_model.model.model.layers.8.self_attn.k_proj": 1605.1365966796875,
+            "base_model.model.model.layers.8.self_attn.o_proj": 1492.258056640625,
+            "base_model.model.model.layers.8.self_attn.q_proj": 1894.617431640625,
+            "base_model.model.model.layers.8.self_attn.v_proj": 2758.839599609375,
+            "base_model.model.model.layers.9.self_attn.k_proj": 3823.552490234375,
+            "base_model.model.model.layers.9.self_attn.o_proj": 1916.678955078125,
+            "base_model.model.model.layers.9.self_attn.q_proj": 3361.288818359375,
+            "base_model.model.model.layers.9.self_attn.v_proj": 3955.43798828125
+          },
+          "nonzero_fraction_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 0.6030375361442566,
+            "base_model.model.model.layers.0.self_attn.o_proj": 0.5878546237945557,
+            "base_model.model.model.layers.0.self_attn.q_proj": 0.5745705366134644,
+            "base_model.model.model.layers.0.self_attn.v_proj": 0.5947520136833191,
+            "base_model.model.model.layers.1.self_attn.k_proj": 0.6197865605354309,
+            "base_model.model.model.layers.1.self_attn.o_proj": 0.564459502696991,
+            "base_model.model.model.layers.1.self_attn.q_proj": 0.586700439453125,
+            "base_model.model.model.layers.1.self_attn.v_proj": 0.5884119868278503,
+            "base_model.model.model.layers.10.self_attn.k_proj": 0.5990524291992188,
+            "base_model.model.model.layers.10.self_attn.o_proj": 0.5922130942344666,
+            "base_model.model.model.layers.10.self_attn.q_proj": 0.588019073009491,
+            "base_model.model.model.layers.10.self_attn.v_proj": 0.5793406367301941,
+            "base_model.model.model.layers.11.self_attn.k_proj": 0.6016743779182434,
+            "base_model.model.model.layers.11.self_attn.o_proj": 0.601810872554779,
+            "base_model.model.model.layers.11.self_attn.q_proj": 0.5960333347320557,
+            "base_model.model.model.layers.11.self_attn.v_proj": 0.592529296875,
+            "base_model.model.model.layers.12.self_attn.k_proj": 0.6009953618049622,
+            "base_model.model.model.layers.12.self_attn.o_proj": 0.5960544943809509,
+            "base_model.model.model.layers.12.self_attn.q_proj": 0.5907906293869019,
+            "base_model.model.model.layers.12.self_attn.v_proj": 0.6033808588981628,
+            "base_model.model.model.layers.13.self_attn.k_proj": 0.6128107905387878,
+            "base_model.model.model.layers.13.self_attn.o_proj": 0.5894279479980469,
+            "base_model.model.model.layers.13.self_attn.q_proj": 0.5913166403770447,
+            "base_model.model.model.layers.13.self_attn.v_proj": 0.5757090449333191,
+            "base_model.model.model.layers.14.self_attn.k_proj": 0.6095657348632812,
+            "base_model.model.model.layers.14.self_attn.o_proj": 0.5949808955192566,
+            "base_model.model.model.layers.14.self_attn.q_proj": 0.5875197649002075,
+            "base_model.model.model.layers.14.self_attn.v_proj": 0.5799052119255066,
+            "base_model.model.model.layers.15.self_attn.k_proj": 0.6159312129020691,
+            "base_model.model.model.layers.15.self_attn.o_proj": 0.6169094443321228,
+            "base_model.model.model.layers.15.self_attn.q_proj": 0.586055338382721,
+            "base_model.model.model.layers.15.self_attn.v_proj": 0.592315673828125,
+            "base_model.model.model.layers.16.self_attn.k_proj": 0.6157506108283997,
+            "base_model.model.model.layers.16.self_attn.o_proj": 0.6018337607383728,
+            "base_model.model.model.layers.16.self_attn.q_proj": 0.5945752263069153,
+            "base_model.model.model.layers.16.self_attn.v_proj": 0.57586669921875,
+            "base_model.model.model.layers.17.self_attn.k_proj": 0.6246464848518372,
+            "base_model.model.model.layers.17.self_attn.o_proj": 0.6003388166427612,
+            "base_model.model.model.layers.17.self_attn.q_proj": 0.593835175037384,
+            "base_model.model.model.layers.17.self_attn.v_proj": 0.5875218510627747,
+            "base_model.model.model.layers.18.self_attn.k_proj": 0.5991618037223816,
+            "base_model.model.model.layers.18.self_attn.o_proj": 0.6182678937911987,
+            "base_model.model.model.layers.18.self_attn.q_proj": 0.5907927751541138,
+            "base_model.model.model.layers.18.self_attn.v_proj": 0.5952326655387878,
+            "base_model.model.model.layers.19.self_attn.k_proj": 0.6204757690429688,
+            "base_model.model.model.layers.19.self_attn.o_proj": 0.6037347316741943,
+            "base_model.model.model.layers.19.self_attn.q_proj": 0.6048901677131653,
+            "base_model.model.model.layers.19.self_attn.v_proj": 0.5866572260856628,
+            "base_model.model.model.layers.2.self_attn.k_proj": 0.6026865839958191,
+            "base_model.model.model.layers.2.self_attn.o_proj": 0.6075672507286072,
+            "base_model.model.model.layers.2.self_attn.q_proj": 0.5890430808067322,
+            "base_model.model.model.layers.2.self_attn.v_proj": 0.5826161503791809,
+            "base_model.model.model.layers.20.self_attn.k_proj": 0.6284611821174622,
+            "base_model.model.model.layers.20.self_attn.o_proj": 0.6320711970329285,
+            "base_model.model.model.layers.20.self_attn.q_proj": 0.6015285849571228,
+            "base_model.model.model.layers.20.self_attn.v_proj": 0.6111500859260559,
+            "base_model.model.model.layers.21.self_attn.k_proj": 0.6253662109375,
+            "base_model.model.model.layers.21.self_attn.o_proj": 0.6144765019416809,
+            "base_model.model.model.layers.21.self_attn.q_proj": 0.5961011052131653,
+            "base_model.model.model.layers.21.self_attn.v_proj": 0.59185791015625,
+            "base_model.model.model.layers.22.self_attn.k_proj": 0.6098963618278503,
+            "base_model.model.model.layers.22.self_attn.o_proj": 0.6120986938476562,
+            "base_model.model.model.layers.22.self_attn.q_proj": 0.6031273603439331,
+            "base_model.model.model.layers.22.self_attn.v_proj": 0.5820948481559753,
+            "base_model.model.model.layers.23.self_attn.k_proj": 0.6078847050666809,
+            "base_model.model.model.layers.23.self_attn.o_proj": 0.6072285771369934,
+            "base_model.model.model.layers.23.self_attn.q_proj": 0.5816951394081116,
+            "base_model.model.model.layers.23.self_attn.v_proj": 0.6013463139533997,
+            "base_model.model.model.layers.24.self_attn.k_proj": 0.6129963994026184,
+            "base_model.model.model.layers.24.self_attn.o_proj": 0.6045777797698975,
+            "base_model.model.model.layers.24.self_attn.q_proj": 0.604529082775116,
+            "base_model.model.model.layers.24.self_attn.v_proj": 0.5770187377929688,
+            "base_model.model.model.layers.25.self_attn.k_proj": 0.6032053828239441,
+            "base_model.model.model.layers.25.self_attn.o_proj": 0.5796377658843994,
+            "base_model.model.model.layers.25.self_attn.q_proj": 0.5766529440879822,
+            "base_model.model.model.layers.25.self_attn.v_proj": 0.5625076293945312,
+            "base_model.model.model.layers.26.self_attn.k_proj": 0.5994288325309753,
+            "base_model.model.model.layers.26.self_attn.o_proj": 0.6005100607872009,
+            "base_model.model.model.layers.26.self_attn.q_proj": 0.580420196056366,
+            "base_model.model.model.layers.26.self_attn.v_proj": 0.575286865234375,
+            "base_model.model.model.layers.27.self_attn.k_proj": 0.6023814082145691,
+            "base_model.model.model.layers.27.self_attn.o_proj": 0.6098120212554932,
+            "base_model.model.model.layers.27.self_attn.q_proj": 0.5758934020996094,
+            "base_model.model.model.layers.27.self_attn.v_proj": 0.5811233520507812,
+            "base_model.model.model.layers.3.self_attn.k_proj": 0.5970535278320312,
+            "base_model.model.model.layers.3.self_attn.o_proj": 0.6033244729042053,
+            "base_model.model.model.layers.3.self_attn.q_proj": 0.5871293544769287,
+            "base_model.model.model.layers.3.self_attn.v_proj": 0.5655543208122253,
+            "base_model.model.model.layers.4.self_attn.k_proj": 0.6024449467658997,
+            "base_model.model.model.layers.4.self_attn.o_proj": 0.592950165271759,
+            "base_model.model.model.layers.4.self_attn.q_proj": 0.5871047973632812,
+            "base_model.model.model.layers.4.self_attn.v_proj": 0.5814692378044128,
+            "base_model.model.model.layers.5.self_attn.k_proj": 0.6011021733283997,
+            "base_model.model.model.layers.5.self_attn.o_proj": 0.5902595520019531,
+            "base_model.model.model.layers.5.self_attn.q_proj": 0.5933040976524353,
+            "base_model.model.model.layers.5.self_attn.v_proj": 0.5876414179801941,
+            "base_model.model.model.layers.6.self_attn.k_proj": 0.606475830078125,
+            "base_model.model.model.layers.6.self_attn.o_proj": 0.5823681950569153,
+            "base_model.model.model.layers.6.self_attn.q_proj": 0.5932282209396362,
+            "base_model.model.model.layers.6.self_attn.v_proj": 0.5663630366325378,
+            "base_model.model.model.layers.7.self_attn.k_proj": 0.60467529296875,
+            "base_model.model.model.layers.7.self_attn.o_proj": 0.592289388179779,
+            "base_model.model.model.layers.7.self_attn.q_proj": 0.59742271900177,
+            "base_model.model.model.layers.7.self_attn.v_proj": 0.5831451416015625,
+            "base_model.model.model.layers.8.self_attn.k_proj": 0.6131617426872253,
+            "base_model.model.model.layers.8.self_attn.o_proj": 0.6000561118125916,
+            "base_model.model.model.layers.8.self_attn.q_proj": 0.5848820805549622,
+            "base_model.model.model.layers.8.self_attn.v_proj": 0.5946070551872253,
+            "base_model.model.model.layers.9.self_attn.k_proj": 0.5775248408317566,
+            "base_model.model.model.layers.9.self_attn.o_proj": 0.5925869345664978,
+            "base_model.model.model.layers.9.self_attn.q_proj": 0.5800281167030334,
+            "base_model.model.model.layers.9.self_attn.v_proj": 0.5729522705078125
+          }
+        },
+        {
+          "after_task": "gsm8k",
+          "clamped_negative_elements": 63231577,
+          "importance_storage_bytes": 616562688,
+          "negative_path_mass": 0.07759350950854499,
+          "task_steps": 100,
+          "coefficient_max": 1.0,
+          "coefficient_argmax": "base_model.model.model.layers.0.self_attn.v_proj",
+          "coefficients_above_1e-6": 1,
+          "importance_l2_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 1977.0693359375,
+            "base_model.model.model.layers.0.self_attn.o_proj": 5066.23828125,
+            "base_model.model.model.layers.0.self_attn.q_proj": 2242.73388671875,
+            "base_model.model.model.layers.0.self_attn.v_proj": 13298.294921875,
+            "base_model.model.model.layers.1.self_attn.k_proj": 529.0586547851562,
+            "base_model.model.model.layers.1.self_attn.o_proj": 4256.07470703125,
+            "base_model.model.model.layers.1.self_attn.q_proj": 393.1341247558594,
+            "base_model.model.model.layers.1.self_attn.v_proj": 3461.94873046875,
+            "base_model.model.model.layers.10.self_attn.k_proj": 2072.420654296875,
+            "base_model.model.model.layers.10.self_attn.o_proj": 2150.230224609375,
+            "base_model.model.model.layers.10.self_attn.q_proj": 2173.60791015625,
+            "base_model.model.model.layers.10.self_attn.v_proj": 3154.613525390625,
+            "base_model.model.model.layers.11.self_attn.k_proj": 4024.16259765625,
+            "base_model.model.model.layers.11.self_attn.o_proj": 2928.029541015625,
+            "base_model.model.model.layers.11.self_attn.q_proj": 2654.19873046875,
+            "base_model.model.model.layers.11.self_attn.v_proj": 4803.68115234375,
+            "base_model.model.model.layers.12.self_attn.k_proj": 1951.5235595703125,
+            "base_model.model.model.layers.12.self_attn.o_proj": 2748.467041015625,
+            "base_model.model.model.layers.12.self_attn.q_proj": 1990.187255859375,
+            "base_model.model.model.layers.12.self_attn.v_proj": 2917.428466796875,
+            "base_model.model.model.layers.13.self_attn.k_proj": 3731.2685546875,
+            "base_model.model.model.layers.13.self_attn.o_proj": 2817.1376953125,
+            "base_model.model.model.layers.13.self_attn.q_proj": 2714.497802734375,
+            "base_model.model.model.layers.13.self_attn.v_proj": 4970.45458984375,
+            "base_model.model.model.layers.14.self_attn.k_proj": 3203.693115234375,
+            "base_model.model.model.layers.14.self_attn.o_proj": 2314.152587890625,
+            "base_model.model.model.layers.14.self_attn.q_proj": 1944.879638671875,
+            "base_model.model.model.layers.14.self_attn.v_proj": 5049.8427734375,
+            "base_model.model.model.layers.15.self_attn.k_proj": 3003.624755859375,
+            "base_model.model.model.layers.15.self_attn.o_proj": 3381.72265625,
+            "base_model.model.model.layers.15.self_attn.q_proj": 2190.571533203125,
+            "base_model.model.model.layers.15.self_attn.v_proj": 4507.22119140625,
+            "base_model.model.model.layers.16.self_attn.k_proj": 1863.7423095703125,
+            "base_model.model.model.layers.16.self_attn.o_proj": 3404.7451171875,
+            "base_model.model.model.layers.16.self_attn.q_proj": 2420.783447265625,
+            "base_model.model.model.layers.16.self_attn.v_proj": 3728.427001953125,
+            "base_model.model.model.layers.17.self_attn.k_proj": 2464.321533203125,
+            "base_model.model.model.layers.17.self_attn.o_proj": 2539.424560546875,
+            "base_model.model.model.layers.17.self_attn.q_proj": 1990.3385009765625,
+            "base_model.model.model.layers.17.self_attn.v_proj": 6090.6982421875,
+            "base_model.model.model.layers.18.self_attn.k_proj": 3261.6201171875,
+            "base_model.model.model.layers.18.self_attn.o_proj": 2687.13818359375,
+            "base_model.model.model.layers.18.self_attn.q_proj": 2541.208984375,
+            "base_model.model.model.layers.18.self_attn.v_proj": 3602.814453125,
+            "base_model.model.model.layers.19.self_attn.k_proj": 2774.3544921875,
+            "base_model.model.model.layers.19.self_attn.o_proj": 1643.8914794921875,
+            "base_model.model.model.layers.19.self_attn.q_proj": 2034.97802734375,
+            "base_model.model.model.layers.19.self_attn.v_proj": 4015.606201171875,
+            "base_model.model.model.layers.2.self_attn.k_proj": 1588.3961181640625,
+            "base_model.model.model.layers.2.self_attn.o_proj": 1247.0799560546875,
+            "base_model.model.model.layers.2.self_attn.q_proj": 1088.39306640625,
+            "base_model.model.model.layers.2.self_attn.v_proj": 6058.89306640625,
+            "base_model.model.model.layers.20.self_attn.k_proj": 1477.1976318359375,
+            "base_model.model.model.layers.20.self_attn.o_proj": 2018.761962890625,
+            "base_model.model.model.layers.20.self_attn.q_proj": 1386.97607421875,
+            "base_model.model.model.layers.20.self_attn.v_proj": 2405.548095703125,
+            "base_model.model.model.layers.21.self_attn.k_proj": 1576.786376953125,
+            "base_model.model.model.layers.21.self_attn.o_proj": 2556.43505859375,
+            "base_model.model.model.layers.21.self_attn.q_proj": 1545.7669677734375,
+            "base_model.model.model.layers.21.self_attn.v_proj": 2011.5902099609375,
+            "base_model.model.model.layers.22.self_attn.k_proj": 1393.826904296875,
+            "base_model.model.model.layers.22.self_attn.o_proj": 848.8182373046875,
+            "base_model.model.model.layers.22.self_attn.q_proj": 1089.230224609375,
+            "base_model.model.model.layers.22.self_attn.v_proj": 1727.1680908203125,
+            "base_model.model.model.layers.23.self_attn.k_proj": 2100.587890625,
+            "base_model.model.model.layers.23.self_attn.o_proj": 1557.8182373046875,
+            "base_model.model.model.layers.23.self_attn.q_proj": 1634.1715087890625,
+            "base_model.model.model.layers.23.self_attn.v_proj": 2219.59130859375,
+            "base_model.model.model.layers.24.self_attn.k_proj": 1521.5810546875,
+            "base_model.model.model.layers.24.self_attn.o_proj": 1678.689453125,
+            "base_model.model.model.layers.24.self_attn.q_proj": 992.4105834960938,
+            "base_model.model.model.layers.24.self_attn.v_proj": 1692.2744140625,
+            "base_model.model.model.layers.25.self_attn.k_proj": 1649.253173828125,
+            "base_model.model.model.layers.25.self_attn.o_proj": 1960.8201904296875,
+            "base_model.model.model.layers.25.self_attn.q_proj": 1319.5565185546875,
+            "base_model.model.model.layers.25.self_attn.v_proj": 2219.65380859375,
+            "base_model.model.model.layers.26.self_attn.k_proj": 1675.089111328125,
+            "base_model.model.model.layers.26.self_attn.o_proj": 1714.165283203125,
+            "base_model.model.model.layers.26.self_attn.q_proj": 1128.253173828125,
+            "base_model.model.model.layers.26.self_attn.v_proj": 749.8060302734375,
+            "base_model.model.model.layers.27.self_attn.k_proj": 1408.5511474609375,
+            "base_model.model.model.layers.27.self_attn.o_proj": 1732.292236328125,
+            "base_model.model.model.layers.27.self_attn.q_proj": 901.2477416992188,
+            "base_model.model.model.layers.27.self_attn.v_proj": 556.5919189453125,
+            "base_model.model.model.layers.3.self_attn.k_proj": 2391.00146484375,
+            "base_model.model.model.layers.3.self_attn.o_proj": 1324.7342529296875,
+            "base_model.model.model.layers.3.self_attn.q_proj": 1824.0655517578125,
+            "base_model.model.model.layers.3.self_attn.v_proj": 7712.38232421875,
+            "base_model.model.model.layers.4.self_attn.k_proj": 2007.2645263671875,
+            "base_model.model.model.layers.4.self_attn.o_proj": 1125.461181640625,
+            "base_model.model.model.layers.4.self_attn.q_proj": 1628.958984375,
+            "base_model.model.model.layers.4.self_attn.v_proj": 3817.57080078125,
+            "base_model.model.model.layers.5.self_attn.k_proj": 3452.820068359375,
+            "base_model.model.model.layers.5.self_attn.o_proj": 1680.825439453125,
+            "base_model.model.model.layers.5.self_attn.q_proj": 1992.0784912109375,
+            "base_model.model.model.layers.5.self_attn.v_proj": 3427.193603515625,
+            "base_model.model.model.layers.6.self_attn.k_proj": 2296.6513671875,
+            "base_model.model.model.layers.6.self_attn.o_proj": 1825.384033203125,
+            "base_model.model.model.layers.6.self_attn.q_proj": 1967.7525634765625,
+            "base_model.model.model.layers.6.self_attn.v_proj": 6046.052734375,
+            "base_model.model.model.layers.7.self_attn.k_proj": 2933.625244140625,
+            "base_model.model.model.layers.7.self_attn.o_proj": 1966.7147216796875,
+            "base_model.model.model.layers.7.self_attn.q_proj": 2403.323974609375,
+            "base_model.model.model.layers.7.self_attn.v_proj": 4441.427734375,
+            "base_model.model.model.layers.8.self_attn.k_proj": 1962.23046875,
+            "base_model.model.model.layers.8.self_attn.o_proj": 1683.0228271484375,
+            "base_model.model.model.layers.8.self_attn.q_proj": 2127.590087890625,
+            "base_model.model.model.layers.8.self_attn.v_proj": 3221.7060546875,
+            "base_model.model.model.layers.9.self_attn.k_proj": 4487.87744140625,
+            "base_model.model.model.layers.9.self_attn.o_proj": 2133.6962890625,
+            "base_model.model.model.layers.9.self_attn.q_proj": 3619.4375,
+            "base_model.model.model.layers.9.self_attn.v_proj": 4412.3046875
+          },
+          "nonzero_fraction_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 0.8053792119026184,
+            "base_model.model.model.layers.0.self_attn.o_proj": 0.8077341914176941,
+            "base_model.model.model.layers.0.self_attn.q_proj": 0.7605205178260803,
+            "base_model.model.model.layers.0.self_attn.v_proj": 0.78216552734375,
+            "base_model.model.model.layers.1.self_attn.k_proj": 0.8408864140510559,
+            "base_model.model.model.layers.1.self_attn.o_proj": 0.7753435969352722,
+            "base_model.model.model.layers.1.self_attn.q_proj": 0.8080931901931763,
+            "base_model.model.model.layers.1.self_attn.v_proj": 0.7973149418830872,
+            "base_model.model.model.layers.10.self_attn.k_proj": 0.8282673954963684,
+            "base_model.model.model.layers.10.self_attn.o_proj": 0.8179389238357544,
+            "base_model.model.model.layers.10.self_attn.q_proj": 0.8161718845367432,
+            "base_model.model.model.layers.10.self_attn.v_proj": 0.8015899658203125,
+            "base_model.model.model.layers.11.self_attn.k_proj": 0.822265625,
+            "base_model.model.model.layers.11.self_attn.o_proj": 0.8106629848480225,
+            "base_model.model.model.layers.11.self_attn.q_proj": 0.8144802451133728,
+            "base_model.model.model.layers.11.self_attn.v_proj": 0.8128890991210938,
+            "base_model.model.model.layers.12.self_attn.k_proj": 0.8344777226448059,
+            "base_model.model.model.layers.12.self_attn.o_proj": 0.8023898005485535,
+            "base_model.model.model.layers.12.self_attn.q_proj": 0.81647789478302,
+            "base_model.model.model.layers.12.self_attn.v_proj": 0.818389892578125,
+            "base_model.model.model.layers.13.self_attn.k_proj": 0.8335011601448059,
+            "base_model.model.model.layers.13.self_attn.o_proj": 0.7997000217437744,
+            "base_model.model.model.layers.13.self_attn.q_proj": 0.8006172180175781,
+            "base_model.model.model.layers.13.self_attn.v_proj": 0.7857284545898438,
+            "base_model.model.model.layers.14.self_attn.k_proj": 0.8276392817497253,
+            "base_model.model.model.layers.14.self_attn.o_proj": 0.8088862299919128,
+            "base_model.model.model.layers.14.self_attn.q_proj": 0.8186488747596741,
+            "base_model.model.model.layers.14.self_attn.v_proj": 0.7853037714958191,
+            "base_model.model.model.layers.15.self_attn.k_proj": 0.8391444087028503,
+            "base_model.model.model.layers.15.self_attn.o_proj": 0.821722686290741,
+            "base_model.model.model.layers.15.self_attn.q_proj": 0.8132557272911072,
+            "base_model.model.model.layers.15.self_attn.v_proj": 0.8096644282341003,
+            "base_model.model.model.layers.16.self_attn.k_proj": 0.8427047729492188,
+            "base_model.model.model.layers.16.self_attn.o_proj": 0.8126208186149597,
+            "base_model.model.model.layers.16.self_attn.q_proj": 0.818719208240509,
+            "base_model.model.model.layers.16.self_attn.v_proj": 0.8029937744140625,
+            "base_model.model.model.layers.17.self_attn.k_proj": 0.842864990234375,
+            "base_model.model.model.layers.17.self_attn.o_proj": 0.8090320229530334,
+            "base_model.model.model.layers.17.self_attn.q_proj": 0.82283616065979,
+            "base_model.model.model.layers.17.self_attn.v_proj": 0.7996394038200378,
+            "base_model.model.model.layers.18.self_attn.k_proj": 0.8269627690315247,
+            "base_model.model.model.layers.18.self_attn.o_proj": 0.8196533918380737,
+            "base_model.model.model.layers.18.self_attn.q_proj": 0.8156734108924866,
+            "base_model.model.model.layers.18.self_attn.v_proj": 0.8139521479606628,
+            "base_model.model.model.layers.19.self_attn.k_proj": 0.8371047973632812,
+            "base_model.model.model.layers.19.self_attn.o_proj": 0.8192994594573975,
+            "base_model.model.model.layers.19.self_attn.q_proj": 0.818078339099884,
+            "base_model.model.model.layers.19.self_attn.v_proj": 0.8063862919807434,
+            "base_model.model.model.layers.2.self_attn.k_proj": 0.8238754272460938,
+            "base_model.model.model.layers.2.self_attn.o_proj": 0.81439208984375,
+            "base_model.model.model.layers.2.self_attn.q_proj": 0.8053165078163147,
+            "base_model.model.model.layers.2.self_attn.v_proj": 0.7666142582893372,
+            "base_model.model.model.layers.20.self_attn.k_proj": 0.8499094843864441,
+            "base_model.model.model.layers.20.self_attn.o_proj": 0.8411996364593506,
+            "base_model.model.model.layers.20.self_attn.q_proj": 0.8238228559494019,
+            "base_model.model.model.layers.20.self_attn.v_proj": 0.8252919316291809,
+            "base_model.model.model.layers.21.self_attn.k_proj": 0.8465983271598816,
+            "base_model.model.model.layers.21.self_attn.o_proj": 0.8271785378456116,
+            "base_model.model.model.layers.21.self_attn.q_proj": 0.8222596645355225,
+            "base_model.model.model.layers.21.self_attn.v_proj": 0.8113682866096497,
+            "base_model.model.model.layers.22.self_attn.k_proj": 0.8370513916015625,
+            "base_model.model.model.layers.22.self_attn.o_proj": 0.8314196467399597,
+            "base_model.model.model.layers.22.self_attn.q_proj": 0.8237664699554443,
+            "base_model.model.model.layers.22.self_attn.v_proj": 0.8082020878791809,
+            "base_model.model.model.layers.23.self_attn.k_proj": 0.8386179804801941,
+            "base_model.model.model.layers.23.self_attn.o_proj": 0.8223139643669128,
+            "base_model.model.model.layers.23.self_attn.q_proj": 0.8056191205978394,
+            "base_model.model.model.layers.23.self_attn.v_proj": 0.8064549565315247,
+            "base_model.model.model.layers.24.self_attn.k_proj": 0.8354288935661316,
+            "base_model.model.model.layers.24.self_attn.o_proj": 0.8143336176872253,
+            "base_model.model.model.layers.24.self_attn.q_proj": 0.8206341862678528,
+            "base_model.model.model.layers.24.self_attn.v_proj": 0.7975743412971497,
+            "base_model.model.model.layers.25.self_attn.k_proj": 0.8286870121955872,
+            "base_model.model.model.layers.25.self_attn.o_proj": 0.7959988713264465,
+            "base_model.model.model.layers.25.self_attn.q_proj": 0.7988514304161072,
+            "base_model.model.model.layers.25.self_attn.v_proj": 0.7703094482421875,
+            "base_model.model.model.layers.26.self_attn.k_proj": 0.8244374394416809,
+            "base_model.model.model.layers.26.self_attn.o_proj": 0.825931966304779,
+            "base_model.model.model.layers.26.self_attn.q_proj": 0.8060192465782166,
+            "base_model.model.model.layers.26.self_attn.v_proj": 0.7886683344841003,
+            "base_model.model.model.layers.27.self_attn.k_proj": 0.8329951167106628,
+            "base_model.model.model.layers.27.self_attn.o_proj": 0.8226246237754822,
+            "base_model.model.model.layers.27.self_attn.q_proj": 0.7985916137695312,
+            "base_model.model.model.layers.27.self_attn.v_proj": 0.7978871464729309,
+            "base_model.model.model.layers.3.self_attn.k_proj": 0.8135426640510559,
+            "base_model.model.model.layers.3.self_attn.o_proj": 0.8121333718299866,
+            "base_model.model.model.layers.3.self_attn.q_proj": 0.8023635149002075,
+            "base_model.model.model.layers.3.self_attn.v_proj": 0.7674789428710938,
+            "base_model.model.model.layers.4.self_attn.k_proj": 0.8237431645393372,
+            "base_model.model.model.layers.4.self_attn.o_proj": 0.8182402849197388,
+            "base_model.model.model.layers.4.self_attn.q_proj": 0.8027051091194153,
+            "base_model.model.model.layers.4.self_attn.v_proj": 0.7973251342773438,
+            "base_model.model.model.layers.5.self_attn.k_proj": 0.8186213374137878,
+            "base_model.model.model.layers.5.self_attn.o_proj": 0.8084080815315247,
+            "base_model.model.model.layers.5.self_attn.q_proj": 0.8061120510101318,
+            "base_model.model.model.layers.5.self_attn.v_proj": 0.8063303828239441,
+            "base_model.model.model.layers.6.self_attn.k_proj": 0.8299357295036316,
+            "base_model.model.model.layers.6.self_attn.o_proj": 0.7926457524299622,
+            "base_model.model.model.layers.6.self_attn.q_proj": 0.8164257407188416,
+            "base_model.model.model.layers.6.self_attn.v_proj": 0.7732442021369934,
+            "base_model.model.model.layers.7.self_attn.k_proj": 0.8194808959960938,
+            "base_model.model.model.layers.7.self_attn.o_proj": 0.8257119655609131,
+            "base_model.model.model.layers.7.self_attn.q_proj": 0.8105032444000244,
+            "base_model.model.model.layers.7.self_attn.v_proj": 0.7983805537223816,
+            "base_model.model.model.layers.8.self_attn.k_proj": 0.8386866450309753,
+            "base_model.model.model.layers.8.self_attn.o_proj": 0.827046275138855,
+            "base_model.model.model.layers.8.self_attn.q_proj": 0.8135600686073303,
+            "base_model.model.model.layers.8.self_attn.v_proj": 0.8131866455078125,
+            "base_model.model.model.layers.9.self_attn.k_proj": 0.8075053095817566,
+            "base_model.model.model.layers.9.self_attn.o_proj": 0.8083847761154175,
+            "base_model.model.model.layers.9.self_attn.q_proj": 0.8099047541618347,
+            "base_model.model.model.layers.9.self_attn.v_proj": 0.7921574711799622
+          }
+        }
+      ],
+      "system": {
+        "logged_steps": 200,
+        "mean_step_seconds": 51.82425828099862,
+        "median_step_seconds": 51.81206920000841,
+        "total_optimizer_hours": 2.8791254600554788,
+        "mean_tokens_per_second": 19.761601256421415,
+        "peak_gpu_allocated_gb": 14.063552512,
+        "max_cpu_rss_gb": 6.166110208
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "arc_base_150": {
+      "label": "RL-LoRA 1.5B ARC->GSM8K (150/task)",
+      "run_dir": "outputs/runs/pilot_two_task/rl_lora/order_arc_first/1/phase3-scaled-baseline-arc-gsm-150",
+      "method": "rl_lora",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "arc_challenge",
+        "gsm8k"
+      ],
+      "seed": 1,
+      "steps_per_task": 150,
+      "global_steps": 300,
+      "rollouts": 2400,
+      "evaluation_examples_per_task": 64,
+      "config_sha256": "e9d32b44a42b2c4942c1feb557e04869c1a2a2064659368ca737d32c8a63a066",
+      "matrix": {
+        "tasks": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "rows": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "values": {
+          "arc_challenge": {
+            "arc_challenge": 0.828125,
+            "gsm8k": null
+          },
+          "gsm8k": {
+            "arc_challenge": 0.796875,
+            "gsm8k": 0.03125
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.03125,
+        "backward_transfer": -0.03125,
+        "final_average_performance": 0.4140625,
+        "task1_after_task1": 0.828125,
+        "task1_after_task2": 0.796875,
+        "task2_after_task2": 0.03125,
+        "max_possible_task1_loss": 0.828125
+      },
+      "scores": {
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.828125,
+          "n": 64,
+          "sum_reward": 53.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.7178678837734179,
+            0.9012225769875536
+          ]
+        },
+        "arc_challenge|after_gsm8k": {
+          "score": 0.796875,
+          "n": 64,
+          "sum_reward": 51.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6828636426898583,
+            0.8772658218081634
+          ]
+        },
+        "gsm8k|after_gsm8k": {
+          "score": 0.03125,
+          "n": 64,
+          "sum_reward": 2.0,
+          "parse_success_rate": 0.828125,
+          "wilson95": [
+            0.008612138346171874,
+            0.10697291770958313
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0,
+          "frozen": 0.0,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.171875,
+          "frozen": 0.171875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.795220228557415,
+          "frozen": 20.795220228557415,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.125,
+          "frozen": 0.15625,
+          "change": -0.03125,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1875,
+          "frozen": 0.203125,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.40625,
+          "frozen": 0.046875,
+          "change": 0.359375,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.40625,
+          "frozen": 0.0,
+          "change": 0.40625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.828125,
+          "frozen": 0.171875,
+          "change": 0.65625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.796194675901337,
+          "frozen": 20.795220228557415,
+          "change": 0.0009744473439212697,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.109375,
+          "frozen": 0.15625,
+          "change": -0.046875,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.15625,
+          "frozen": 0.203125,
+          "change": -0.046875,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.265625,
+          "frozen": 0.046875,
+          "change": 0.21875,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.484375,
+          "frozen": 0.0,
+          "change": 0.484375,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.65625,
+          "frozen": 0.171875,
+          "change": 0.484375,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.828879513136528,
+          "frozen": 20.795220228557415,
+          "change": 0.03365928457911238,
+          "n": 64
+        }
+      ],
+      "training": {
+        "arc_challenge": {
+          "updates": 150,
+          "mean_raw_reward": 0.5391666666666667,
+          "positive_reward_batches": 149,
+          "zero_variance_groups": 109,
+          "zero_variance_group_fraction": 0.36333333333333334,
+          "zero_gradient_updates": 25,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 353,
+          "responses": 1200,
+          "parse_failure_rate": 0.2941666666666667,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0010824022766125077,
+          "mean_ratio_clip_fraction": 0.003984375
+        },
+        "gsm8k": {
+          "updates": 150,
+          "mean_raw_reward": 0.07916666666666666,
+          "positive_reward_batches": 65,
+          "zero_variance_groups": 226,
+          "zero_variance_group_fraction": 0.7533333333333333,
+          "zero_gradient_updates": 85,
+          "gradient_clipped_updates": 1,
+          "parse_failures": 135,
+          "responses": 1200,
+          "parse_failure_rate": 0.1125,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0006058905931422487,
+          "mean_ratio_clip_fraction": 0.00337890625
+        }
+      },
+      "consolidations": [],
+      "system": {
+        "logged_steps": 300,
+        "mean_step_seconds": 50.637373407667035,
+        "median_step_seconds": 50.494141700008186,
+        "total_optimizer_hours": 4.219781117305587,
+        "mean_tokens_per_second": 20.22625498397508,
+        "peak_gpu_allocated_gb": 12.156847616,
+        "max_cpu_rss_gb": 3.396517888
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    },
+    "arc_hlora_150": {
+      "label": "HLoRA-RL 1.5B ARC->GSM8K (150/task)",
+      "run_dir": "outputs/runs/pilot_two_task/hlora_rl/order_arc_first/1/phase3-scaled-hlora-arc-gsm-150",
+      "method": "hlora_rl",
+      "model": "Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "task_order": [
+        "arc_challenge",
+        "gsm8k"
+      ],
+      "seed": 1,
+      "steps_per_task": 150,
+      "global_steps": 300,
+      "rollouts": 2400,
+      "evaluation_examples_per_task": 64,
+      "config_sha256": "8fc6961ce83221be131cb4c7c864917660feda2ab9512b3a8f3952b5fe14554b",
+      "matrix": {
+        "tasks": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "rows": [
+          "arc_challenge",
+          "gsm8k"
+        ],
+        "values": {
+          "arc_challenge": {
+            "arc_challenge": 0.828125,
+            "gsm8k": null
+          },
+          "gsm8k": {
+            "arc_challenge": 0.796875,
+            "gsm8k": 0.328125
+          }
+        }
+      },
+      "continual": {
+        "average_forgetting": 0.03125,
+        "backward_transfer": -0.03125,
+        "final_average_performance": 0.5625,
+        "task1_after_task1": 0.828125,
+        "task1_after_task2": 0.796875,
+        "task2_after_task2": 0.328125,
+        "max_possible_task1_loss": 0.828125
+      },
+      "scores": {
+        "arc_challenge|after_arc_challenge": {
+          "score": 0.828125,
+          "n": 64,
+          "sum_reward": 53.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.7178678837734179,
+            0.9012225769875536
+          ]
+        },
+        "arc_challenge|after_gsm8k": {
+          "score": 0.796875,
+          "n": 64,
+          "sum_reward": 51.0,
+          "parse_success_rate": 1.0,
+          "wilson95": [
+            0.6828636426898583,
+            0.8772658218081634
+          ]
+        },
+        "gsm8k|after_gsm8k": {
+          "score": 0.328125,
+          "n": 64,
+          "sum_reward": 21.0,
+          "parse_success_rate": 0.9375,
+          "wilson95": [
+            0.22570557904469185,
+            0.45000894150908505
+          ]
+        }
+      },
+      "capabilities": [
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.15625,
+          "frozen": 0.15625,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.203125,
+          "frozen": 0.203125,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.046875,
+          "frozen": 0.046875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.0,
+          "frozen": 0.0,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.171875,
+          "frozen": 0.171875,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "frozen_start",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.795220228557415,
+          "frozen": 20.795220228557415,
+          "change": 0.0,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.125,
+          "frozen": 0.15625,
+          "change": -0.03125,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.1875,
+          "frozen": 0.203125,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.40625,
+          "frozen": 0.046875,
+          "change": 0.359375,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.40625,
+          "frozen": 0.0,
+          "change": 0.40625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.828125,
+          "frozen": 0.171875,
+          "change": 0.65625,
+          "n": 64
+        },
+        {
+          "after_task": "arc_challenge",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.796194675901337,
+          "frozen": 20.795220228557415,
+          "change": 0.0009744473439212697,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "strict",
+          "score": 0.140625,
+          "frozen": 0.15625,
+          "change": -0.015625,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "ifeval",
+          "metric": "loose",
+          "score": 0.171875,
+          "frozen": 0.203125,
+          "change": -0.03125,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "mmlu",
+          "metric": "accuracy",
+          "score": 0.296875,
+          "frozen": 0.046875,
+          "change": 0.25,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "hellaswag",
+          "metric": "accuracy",
+          "score": 0.421875,
+          "frozen": 0.0,
+          "change": 0.421875,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "arc_easy",
+          "metric": "accuracy",
+          "score": 0.671875,
+          "frozen": 0.171875,
+          "change": 0.5,
+          "n": 64
+        },
+        {
+          "after_task": "gsm8k",
+          "capability": "perplexity",
+          "metric": "perplexity",
+          "score": 20.770698282440964,
+          "frozen": 20.795220228557415,
+          "change": -0.024521946116450977,
+          "n": 64
+        }
+      ],
+      "training": {
+        "arc_challenge": {
+          "updates": 150,
+          "mean_raw_reward": 0.5391666666666667,
+          "positive_reward_batches": 149,
+          "zero_variance_groups": 109,
+          "zero_variance_group_fraction": 0.36333333333333334,
+          "zero_gradient_updates": 25,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 353,
+          "responses": 1200,
+          "parse_failure_rate": 0.2941666666666667,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0010824022766125077,
+          "mean_ratio_clip_fraction": 0.003984375
+        },
+        "gsm8k": {
+          "updates": 150,
+          "mean_raw_reward": 0.1075,
+          "positive_reward_batches": 82,
+          "zero_variance_groups": 204,
+          "zero_variance_group_fraction": 0.68,
+          "zero_gradient_updates": 0,
+          "gradient_clipped_updates": 0,
+          "parse_failures": 142,
+          "responses": 1200,
+          "parse_failure_rate": 0.11833333333333333,
+          "mean_response_length": 128.0,
+          "mean_sampled_policy_kl": 0.0006116390935494565,
+          "mean_ratio_clip_fraction": 0.0038020833333333335
+        }
+      },
+      "consolidations": [
+        {
+          "after_task": "arc_challenge",
+          "clamped_negative_elements": 60295381,
+          "importance_storage_bytes": 616562688,
+          "negative_path_mass": 0.433267031070492,
+          "task_steps": 150,
+          "coefficient_max": 1.0,
+          "coefficient_argmax": "base_model.model.model.layers.0.self_attn.v_proj",
+          "coefficients_above_1e-6": 1,
+          "importance_l2_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 2190.487548828125,
+            "base_model.model.model.layers.0.self_attn.o_proj": 4808.92236328125,
+            "base_model.model.model.layers.0.self_attn.q_proj": 1982.169677734375,
+            "base_model.model.model.layers.0.self_attn.v_proj": 11728.60546875,
+            "base_model.model.model.layers.1.self_attn.k_proj": 515.5691528320312,
+            "base_model.model.model.layers.1.self_attn.o_proj": 4118.26611328125,
+            "base_model.model.model.layers.1.self_attn.q_proj": 385.3431396484375,
+            "base_model.model.model.layers.1.self_attn.v_proj": 3520.767822265625,
+            "base_model.model.model.layers.10.self_attn.k_proj": 2079.052001953125,
+            "base_model.model.model.layers.10.self_attn.o_proj": 2192.863525390625,
+            "base_model.model.model.layers.10.self_attn.q_proj": 2185.07666015625,
+            "base_model.model.model.layers.10.self_attn.v_proj": 3169.36376953125,
+            "base_model.model.model.layers.11.self_attn.k_proj": 3387.911865234375,
+            "base_model.model.model.layers.11.self_attn.o_proj": 2897.021728515625,
+            "base_model.model.model.layers.11.self_attn.q_proj": 2519.630615234375,
+            "base_model.model.model.layers.11.self_attn.v_proj": 4820.4541015625,
+            "base_model.model.model.layers.12.self_attn.k_proj": 1787.2236328125,
+            "base_model.model.model.layers.12.self_attn.o_proj": 2670.38232421875,
+            "base_model.model.model.layers.12.self_attn.q_proj": 2075.442626953125,
+            "base_model.model.model.layers.12.self_attn.v_proj": 2898.658203125,
+            "base_model.model.model.layers.13.self_attn.k_proj": 3194.775634765625,
+            "base_model.model.model.layers.13.self_attn.o_proj": 2719.31884765625,
+            "base_model.model.model.layers.13.self_attn.q_proj": 2752.659423828125,
+            "base_model.model.model.layers.13.self_attn.v_proj": 4743.73046875,
+            "base_model.model.model.layers.14.self_attn.k_proj": 3131.017333984375,
+            "base_model.model.model.layers.14.self_attn.o_proj": 2118.240234375,
+            "base_model.model.model.layers.14.self_attn.q_proj": 2110.851318359375,
+            "base_model.model.model.layers.14.self_attn.v_proj": 4893.77978515625,
+            "base_model.model.model.layers.15.self_attn.k_proj": 2751.340087890625,
+            "base_model.model.model.layers.15.self_attn.o_proj": 3315.649658203125,
+            "base_model.model.model.layers.15.self_attn.q_proj": 2169.166748046875,
+            "base_model.model.model.layers.15.self_attn.v_proj": 4376.99853515625,
+            "base_model.model.model.layers.16.self_attn.k_proj": 1852.307861328125,
+            "base_model.model.model.layers.16.self_attn.o_proj": 3658.1064453125,
+            "base_model.model.model.layers.16.self_attn.q_proj": 2446.747314453125,
+            "base_model.model.model.layers.16.self_attn.v_proj": 3722.5703125,
+            "base_model.model.model.layers.17.self_attn.k_proj": 2481.20849609375,
+            "base_model.model.model.layers.17.self_attn.o_proj": 2666.869140625,
+            "base_model.model.model.layers.17.self_attn.q_proj": 1981.2930908203125,
+            "base_model.model.model.layers.17.self_attn.v_proj": 5965.44140625,
+            "base_model.model.model.layers.18.self_attn.k_proj": 3166.865966796875,
+            "base_model.model.model.layers.18.self_attn.o_proj": 2847.551513671875,
+            "base_model.model.model.layers.18.self_attn.q_proj": 2572.0595703125,
+            "base_model.model.model.layers.18.self_attn.v_proj": 3605.63037109375,
+            "base_model.model.model.layers.19.self_attn.k_proj": 2639.650634765625,
+            "base_model.model.model.layers.19.self_attn.o_proj": 1605.703369140625,
+            "base_model.model.model.layers.19.self_attn.q_proj": 2039.5885009765625,
+            "base_model.model.model.layers.19.self_attn.v_proj": 3887.343994140625,
+            "base_model.model.model.layers.2.self_attn.k_proj": 1494.9154052734375,
+            "base_model.model.model.layers.2.self_attn.o_proj": 1287.1282958984375,
+            "base_model.model.model.layers.2.self_attn.q_proj": 1104.3092041015625,
+            "base_model.model.model.layers.2.self_attn.v_proj": 5956.06591796875,
+            "base_model.model.model.layers.20.self_attn.k_proj": 1531.06396484375,
+            "base_model.model.model.layers.20.self_attn.o_proj": 2207.15478515625,
+            "base_model.model.model.layers.20.self_attn.q_proj": 1353.9012451171875,
+            "base_model.model.model.layers.20.self_attn.v_proj": 2369.459716796875,
+            "base_model.model.model.layers.21.self_attn.k_proj": 1621.6026611328125,
+            "base_model.model.model.layers.21.self_attn.o_proj": 2579.6552734375,
+            "base_model.model.model.layers.21.self_attn.q_proj": 1615.244140625,
+            "base_model.model.model.layers.21.self_attn.v_proj": 2004.4700927734375,
+            "base_model.model.model.layers.22.self_attn.k_proj": 1188.578125,
+            "base_model.model.model.layers.22.self_attn.o_proj": 841.60205078125,
+            "base_model.model.model.layers.22.self_attn.q_proj": 1085.8863525390625,
+            "base_model.model.model.layers.22.self_attn.v_proj": 1587.5869140625,
+            "base_model.model.model.layers.23.self_attn.k_proj": 2044.25634765625,
+            "base_model.model.model.layers.23.self_attn.o_proj": 1487.9788818359375,
+            "base_model.model.model.layers.23.self_attn.q_proj": 1639.85498046875,
+            "base_model.model.model.layers.23.self_attn.v_proj": 2216.2333984375,
+            "base_model.model.model.layers.24.self_attn.k_proj": 1662.036376953125,
+            "base_model.model.model.layers.24.self_attn.o_proj": 1678.6168212890625,
+            "base_model.model.model.layers.24.self_attn.q_proj": 911.2101440429688,
+            "base_model.model.model.layers.24.self_attn.v_proj": 1705.1163330078125,
+            "base_model.model.model.layers.25.self_attn.k_proj": 1483.6063232421875,
+            "base_model.model.model.layers.25.self_attn.o_proj": 1939.8680419921875,
+            "base_model.model.model.layers.25.self_attn.q_proj": 1270.1522216796875,
+            "base_model.model.model.layers.25.self_attn.v_proj": 2085.887939453125,
+            "base_model.model.model.layers.26.self_attn.k_proj": 1702.6795654296875,
+            "base_model.model.model.layers.26.self_attn.o_proj": 1751.1212158203125,
+            "base_model.model.model.layers.26.self_attn.q_proj": 1094.1624755859375,
+            "base_model.model.model.layers.26.self_attn.v_proj": 789.706787109375,
+            "base_model.model.model.layers.27.self_attn.k_proj": 1426.2159423828125,
+            "base_model.model.model.layers.27.self_attn.o_proj": 1808.2265625,
+            "base_model.model.model.layers.27.self_attn.q_proj": 877.1890258789062,
+            "base_model.model.model.layers.27.self_attn.v_proj": 571.7808837890625,
+            "base_model.model.model.layers.3.self_attn.k_proj": 2109.114990234375,
+            "base_model.model.model.layers.3.self_attn.o_proj": 1344.522216796875,
+            "base_model.model.model.layers.3.self_attn.q_proj": 1849.5914306640625,
+            "base_model.model.model.layers.3.self_attn.v_proj": 7718.5390625,
+            "base_model.model.model.layers.4.self_attn.k_proj": 2026.1060791015625,
+            "base_model.model.model.layers.4.self_attn.o_proj": 1125.2808837890625,
+            "base_model.model.model.layers.4.self_attn.q_proj": 1548.352783203125,
+            "base_model.model.model.layers.4.self_attn.v_proj": 3673.41357421875,
+            "base_model.model.model.layers.5.self_attn.k_proj": 2739.841064453125,
+            "base_model.model.model.layers.5.self_attn.o_proj": 1674.6204833984375,
+            "base_model.model.model.layers.5.self_attn.q_proj": 1899.3951416015625,
+            "base_model.model.model.layers.5.self_attn.v_proj": 3438.28515625,
+            "base_model.model.model.layers.6.self_attn.k_proj": 1764.5054931640625,
+            "base_model.model.model.layers.6.self_attn.o_proj": 1752.8177490234375,
+            "base_model.model.model.layers.6.self_attn.q_proj": 1771.251708984375,
+            "base_model.model.model.layers.6.self_attn.v_proj": 5929.28759765625,
+            "base_model.model.model.layers.7.self_attn.k_proj": 3390.5244140625,
+            "base_model.model.model.layers.7.self_attn.o_proj": 1932.9166259765625,
+            "base_model.model.model.layers.7.self_attn.q_proj": 2474.293212890625,
+            "base_model.model.model.layers.7.self_attn.v_proj": 4325.16357421875,
+            "base_model.model.model.layers.8.self_attn.k_proj": 1922.1046142578125,
+            "base_model.model.model.layers.8.self_attn.o_proj": 1608.6881103515625,
+            "base_model.model.model.layers.8.self_attn.q_proj": 2292.8310546875,
+            "base_model.model.model.layers.8.self_attn.v_proj": 3261.555419921875,
+            "base_model.model.model.layers.9.self_attn.k_proj": 4147.919921875,
+            "base_model.model.model.layers.9.self_attn.o_proj": 2089.39208984375,
+            "base_model.model.model.layers.9.self_attn.q_proj": 3707.946044921875,
+            "base_model.model.model.layers.9.self_attn.v_proj": 4459.08837890625
+          },
+          "nonzero_fraction_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 0.6162821650505066,
+            "base_model.model.model.layers.0.self_attn.o_proj": 0.6013819575309753,
+            "base_model.model.model.layers.0.self_attn.q_proj": 0.579763650894165,
+            "base_model.model.model.layers.0.self_attn.v_proj": 0.6069615483283997,
+            "base_model.model.model.layers.1.self_attn.k_proj": 0.6342849731445312,
+            "base_model.model.model.layers.1.self_attn.o_proj": 0.5750596523284912,
+            "base_model.model.model.layers.1.self_attn.q_proj": 0.5971378684043884,
+            "base_model.model.model.layers.1.self_attn.v_proj": 0.5946171879768372,
+            "base_model.model.model.layers.10.self_attn.k_proj": 0.611083984375,
+            "base_model.model.model.layers.10.self_attn.o_proj": 0.6065216064453125,
+            "base_model.model.model.layers.10.self_attn.q_proj": 0.6005215048789978,
+            "base_model.model.model.layers.10.self_attn.v_proj": 0.5893223881721497,
+            "base_model.model.model.layers.11.self_attn.k_proj": 0.6189702153205872,
+            "base_model.model.model.layers.11.self_attn.o_proj": 0.6115451455116272,
+            "base_model.model.model.layers.11.self_attn.q_proj": 0.6102744340896606,
+            "base_model.model.model.layers.11.self_attn.v_proj": 0.6045481562614441,
+            "base_model.model.model.layers.12.self_attn.k_proj": 0.6237666010856628,
+            "base_model.model.model.layers.12.self_attn.o_proj": 0.6057480573654175,
+            "base_model.model.model.layers.12.self_attn.q_proj": 0.6055412292480469,
+            "base_model.model.model.layers.12.self_attn.v_proj": 0.6175003051757812,
+            "base_model.model.model.layers.13.self_attn.k_proj": 0.6321766972541809,
+            "base_model.model.model.layers.13.self_attn.o_proj": 0.6003799438476562,
+            "base_model.model.model.layers.13.self_attn.q_proj": 0.6060494184494019,
+            "base_model.model.model.layers.13.self_attn.v_proj": 0.5851618647575378,
+            "base_model.model.model.layers.14.self_attn.k_proj": 0.6239649653434753,
+            "base_model.model.model.layers.14.self_attn.o_proj": 0.6063101291656494,
+            "base_model.model.model.layers.14.self_attn.q_proj": 0.599280059337616,
+            "base_model.model.model.layers.14.self_attn.v_proj": 0.5910237431526184,
+            "base_model.model.model.layers.15.self_attn.k_proj": 0.6379470825195312,
+            "base_model.model.model.layers.15.self_attn.o_proj": 0.6308360695838928,
+            "base_model.model.model.layers.15.self_attn.q_proj": 0.5992639064788818,
+            "base_model.model.model.layers.15.self_attn.v_proj": 0.6080958247184753,
+            "base_model.model.model.layers.16.self_attn.k_proj": 0.6342036128044128,
+            "base_model.model.model.layers.16.self_attn.o_proj": 0.6141891479492188,
+            "base_model.model.model.layers.16.self_attn.q_proj": 0.6081348061561584,
+            "base_model.model.model.layers.16.self_attn.v_proj": 0.5882441401481628,
+            "base_model.model.model.layers.17.self_attn.k_proj": 0.6417033076286316,
+            "base_model.model.model.layers.17.self_attn.o_proj": 0.6175177097320557,
+            "base_model.model.model.layers.17.self_attn.q_proj": 0.6092007756233215,
+            "base_model.model.model.layers.17.self_attn.v_proj": 0.6005986332893372,
+            "base_model.model.model.layers.18.self_attn.k_proj": 0.6159235835075378,
+            "base_model.model.model.layers.18.self_attn.o_proj": 0.6371756792068481,
+            "base_model.model.model.layers.18.self_attn.q_proj": 0.6059205532073975,
+            "base_model.model.model.layers.18.self_attn.v_proj": 0.6126251220703125,
+            "base_model.model.model.layers.19.self_attn.k_proj": 0.6422856450080872,
+            "base_model.model.model.layers.19.self_attn.o_proj": 0.6203600764274597,
+            "base_model.model.model.layers.19.self_attn.q_proj": 0.6203749179840088,
+            "base_model.model.model.layers.19.self_attn.v_proj": 0.6031977534294128,
+            "base_model.model.model.layers.2.self_attn.k_proj": 0.61651611328125,
+            "base_model.model.model.layers.2.self_attn.o_proj": 0.6184065341949463,
+            "base_model.model.model.layers.2.self_attn.q_proj": 0.6017540693283081,
+            "base_model.model.model.layers.2.self_attn.v_proj": 0.5945866703987122,
+            "base_model.model.model.layers.20.self_attn.k_proj": 0.6503168940544128,
+            "base_model.model.model.layers.20.self_attn.o_proj": 0.653446614742279,
+            "base_model.model.model.layers.20.self_attn.q_proj": 0.6182992458343506,
+            "base_model.model.model.layers.20.self_attn.v_proj": 0.6288807988166809,
+            "base_model.model.model.layers.21.self_attn.k_proj": 0.648712158203125,
+            "base_model.model.model.layers.21.self_attn.o_proj": 0.6309874057769775,
+            "base_model.model.model.layers.21.self_attn.q_proj": 0.610192596912384,
+            "base_model.model.model.layers.21.self_attn.v_proj": 0.6071802973747253,
+            "base_model.model.model.layers.22.self_attn.k_proj": 0.6318461298942566,
+            "base_model.model.model.layers.22.self_attn.o_proj": 0.6320584416389465,
+            "base_model.model.model.layers.22.self_attn.q_proj": 0.6179970502853394,
+            "base_model.model.model.layers.22.self_attn.v_proj": 0.59912109375,
+            "base_model.model.model.layers.23.self_attn.k_proj": 0.6279881596565247,
+            "base_model.model.model.layers.23.self_attn.o_proj": 0.6240174770355225,
+            "base_model.model.model.layers.23.self_attn.q_proj": 0.5937961935997009,
+            "base_model.model.model.layers.23.self_attn.v_proj": 0.6207656860351562,
+            "base_model.model.model.layers.24.self_attn.k_proj": 0.6339035034179688,
+            "base_model.model.model.layers.24.self_attn.o_proj": 0.619197428226471,
+            "base_model.model.model.layers.24.self_attn.q_proj": 0.6241878867149353,
+            "base_model.model.model.layers.24.self_attn.v_proj": 0.5904693603515625,
+            "base_model.model.model.layers.25.self_attn.k_proj": 0.6237055659294128,
+            "base_model.model.model.layers.25.self_attn.o_proj": 0.5930103659629822,
+            "base_model.model.model.layers.25.self_attn.q_proj": 0.5862697958946228,
+            "base_model.model.model.layers.25.self_attn.v_proj": 0.5731022953987122,
+            "base_model.model.model.layers.26.self_attn.k_proj": 0.6168187260627747,
+            "base_model.model.model.layers.26.self_attn.o_proj": 0.6178719997406006,
+            "base_model.model.model.layers.26.self_attn.q_proj": 0.5934715270996094,
+            "base_model.model.model.layers.26.self_attn.v_proj": 0.5850982666015625,
+            "base_model.model.model.layers.27.self_attn.k_proj": 0.6221084594726562,
+            "base_model.model.model.layers.27.self_attn.o_proj": 0.6256900429725647,
+            "base_model.model.model.layers.27.self_attn.q_proj": 0.5867674350738525,
+            "base_model.model.model.layers.27.self_attn.v_proj": 0.5954462885856628,
+            "base_model.model.model.layers.3.self_attn.k_proj": 0.6054153442382812,
+            "base_model.model.model.layers.3.self_attn.o_proj": 0.6154225468635559,
+            "base_model.model.model.layers.3.self_attn.q_proj": 0.5998225808143616,
+            "base_model.model.model.layers.3.self_attn.v_proj": 0.5723190307617188,
+            "base_model.model.model.layers.4.self_attn.k_proj": 0.6219075322151184,
+            "base_model.model.model.layers.4.self_attn.o_proj": 0.6068390607833862,
+            "base_model.model.model.layers.4.self_attn.q_proj": 0.6000162959098816,
+            "base_model.model.model.layers.4.self_attn.v_proj": 0.5925267338752747,
+            "base_model.model.model.layers.5.self_attn.k_proj": 0.6213734745979309,
+            "base_model.model.model.layers.5.self_attn.o_proj": 0.60075843334198,
+            "base_model.model.model.layers.5.self_attn.q_proj": 0.6075371503829956,
+            "base_model.model.model.layers.5.self_attn.v_proj": 0.5981470942497253,
+            "base_model.model.model.layers.6.self_attn.k_proj": 0.62664794921875,
+            "base_model.model.model.layers.6.self_attn.o_proj": 0.5908381342887878,
+            "base_model.model.model.layers.6.self_attn.q_proj": 0.6138229370117188,
+            "base_model.model.model.layers.6.self_attn.v_proj": 0.5740610957145691,
+            "base_model.model.model.layers.7.self_attn.k_proj": 0.613433837890625,
+            "base_model.model.model.layers.7.self_attn.o_proj": 0.6076736450195312,
+            "base_model.model.model.layers.7.self_attn.q_proj": 0.6079131364822388,
+            "base_model.model.model.layers.7.self_attn.v_proj": 0.5938822627067566,
+            "base_model.model.model.layers.8.self_attn.k_proj": 0.6337636113166809,
+            "base_model.model.model.layers.8.self_attn.o_proj": 0.6107118129730225,
+            "base_model.model.model.layers.8.self_attn.q_proj": 0.5989430546760559,
+            "base_model.model.model.layers.8.self_attn.v_proj": 0.6088485717773438,
+            "base_model.model.model.layers.9.self_attn.k_proj": 0.5882492065429688,
+            "base_model.model.model.layers.9.self_attn.o_proj": 0.6030137538909912,
+            "base_model.model.model.layers.9.self_attn.q_proj": 0.5925589799880981,
+            "base_model.model.model.layers.9.self_attn.v_proj": 0.5785929560661316
+          }
+        },
+        {
+          "after_task": "gsm8k",
+          "clamped_negative_elements": 59596034,
+          "importance_storage_bytes": 616562688,
+          "negative_path_mass": 0.21246765387006053,
+          "task_steps": 150,
+          "coefficient_max": 1.0,
+          "coefficient_argmax": "base_model.model.model.layers.0.self_attn.v_proj",
+          "coefficients_above_1e-6": 1,
+          "importance_l2_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 2913.110107421875,
+            "base_model.model.model.layers.0.self_attn.o_proj": 7327.23876953125,
+            "base_model.model.model.layers.0.self_attn.q_proj": 2691.4677734375,
+            "base_model.model.model.layers.0.self_attn.v_proj": 22043.009765625,
+            "base_model.model.model.layers.1.self_attn.k_proj": 682.6727905273438,
+            "base_model.model.model.layers.1.self_attn.o_proj": 5777.845703125,
+            "base_model.model.model.layers.1.self_attn.q_proj": 513.0050659179688,
+            "base_model.model.model.layers.1.self_attn.v_proj": 4667.36865234375,
+            "base_model.model.model.layers.10.self_attn.k_proj": 2778.302978515625,
+            "base_model.model.model.layers.10.self_attn.o_proj": 2782.201904296875,
+            "base_model.model.model.layers.10.self_attn.q_proj": 2845.034912109375,
+            "base_model.model.model.layers.10.self_attn.v_proj": 4462.01318359375,
+            "base_model.model.model.layers.11.self_attn.k_proj": 4441.52880859375,
+            "base_model.model.model.layers.11.self_attn.o_proj": 3834.281005859375,
+            "base_model.model.model.layers.11.self_attn.q_proj": 3321.803466796875,
+            "base_model.model.model.layers.11.self_attn.v_proj": 6403.11376953125,
+            "base_model.model.model.layers.12.self_attn.k_proj": 2711.655029296875,
+            "base_model.model.model.layers.12.self_attn.o_proj": 3799.035400390625,
+            "base_model.model.model.layers.12.self_attn.q_proj": 2877.8115234375,
+            "base_model.model.model.layers.12.self_attn.v_proj": 4084.843505859375,
+            "base_model.model.model.layers.13.self_attn.k_proj": 4684.771484375,
+            "base_model.model.model.layers.13.self_attn.o_proj": 3911.00634765625,
+            "base_model.model.model.layers.13.self_attn.q_proj": 3651.117431640625,
+            "base_model.model.model.layers.13.self_attn.v_proj": 6797.908203125,
+            "base_model.model.model.layers.14.self_attn.k_proj": 4317.181640625,
+            "base_model.model.model.layers.14.self_attn.o_proj": 3307.942626953125,
+            "base_model.model.model.layers.14.self_attn.q_proj": 2868.87109375,
+            "base_model.model.model.layers.14.self_attn.v_proj": 6790.4287109375,
+            "base_model.model.model.layers.15.self_attn.k_proj": 3984.218017578125,
+            "base_model.model.model.layers.15.self_attn.o_proj": 4686.3212890625,
+            "base_model.model.model.layers.15.self_attn.q_proj": 2969.99853515625,
+            "base_model.model.model.layers.15.self_attn.v_proj": 6119.08349609375,
+            "base_model.model.model.layers.16.self_attn.k_proj": 2554.123046875,
+            "base_model.model.model.layers.16.self_attn.o_proj": 4590.16064453125,
+            "base_model.model.model.layers.16.self_attn.q_proj": 3248.509765625,
+            "base_model.model.model.layers.16.self_attn.v_proj": 5081.94091796875,
+            "base_model.model.model.layers.17.self_attn.k_proj": 3267.302001953125,
+            "base_model.model.model.layers.17.self_attn.o_proj": 3558.603759765625,
+            "base_model.model.model.layers.17.self_attn.q_proj": 2740.609619140625,
+            "base_model.model.model.layers.17.self_attn.v_proj": 8333.0693359375,
+            "base_model.model.model.layers.18.self_attn.k_proj": 4336.25341796875,
+            "base_model.model.model.layers.18.self_attn.o_proj": 3989.6767578125,
+            "base_model.model.model.layers.18.self_attn.q_proj": 3550.938232421875,
+            "base_model.model.model.layers.18.self_attn.v_proj": 5439.77001953125,
+            "base_model.model.model.layers.19.self_attn.k_proj": 4411.73193359375,
+            "base_model.model.model.layers.19.self_attn.o_proj": 2435.15185546875,
+            "base_model.model.model.layers.19.self_attn.q_proj": 2985.472412109375,
+            "base_model.model.model.layers.19.self_attn.v_proj": 5722.0341796875,
+            "base_model.model.model.layers.2.self_attn.k_proj": 2298.675048828125,
+            "base_model.model.model.layers.2.self_attn.o_proj": 1719.1466064453125,
+            "base_model.model.model.layers.2.self_attn.q_proj": 1622.3409423828125,
+            "base_model.model.model.layers.2.self_attn.v_proj": 8384.60546875,
+            "base_model.model.model.layers.20.self_attn.k_proj": 2229.88427734375,
+            "base_model.model.model.layers.20.self_attn.o_proj": 3071.665771484375,
+            "base_model.model.model.layers.20.self_attn.q_proj": 2068.1669921875,
+            "base_model.model.model.layers.20.self_attn.v_proj": 3391.669677734375,
+            "base_model.model.model.layers.21.self_attn.k_proj": 2100.166748046875,
+            "base_model.model.model.layers.21.self_attn.o_proj": 3666.131103515625,
+            "base_model.model.model.layers.21.self_attn.q_proj": 2178.943115234375,
+            "base_model.model.model.layers.21.self_attn.v_proj": 3048.592041015625,
+            "base_model.model.model.layers.22.self_attn.k_proj": 2261.586181640625,
+            "base_model.model.model.layers.22.self_attn.o_proj": 1262.129638671875,
+            "base_model.model.model.layers.22.self_attn.q_proj": 1618.691162109375,
+            "base_model.model.model.layers.22.self_attn.v_proj": 2289.166015625,
+            "base_model.model.model.layers.23.self_attn.k_proj": 2830.02099609375,
+            "base_model.model.model.layers.23.self_attn.o_proj": 2326.987548828125,
+            "base_model.model.model.layers.23.self_attn.q_proj": 2293.383056640625,
+            "base_model.model.model.layers.23.self_attn.v_proj": 3056.490234375,
+            "base_model.model.model.layers.24.self_attn.k_proj": 2499.45361328125,
+            "base_model.model.model.layers.24.self_attn.o_proj": 2281.48193359375,
+            "base_model.model.model.layers.24.self_attn.q_proj": 1368.80126953125,
+            "base_model.model.model.layers.24.self_attn.v_proj": 2405.056884765625,
+            "base_model.model.model.layers.25.self_attn.k_proj": 2176.43017578125,
+            "base_model.model.model.layers.25.self_attn.o_proj": 2716.34912109375,
+            "base_model.model.model.layers.25.self_attn.q_proj": 1993.8116455078125,
+            "base_model.model.model.layers.25.self_attn.v_proj": 2965.67236328125,
+            "base_model.model.model.layers.26.self_attn.k_proj": 2235.76806640625,
+            "base_model.model.model.layers.26.self_attn.o_proj": 2329.290771484375,
+            "base_model.model.model.layers.26.self_attn.q_proj": 1488.3538818359375,
+            "base_model.model.model.layers.26.self_attn.v_proj": 929.3829345703125,
+            "base_model.model.model.layers.27.self_attn.k_proj": 2009.5872802734375,
+            "base_model.model.model.layers.27.self_attn.o_proj": 2283.64892578125,
+            "base_model.model.model.layers.27.self_attn.q_proj": 1349.128173828125,
+            "base_model.model.model.layers.27.self_attn.v_proj": 764.81591796875,
+            "base_model.model.model.layers.3.self_attn.k_proj": 3239.693603515625,
+            "base_model.model.model.layers.3.self_attn.o_proj": 1907.3787841796875,
+            "base_model.model.model.layers.3.self_attn.q_proj": 2315.547119140625,
+            "base_model.model.model.layers.3.self_attn.v_proj": 10655.7587890625,
+            "base_model.model.model.layers.4.self_attn.k_proj": 2634.981689453125,
+            "base_model.model.model.layers.4.self_attn.o_proj": 1559.496826171875,
+            "base_model.model.model.layers.4.self_attn.q_proj": 2055.44580078125,
+            "base_model.model.model.layers.4.self_attn.v_proj": 5177.18603515625,
+            "base_model.model.model.layers.5.self_attn.k_proj": 4315.197265625,
+            "base_model.model.model.layers.5.self_attn.o_proj": 2196.819091796875,
+            "base_model.model.model.layers.5.self_attn.q_proj": 2744.61865234375,
+            "base_model.model.model.layers.5.self_attn.v_proj": 4619.5146484375,
+            "base_model.model.model.layers.6.self_attn.k_proj": 2958.22119140625,
+            "base_model.model.model.layers.6.self_attn.o_proj": 2411.421142578125,
+            "base_model.model.model.layers.6.self_attn.q_proj": 2956.4599609375,
+            "base_model.model.model.layers.6.self_attn.v_proj": 8318.484375,
+            "base_model.model.model.layers.7.self_attn.k_proj": 3987.532958984375,
+            "base_model.model.model.layers.7.self_attn.o_proj": 2387.6533203125,
+            "base_model.model.model.layers.7.self_attn.q_proj": 3098.941650390625,
+            "base_model.model.model.layers.7.self_attn.v_proj": 5883.17236328125,
+            "base_model.model.model.layers.8.self_attn.k_proj": 2931.775634765625,
+            "base_model.model.model.layers.8.self_attn.o_proj": 2126.021728515625,
+            "base_model.model.model.layers.8.self_attn.q_proj": 3019.7255859375,
+            "base_model.model.model.layers.8.self_attn.v_proj": 4787.58935546875,
+            "base_model.model.model.layers.9.self_attn.k_proj": 6085.25146484375,
+            "base_model.model.model.layers.9.self_attn.o_proj": 2672.214111328125,
+            "base_model.model.model.layers.9.self_attn.q_proj": 4329.2890625,
+            "base_model.model.model.layers.9.self_attn.v_proj": 5693.31201171875
+          },
+          "nonzero_fraction_by_layer": {
+            "base_model.model.model.layers.0.self_attn.k_proj": 0.8110300898551941,
+            "base_model.model.model.layers.0.self_attn.o_proj": 0.814871072769165,
+            "base_model.model.model.layers.0.self_attn.q_proj": 0.763970673084259,
+            "base_model.model.model.layers.0.self_attn.v_proj": 0.7817332148551941,
+            "base_model.model.model.layers.1.self_attn.k_proj": 0.8535181879997253,
+            "base_model.model.model.layers.1.self_attn.o_proj": 0.7941356301307678,
+            "base_model.model.model.layers.1.self_attn.q_proj": 0.8155258893966675,
+            "base_model.model.model.layers.1.self_attn.v_proj": 0.8077138066291809,
+            "base_model.model.model.layers.10.self_attn.k_proj": 0.8455886840820312,
+            "base_model.model.model.layers.10.self_attn.o_proj": 0.8316781520843506,
+            "base_model.model.model.layers.10.self_attn.q_proj": 0.8181321620941162,
+            "base_model.model.model.layers.10.self_attn.v_proj": 0.8055445551872253,
+            "base_model.model.model.layers.11.self_attn.k_proj": 0.8340428471565247,
+            "base_model.model.model.layers.11.self_attn.o_proj": 0.8178876042366028,
+            "base_model.model.model.layers.11.self_attn.q_proj": 0.8205875754356384,
+            "base_model.model.model.layers.11.self_attn.v_proj": 0.8278096318244934,
+            "base_model.model.model.layers.12.self_attn.k_proj": 0.8444747924804688,
+            "base_model.model.model.layers.12.self_attn.o_proj": 0.8060836791992188,
+            "base_model.model.model.layers.12.self_attn.q_proj": 0.8309707641601562,
+            "base_model.model.model.layers.12.self_attn.v_proj": 0.8197708129882812,
+            "base_model.model.model.layers.13.self_attn.k_proj": 0.8428421020507812,
+            "base_model.model.model.layers.13.self_attn.o_proj": 0.8061294555664062,
+            "base_model.model.model.layers.13.self_attn.q_proj": 0.8096148371696472,
+            "base_model.model.model.layers.13.self_attn.v_proj": 0.7843704223632812,
+            "base_model.model.model.layers.14.self_attn.k_proj": 0.8333994746208191,
+            "base_model.model.model.layers.14.self_attn.o_proj": 0.8135956525802612,
+            "base_model.model.model.layers.14.self_attn.q_proj": 0.8217557072639465,
+            "base_model.model.model.layers.14.self_attn.v_proj": 0.7827835083007812,
+            "base_model.model.model.layers.15.self_attn.k_proj": 0.8526713252067566,
+            "base_model.model.model.layers.15.self_attn.o_proj": 0.8200992941856384,
+            "base_model.model.model.layers.15.self_attn.q_proj": 0.81480872631073,
+            "base_model.model.model.layers.15.self_attn.v_proj": 0.8168843388557434,
+            "base_model.model.model.layers.16.self_attn.k_proj": 0.8495305180549622,
+            "base_model.model.model.layers.16.self_attn.o_proj": 0.8139775395393372,
+            "base_model.model.model.layers.16.self_attn.q_proj": 0.8222380876541138,
+            "base_model.model.model.layers.16.self_attn.v_proj": 0.8064422607421875,
+            "base_model.model.model.layers.17.self_attn.k_proj": 0.8554179072380066,
+            "base_model.model.model.layers.17.self_attn.o_proj": 0.8177265524864197,
+            "base_model.model.model.layers.17.self_attn.q_proj": 0.8283640742301941,
+            "base_model.model.model.layers.17.self_attn.v_proj": 0.8008346557617188,
+            "base_model.model.model.layers.18.self_attn.k_proj": 0.8351364135742188,
+            "base_model.model.model.layers.18.self_attn.o_proj": 0.8235248923301697,
+            "base_model.model.model.layers.18.self_attn.q_proj": 0.8190396428108215,
+            "base_model.model.model.layers.18.self_attn.v_proj": 0.8213958740234375,
+            "base_model.model.model.layers.19.self_attn.k_proj": 0.8520431518554688,
+            "base_model.model.model.layers.19.self_attn.o_proj": 0.8240504860877991,
+            "base_model.model.model.layers.19.self_attn.q_proj": 0.8231947422027588,
+            "base_model.model.model.layers.19.self_attn.v_proj": 0.8135121464729309,
+            "base_model.model.model.layers.2.self_attn.k_proj": 0.8367843627929688,
+            "base_model.model.model.layers.2.self_attn.o_proj": 0.8186162114143372,
+            "base_model.model.model.layers.2.self_attn.q_proj": 0.812861979007721,
+            "base_model.model.model.layers.2.self_attn.v_proj": 0.774658203125,
+            "base_model.model.model.layers.20.self_attn.k_proj": 0.8726374506950378,
+            "base_model.model.model.layers.20.self_attn.o_proj": 0.8452483415603638,
+            "base_model.model.model.layers.20.self_attn.q_proj": 0.8400611877441406,
+            "base_model.model.model.layers.20.self_attn.v_proj": 0.8322372436523438,
+            "base_model.model.model.layers.21.self_attn.k_proj": 0.8659286499023438,
+            "base_model.model.model.layers.21.self_attn.o_proj": 0.8319485783576965,
+            "base_model.model.model.layers.21.self_attn.q_proj": 0.8315658569335938,
+            "base_model.model.model.layers.21.self_attn.v_proj": 0.8168513178825378,
+            "base_model.model.model.layers.22.self_attn.k_proj": 0.8567123413085938,
+            "base_model.model.model.layers.22.self_attn.o_proj": 0.8441827297210693,
+            "base_model.model.model.layers.22.self_attn.q_proj": 0.8296716213226318,
+            "base_model.model.model.layers.22.self_attn.v_proj": 0.8180796504020691,
+            "base_model.model.model.layers.23.self_attn.k_proj": 0.8574727177619934,
+            "base_model.model.model.layers.23.self_attn.o_proj": 0.8312221169471741,
+            "base_model.model.model.layers.23.self_attn.q_proj": 0.80982506275177,
+            "base_model.model.model.layers.23.self_attn.v_proj": 0.8164927363395691,
+            "base_model.model.model.layers.24.self_attn.k_proj": 0.8539326786994934,
+            "base_model.model.model.layers.24.self_attn.o_proj": 0.8246781826019287,
+            "base_model.model.model.layers.24.self_attn.q_proj": 0.8423436284065247,
+            "base_model.model.model.layers.24.self_attn.v_proj": 0.8026631474494934,
+            "base_model.model.model.layers.25.self_attn.k_proj": 0.8453750610351562,
+            "base_model.model.model.layers.25.self_attn.o_proj": 0.8081690669059753,
+            "base_model.model.model.layers.25.self_attn.q_proj": 0.8076684474945068,
+            "base_model.model.model.layers.25.self_attn.v_proj": 0.7824833989143372,
+            "base_model.model.model.layers.26.self_attn.k_proj": 0.8407923579216003,
+            "base_model.model.model.layers.26.self_attn.o_proj": 0.8346824645996094,
+            "base_model.model.model.layers.26.self_attn.q_proj": 0.8170585632324219,
+            "base_model.model.model.layers.26.self_attn.v_proj": 0.8074137568473816,
+            "base_model.model.model.layers.27.self_attn.k_proj": 0.8543141484260559,
+            "base_model.model.model.layers.27.self_attn.o_proj": 0.8322635293006897,
+            "base_model.model.model.layers.27.self_attn.q_proj": 0.800757110118866,
+            "base_model.model.model.layers.27.self_attn.v_proj": 0.8139114379882812,
+            "base_model.model.model.layers.3.self_attn.k_proj": 0.8193715214729309,
+            "base_model.model.model.layers.3.self_attn.o_proj": 0.8180872797966003,
+            "base_model.model.model.layers.3.self_attn.q_proj": 0.8213937282562256,
+            "base_model.model.model.layers.3.self_attn.v_proj": 0.7792078852653503,
+            "base_model.model.model.layers.4.self_attn.k_proj": 0.8433609008789062,
+            "base_model.model.model.layers.4.self_attn.o_proj": 0.8231692910194397,
+            "base_model.model.model.layers.4.self_attn.q_proj": 0.8168648481369019,
+            "base_model.model.model.layers.4.self_attn.v_proj": 0.8046340942382812,
+            "base_model.model.model.layers.5.self_attn.k_proj": 0.8297984004020691,
+            "base_model.model.model.layers.5.self_attn.o_proj": 0.8117701411247253,
+            "base_model.model.model.layers.5.self_attn.q_proj": 0.8194546103477478,
+            "base_model.model.model.layers.5.self_attn.v_proj": 0.8165308833122253,
+            "base_model.model.model.layers.6.self_attn.k_proj": 0.8372471928596497,
+            "base_model.model.model.layers.6.self_attn.o_proj": 0.7980732321739197,
+            "base_model.model.model.layers.6.self_attn.q_proj": 0.8261451721191406,
+            "base_model.model.model.layers.6.self_attn.v_proj": 0.7784830927848816,
+            "base_model.model.model.layers.7.self_attn.k_proj": 0.8267415165901184,
+            "base_model.model.model.layers.7.self_attn.o_proj": 0.833247721195221,
+            "base_model.model.model.layers.7.self_attn.q_proj": 0.8184539079666138,
+            "base_model.model.model.layers.7.self_attn.v_proj": 0.8048858642578125,
+            "base_model.model.model.layers.8.self_attn.k_proj": 0.8486683964729309,
+            "base_model.model.model.layers.8.self_attn.o_proj": 0.8355602622032166,
+            "base_model.model.model.layers.8.self_attn.q_proj": 0.8183665871620178,
+            "base_model.model.model.layers.8.self_attn.v_proj": 0.8221308588981628,
+            "base_model.model.model.layers.9.self_attn.k_proj": 0.8148040771484375,
+            "base_model.model.model.layers.9.self_attn.o_proj": 0.8143818974494934,
+            "base_model.model.model.layers.9.self_attn.q_proj": 0.8195063471794128,
+            "base_model.model.model.layers.9.self_attn.v_proj": 0.7965240478515625
+          }
+        }
+      ],
+      "system": {
+        "logged_steps": 300,
+        "mean_step_seconds": 51.76697513700036,
+        "median_step_seconds": 51.77562845000648,
+        "total_optimizer_hours": 4.31391459475003,
+        "mean_tokens_per_second": 19.78358876440106,
+        "peak_gpu_allocated_gb": 14.063552512,
+        "max_cpu_rss_gb": 6.146953216
+      },
+      "dependencies": {
+        "absl-py": "2.5.0",
+        "accelerate": "1.14.0",
+        "datasets": "4.8.5",
+        "hydra-core": "1.3.7",
+        "immutabledict": "4.3.1",
+        "langdetect": "1.0.9",
+        "nltk": "3.10.3",
+        "numpy": "2.4.6",
+        "pandas": "3.0.5",
+        "peft": "0.20.0",
+        "psutil": "7.2.2",
+        "pyarrow": "25.0.1",
+        "safetensors": "0.8.0",
+        "scikit-learn": "1.9.0",
+        "scipy": "1.17.1",
+        "torch": "2.13.0+cu126",
+        "transformers": "4.57.6",
+        "trl": "0.29.1"
+      },
+      "hardware": {
+        "bf16_supported": true,
+        "cuda_available": true,
+        "cuda_runtime": "12.6",
+        "gpu_names": [
+          "NVIDIA GeForce RTX 4070 Ti SUPER"
+        ],
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "torch_version": "2.13.0+cu126"
+      }
+    }
+  },
+  "comparisons": {
+    "100": {
+      "arc_challenge|after_arc_challenge": {
+        "n": 64,
+        "baseline": 0.765625,
+        "hlora": 0.765625,
+        "difference_hlora_minus_baseline": 0.0,
+        "bootstrap95_difference": [
+          0.0,
+          0.0
+        ],
+        "both_correct": 49,
+        "only_baseline_correct": 0,
+        "only_hlora_correct": 0,
+        "mcnemar_exact_p": 1.0
+      },
+      "arc_challenge|after_gsm8k": {
+        "n": 64,
+        "baseline": 0.765625,
+        "hlora": 0.75,
+        "difference_hlora_minus_baseline": -0.015625,
+        "bootstrap95_difference": [
+          -0.046875,
+          0.0
+        ],
+        "both_correct": 48,
+        "only_baseline_correct": 1,
+        "only_hlora_correct": 0,
+        "mcnemar_exact_p": 1.0
+      },
+      "gsm8k|after_gsm8k": {
+        "n": 64,
+        "baseline": 0.015625,
+        "hlora": 0.15625,
+        "difference_hlora_minus_baseline": 0.140625,
+        "bootstrap95_difference": [
+          0.0625,
+          0.234375
+        ],
+        "both_correct": 1,
+        "only_baseline_correct": 0,
+        "only_hlora_correct": 9,
+        "mcnemar_exact_p": 0.00390625
+      },
+      "arc_forgetting|baseline": {
+        "forgetting": 0.0,
+        "examples_lost": 1,
+        "examples_gained": 1,
+        "bootstrap95_forgetting": [
+          -0.046875,
+          0.046875
+        ],
+        "mcnemar_exact_p": 1.0
+      },
+      "arc_forgetting|hlora": {
+        "forgetting": 0.015625,
+        "examples_lost": 2,
+        "examples_gained": 1,
+        "bootstrap95_forgetting": [
+          -0.03125,
+          0.078125
+        ],
+        "mcnemar_exact_p": 1.0
+      },
+      "trajectory": {
+        "first_differing_global_step": 102,
+        "first_differing_task": "gsm8k",
+        "task1_bit_identical_losses_and_gradnorms": true
+      },
+      "penalty_magnitude_gsm8k": {
+        "mean_regularization_loss": 2.5069080447792657e-05,
+        "max_regularization_loss": 6.707731517963111e-05,
+        "mean_abs_rl_loss": 0.0002057361206971109,
+        "steps_with_zero_rl_loss": 66
+      }
+    },
+    "150": {
+      "arc_challenge|after_arc_challenge": {
+        "n": 64,
+        "baseline": 0.828125,
+        "hlora": 0.828125,
+        "difference_hlora_minus_baseline": 0.0,
+        "bootstrap95_difference": [
+          0.0,
+          0.0
+        ],
+        "both_correct": 53,
+        "only_baseline_correct": 0,
+        "only_hlora_correct": 0,
+        "mcnemar_exact_p": 1.0
+      },
+      "arc_challenge|after_gsm8k": {
+        "n": 64,
+        "baseline": 0.796875,
+        "hlora": 0.796875,
+        "difference_hlora_minus_baseline": 0.0,
+        "bootstrap95_difference": [
+          0.0,
+          0.0
+        ],
+        "both_correct": 51,
+        "only_baseline_correct": 0,
+        "only_hlora_correct": 0,
+        "mcnemar_exact_p": 1.0
+      },
+      "gsm8k|after_gsm8k": {
+        "n": 64,
+        "baseline": 0.03125,
+        "hlora": 0.328125,
+        "difference_hlora_minus_baseline": 0.296875,
+        "bootstrap95_difference": [
+          0.1875,
+          0.40625
+        ],
+        "both_correct": 2,
+        "only_baseline_correct": 0,
+        "only_hlora_correct": 19,
+        "mcnemar_exact_p": 3.814697265625e-06
+      },
+      "arc_forgetting|baseline": {
+        "forgetting": 0.03125,
+        "examples_lost": 2,
+        "examples_gained": 0,
+        "bootstrap95_forgetting": [
+          0.0,
+          0.078125
+        ],
+        "mcnemar_exact_p": 0.5
+      },
+      "arc_forgetting|hlora": {
+        "forgetting": 0.03125,
+        "examples_lost": 2,
+        "examples_gained": 0,
+        "bootstrap95_forgetting": [
+          0.0,
+          0.078125
+        ],
+        "mcnemar_exact_p": 0.5
+      },
+      "trajectory": {
+        "first_differing_global_step": 152,
+        "first_differing_task": "gsm8k",
+        "task1_bit_identical_losses_and_gradnorms": true
+      },
+      "penalty_magnitude_gsm8k": {
+        "mean_regularization_loss": 5.213395187335361e-05,
+        "max_regularization_loss": 0.00011416568304412067,
+        "mean_abs_rl_loss": 0.0003941905164780716,
+        "steps_with_zero_rl_loss": 69
+      }
+    }
+  },
+  "storage": {
+    "Qwen2.5-0.5B-Instruct": {
+      "lora_rank": 8,
+      "trainable_lora_parameters": 1081344,
+      "lora_fp32_bytes": 4325376,
+      "dense_importance_elements": 44040192,
+      "dense_importance_fp32_bytes": 176160768,
+      "rank1_factorized_elements": 135168,
+      "rank1_factorized_fp32_bytes": 540672,
+      "dense_to_rank1_ratio": 325.8181818181818,
+      "protected_modules": 96
+    },
+    "Qwen2.5-1.5B-Instruct": {
+      "lora_rank": 8,
+      "trainable_lora_parameters": 2179072,
+      "lora_fp32_bytes": 8716288,
+      "dense_importance_elements": 154140672,
+      "dense_importance_fp32_bytes": 616562688,
+      "rank1_factorized_elements": 272384,
+      "rank1_factorized_fp32_bytes": 1089536,
+      "dense_to_rank1_ratio": 565.8947368421053,
+      "protected_modules": 112
+    }
+  },
+  "continuation_rule": {
+    "p05_order1_100": {
+      "forgetting_pp": 0.78125,
+      "task1_peak_pp": 1.5625,
+      "meets_10pp_rule": false
+    },
+    "p15_order1_100": {
+      "forgetting_pp": -0.78125,
+      "task1_peak_pp": 3.90625,
+      "meets_10pp_rule": false
+    },
+    "p15_order1_500": {
+      "forgetting_pp": 1.5625,
+      "task1_peak_pp": 18.75,
+      "meets_10pp_rule": false
+    },
+    "p15_order2_500": {
+      "forgetting_pp": -1.3020833333333335,
+      "task1_peak_pp": 4.947916666666666,
+      "meets_10pp_rule": false
+    },
+    "arc_base_100": {
+      "forgetting_pp": 0.0,
+      "task1_peak_pp": 76.5625,
+      "meets_10pp_rule": false
+    },
+    "arc_base_150": {
+      "forgetting_pp": 3.125,
+      "task1_peak_pp": 82.8125,
+      "meets_10pp_rule": false
+    }
+  },
+  "order2_source_run_preserved": "outputs/runs/pilot_two_task/rl_lora/order_2/1/phase2-pilot-order2-duration-500-gpu-128-20260925"
+}
